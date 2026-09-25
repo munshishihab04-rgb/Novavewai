@@ -1,0 +1,81 @@
+[
+  {
+    "name": "permanent-idempotency",
+    "exit_code": 0,
+    "expected_exit": 0,
+    "matches_expected": true,
+    "counts": {
+      "tests": 9,
+      "pass": 9,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0
+    }
+  },
+  {
+    "name": "corrected-r1",
+    "exit_code": 0,
+    "expected_exit": 0,
+    "matches_expected": true,
+    "counts": {
+      "tests": 1,
+      "pass": 1,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0
+    }
+  },
+  {
+    "name": "unaffected-controls",
+    "exit_code": 0,
+    "expected_exit": 0,
+    "matches_expected": true,
+    "counts": {
+      "tests": 6,
+      "pass": 6,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0
+    }
+  },
+  {
+    "name": "baseline-corrected-r1-red",
+    "exit_code": 1,
+    "expected_exit": 1,
+    "matches_expected": true,
+    "counts": {
+      "tests": 1,
+      "pass": 0,
+      "fail": 1,
+      "cancelled": 0,
+      "skipped": 0
+    }
+  },
+  {
+    "name": "auth-revalidation",
+    "exit_code": 0,
+    "expected_exit": 0,
+    "matches_expected": true,
+    "counts": {
+      "tests": 12,
+      "pass": 12,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0
+    }
+  },
+  {
+    "name": "typecheck",
+    "exit_code": 0,
+    "expected_exit": 0,
+    "matches_expected": true,
+    "counts": {}
+  },
+  {
+    "name": "diff-check",
+    "exit_code": 0,
+    "expected_exit": 0,
+    "matches_expected": true,
+    "counts": {}
+  }
+]

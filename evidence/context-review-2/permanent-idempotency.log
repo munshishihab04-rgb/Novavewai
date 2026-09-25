@@ -1,0 +1,17 @@
+✔ R1 acceptance: pending upload owns shared key, completes once and replays after restart (1625.271273ms)
+✔ R1 all generic routes conflict before DB or file side effects; owners remain independent (1573.654133ms)
+✔ R1 reverse direction: completed generic key rejects upload before reservation or blob write (1477.860148ms)
+✔ R1 DB failure: reservation blocks other routes until recovery, then same request retries once (1724.527795ms)
+✔ R1 FS failure: reservation blocks other routes until recovery, then same request retries once (1677.69361ms)
+✔ R1 cancelled reservation cannot disturb a replacement completed cache; purge releases only its owner (1621.277408ms)
+✔ R1 pending purge releases reservation and leaves another owner same-key cache intact (1522.126274ms)
+✔ R1 cancelled upload retry with identical key and body gets a new reservation, old request cannot finalize it (1479.987154ms)
+✔ R1 recovery of legacy collision preserves the completed same-owner same-key response (1762.414328ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 14852.09191

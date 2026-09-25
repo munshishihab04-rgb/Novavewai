@@ -1,0 +1,29 @@
+✖ Local bootstrap CLI writes private credential file; real server subprocess restarts and serves persisted tasks (1890.193169ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2129.252886
+
+✖ failing tests:
+
+test at tests/cli.test.ts:15:1
+✖ Local bootstrap CLI writes private credential file; real server subprocess restarts and serves persisted tasks (1890.193169ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  503 !== 201
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/cli.test.ts:41:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 503,
+    expected: 201,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

@@ -1,0 +1,11 @@
+{"caseId":"R1","observed":{"conflicting":{"status":201,"body":{"id":"afd6383e-b877-4b8f-997a-fcac5fd57cf5","title":"same key other route"}},"upload":{"status":500,"body":{"error":"internal_error"}},"persisted":[{"state":"pending","request_key":"91df5d88-6315-4641-8525-006269772deb"}],"cache":[{"response":{"id":"afd6383e-b877-4b8f-997a-fcac5fd57cf5","title":"same key other route"},"status":201}],"readyEvents":0,"retry":{"status":409,"body":{"error":"idempotency_conflict"}},"blobCount":1}}
+{"caseId":"R1-after-restart","observed":{"files":0,"names":[".key"],"retry":{"status":409,"body":{"error":"idempotency_conflict"}}}}
+✔ R1 reproduction: pending file key is consumed by another endpoint (1602.894066ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1876.665646

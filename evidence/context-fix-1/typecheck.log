@@ -1,0 +1,8 @@
+
+> nova-community-agent@0.1.0 typecheck
+> tsc --noEmit
+
+src/app.ts(92,52): error TS2345: Argument of type 'string | string[] | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/files.ts(37,52): error TS2345: Argument of type 'string | string[] | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.

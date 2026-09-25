@@ -1,0 +1,49 @@
+
+> nova-community-agent@0.1.0 test
+> tsx --test --test-concurrency=1 tests/*.test.ts
+
+✔ Approval binds exact revision/account/recipient; concurrent consumption yields one durable synthetic effect (1720.981335ms)
+✔ Artifact append-only revisions, concurrent conflict and owner-scoped revision export (1820.689939ms)
+✔ AUTH-RECHECK expiry mutation: reject stale authentication after owner-lock wait (3988.894926ms)
+✔ AUTH-RECHECK expiry replay: reject stale authentication after owner-lock wait (3744.563776ms)
+✔ AUTH-RECHECK expiry export: reject stale authentication after owner-lock wait (3763.560979ms)
+✔ AUTH-RECHECK expiry purge: reject stale authentication after owner-lock wait (3405.930569ms)
+✔ AUTH-RECHECK revoke mutation: reject stale authentication after owner-lock wait (1554.307004ms)
+✔ AUTH-RECHECK revoke replay: reject stale authentication after owner-lock wait (1565.079032ms)
+✔ AUTH-RECHECK revoke export: reject stale authentication after owner-lock wait (1518.013173ms)
+✔ AUTH-RECHECK revoke purge: reject stale authentication after owner-lock wait (1522.286922ms)
+✔ AUTH-RECHECK rebind mutation: reject stale authentication after owner-lock wait (1600.4514ms)
+✔ AUTH-RECHECK rebind replay: reject stale authentication after owner-lock wait (1580.415947ms)
+✔ AUTH-RECHECK rebind export: reject stale authentication after owner-lock wait (1633.200846ms)
+✔ AUTH-RECHECK rebind purge: reject stale authentication after owner-lock wait (1564.544369ms)
+✔ Local bootstrap CLI writes private credential file; real server subprocess restarts and serves persisted tasks (3253.291274ms)
+✔ PROVENANCE: exact revision, literal snapshot, conversation boundaries and declared scopes (1768.806635ms)
+✔ MESSAGES: immutable owned sequence, replay, pagination and restart (1813.251364ms)
+✔ FILE AUTH: expiry during real blob write rejects ready commit and replay, purge cleans pending bytes (3195.653394ms)
+✔ FILE FS BOUNDARY: write failure reserves quota but produces no ready cache, byte quota serializes (1926.737044ms)
+✔ FILE STORE IDENTITY: wrong root and missing key fail closed, no replacement key on existing data (1737.910317ms)
+✔ FILE RECOVERY: real DB failure after blob fsync, pending hidden and startup conservative cleanup (1822.927801ms)
+✔ FILE VALIDATION: paths, MIME, strict UTF-8, oversize, quotas and authenticated corruption failures (1910.670662ms)
+✔ FILE PURGING: filesystem failure keeps durable cleanup, restart completes deletion (1753.742048ms)
+✔ FILE SOURCE: owner-bound immutable UTF-8 snapshot and purge cascade (1552.662014ms)
+✔ FILES PURGE: remove bytes and cascaded context, never resurrect a late reservation (1845.082371ms)
+✔ FILES: real encrypted immutable private bytes, owner download and restart (1819.308433ms)
+✔ HTTP authenticated task persists through application and PostgreSQL restart (2052.448694ms)
+✔ Task lifecycle optimistic locking rejects stale/illegal transitions and resumes persisted checkpoint (1988.226818ms)
+✔ Owner export and purge revoke all sessions and prevent stale worker/direct database resurrection (2139.845074ms)
+✔ Revoked and expired approval cannot authorize queued dispatch (2898.273223ms)
+✔ Ambiguous adapter exception and malformed receipt never retry or expose provider secrets (1703.760007ms)
+✔ Expired lease fences old worker; crash executing marker recovers unknown without repeating effect (1647.024131ms)
+✔ Cancelled task invalidates queued policy before dispatch (1263.472197ms)
+✔ Timeout after synthetic dispatch becomes unknown and a late return cannot overwrite it (1512.17383ms)
+✔ Worker revalidates queued revision, session expiry and intent expiry before any call (4745.804718ms)
+✔ Purge during in-flight synthetic call waits and late completion cannot recreate records (1698.549484ms)
+✔ Closed query and body schemas, redacted parser/DB errors, expired sessions and cross-owner foreign keys (1834.867219ms)
+ℹ tests 37
+ℹ suites 0
+ℹ pass 37
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 81136.359486

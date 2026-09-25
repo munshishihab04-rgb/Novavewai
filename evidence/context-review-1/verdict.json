@@ -1,0 +1,67 @@
+{
+  "passed": false,
+  "baseline": "75e1600b4e984d4f073d0796378496e2e5f56d47",
+  "scope": "Independent review of NEW context/provenance/files continuation only; single-host encrypted local development adapter. No production KMS/cloud/UI approval and no review of unchanged baseline issues.",
+  "security_concerns": [],
+  "logic_errors": [
+    {
+      "id": "R1",
+      "severity": "medium",
+      "title": "Pending upload does not reserve the owner's shared idempotency namespace",
+      "locations": [
+        { "path": "src/files.ts", "lines": "35-47", "detail": "Reservation stores request_key only in files; idempotency remains empty while the transaction is committed and owner lock released." },
+        { "path": "src/app.ts", "lines": "80-85", "detail": "Existing shared mutation path sees no idempotency row and accepts another endpoint with the same owner/key. This is a new integration regression, not a standalone baseline finding." },
+        { "path": "src/files.ts", "lines": "50-57", "detail": "Finalization performs blob I/O before inserting the already-consumed idempotency key; uniqueness violation rolls back ready state and outbox." }
+      ],
+      "reproduction": "Run the R1 test in evidence/context-review-1/review.test.ts. Pause POST /files after its committed reservation via the supplied afterReservation hook. POST /conversations using the same authenticated owner and idempotency key, then resume the upload.",
+      "observed": {
+        "conflicting_POST_conversations": { "status": 201, "persisted": "New conversation and its idempotency response are committed." },
+        "original_POST_files": { "status": 500, "body": { "error": "internal_error" } },
+        "database": { "files": "One pending row, counted against quota", "file_ready_outbox_count": 0, "idempotency": "Same key now permanently caches the conflicting conversation response" },
+        "filesystem": "One encrypted orphan/pending blob exists until startup recovery",
+        "retry_POST_files": { "status": 409, "body": { "error": "idempotency_conflict" } },
+        "after_restart": "Recovery removes pending row/blob but the original upload key still returns 409 idempotency_conflict."
+      },
+      "expected": {
+        "conflicting_POST_conversations": "409 idempotency_conflict, no conversation or cache committed for the conflicting operation",
+        "original_POST_files": "201 ready with exactly one file.ready event and its own cached idempotent result",
+        "retry_POST_files": "Original 201 response replayed; no orphan or quota leakage caused by this conflict"
+      },
+      "evidence": ["evidence/context-review-1/review-tests.log:1-3", "evidence/context-review-1/r1-repeat.log:1-3"],
+      "remediation_boundary": "Reserve/check the shared owner-key namespace across all mutations while an upload is pending; add a regression test. No implementation changes made by reviewer."
+    }
+  ],
+  "observations": [
+    {
+      "id": "R2",
+      "blocking": false,
+      "title": "A second same-host app startup conservatively cancels a live upload in its reservation gap",
+      "locations": ["src/files.ts:12-22", "src/files.ts:48-52", "src/file-lifecycle.ts:13-20"],
+      "observed": "With the first HTTP upload paused after reservation, a second app using the same DB/root becomes ready, deletes the pending row, and the first upload returns 409 upload_cancelled; only .key remains. No resurrection or false ready result.",
+      "expected_for_supported_scope": "The documented single-active-instance local lifecycle must be respected; overlapping startups are not coordinated. An already owner-locked put was separately tested: startup waits, then preserves its successfully committed ready file.",
+      "classification": "Not an additional defect against this explicitly bounded contract: docs/API.md:120 excludes multi-instance coordination. This observation prevents treating startup as live-instance-safe; it is not a request to add distributed infrastructure.",
+      "evidence": ["evidence/context-review-1/review-tests.log:4-7"]
+    }
+  ],
+  "verification": {
+    "existing_suite": { "command": "npm test", "passed": 39, "failed": 0, "log": "evidence/context-review-1/full-tests.log" },
+    "independent_suite": { "command": "./node_modules/.bin/tsx --test --test-concurrency=1 evidence/context-review-1/review.test.ts", "passed": 7, "failed": 0, "note": "Reproduction tests assert the observed defect, so a green test run is not approval.", "log": "evidence/context-review-1/review-tests.log" },
+    "repeat_R1": { "command": "./node_modules/.bin/tsx --test --test-concurrency=1 --test-name-pattern='R1 reproduction' evidence/context-review-1/review.test.ts", "passed": 1, "failed": 0, "log": "evidence/context-review-1/r1-repeat.log" },
+    "typecheck": { "command": "npm run typecheck", "exit_code": 0, "log": "evidence/context-review-1/typecheck.log" },
+    "diff_check": { "command": "git diff --check 75e1600", "exit_code": 0 },
+    "audit": "Not rerun: review forbids network sends. Parent-reported audit result is not independent evidence.",
+    "controls": [
+      "Owner/conversation/exact-revision boundaries, schema rejection of forged assistant and verified provenance, immutable DB checks",
+      "Same-key pending file retry and changed-payload conflict",
+      "Quota byte/count serialization and pending reservation accounting via independently rerun existing tests",
+      "AES-GCM owner/file AAD substitution rejection, corrupt blobs, path and symlink rejection, bound root/key and replaced key failure",
+      "Real DB/fsync failure recovery, restart persistence, durable purge cleanup failure/retry, no late-upload resurrection",
+      "Exact session revocation after real file read blocks both content response and source persistence; expiry during put blocks ready commit",
+      "Startup waits behind active owner-locked put; reservation-gap cancellation recorded separately"
+    ],
+    "cleanup": "All tests use tests/helpers.ts real private loopback PostgreSQL, real HTTP listeners and private ephemeral filesystem roots. Finally blocks close listeners/pools/PostgreSQL and remove roots. capture-state.py observed no remaining test PostgreSQL processes or review temp directories; see cleanup.json.",
+    "review_harness_issue": "Initial after-read revocation control incorrectly attempted forbidden session owner reassignment. Trigger rejected it. Corrected evidence-only test to INSERT a fresh same-owner session; rerun passed. Initial log retained. A capture-state inline command had a quoting SyntaxError; replaced with an evidence-only script and rerun successfully."
+  },
+  "files_changed_by_reviewer": "Only evidence/context-review-1/*; no implementation edits, commits, external sends or legacy project access.",
+  "summary": "Bounded slice not approved: one independently reproduced owner-wide idempotency integration defect. Other tested confidentiality/provenance/purge controls held. Fix R1 and re-review before closing this gate."
+}

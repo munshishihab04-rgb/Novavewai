@@ -1,0 +1,26 @@
+✖ FILE STORE IDENTITY: wrong root and missing key fail closed, no replacement key on existing data (1483.22605ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1821.380726
+
+✖ failing tests:
+
+test at tests/files.test.ts:25:1
+✖ FILE STORE IDENTITY: wrong root and missing key fail closed, no replacement key on existing data (1483.22605ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/files.test.ts:32:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /storage|Storage/,
+    operator: 'rejects',
+    diff: 'simple'
+  }

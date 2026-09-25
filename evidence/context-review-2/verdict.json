@@ -1,0 +1,125 @@
+{
+  "passed": true,
+  "security_concerns": [],
+  "logic_errors": [],
+  "suggestions": [],
+  "summary": "R1 chiuso: approvata la slice circoscritta context/messages/provenance/files di NEW Nova; consentito proseguire con lo sviluppo agent core. Non costituisce approvazione completa J0 o produzione.",
+  "scope": "Independent bounded re-review of R1 shared owner-key upload namespace fix and existing context integration controls only.",
+  "baseline": "evidence/context-fix-1/baseline (pre-fix context snapshot); accepted prior base 75e1600",
+  "source_review": {
+    "changed_files_vs_snapshot": [
+      "src/app.ts",
+      "src/files.ts"
+    ],
+    "common_lookup": "src/app.ts:60-69 and 86-96: completed responses and durable files.request_key checked under authenticated owner-row lock before every generic mutate callback; wired to context/provenance/actions at 153-157. src/files.ts:35-44 applies the identical lookup before reservation.",
+    "finalization": "src/files.ts:48-56 is unchanged: reacquire authenticated owner lock, verify the exact reserved UUID is still pending BEFORE put, revalidate exact session AFTER put, atomically commit ready/event/cache. It intentionally does not call the pending-rejecting helper on its own reservation. Shared lookup at reservation and every competing generic mutation preserves key ownership throughout the gap; cancelled UUIDs cannot finalize a replacement.",
+    "recovery": "src/file-lifecycle.ts:13-20 deletes owner-scoped pending reservations and UUID-scoped cleanup only, not completed cache by key. src/privacy.ts:30-45 purges only the authenticated owner. DB/FS failure, recovery retry, old-request/replacement and legacy-collision cases passed.",
+    "auth": "Owner active lock, exact token/owner/clock_timestamp revalidation, onRequest authentication, upload finalization and filesystem read rechecks unchanged. Twelve original auth-revalidation tests and exact-session after-read control passed.",
+    "schema": "All baseline migrations byte-identical; existing files(owner_id,request_key) unique constraint and completed idempotency(owner_id,key) primary key retained. No new cross-table SQL constraint claimed."
+  },
+  "verification": [
+    {
+      "name": "permanent-idempotency",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "matches_expected": true,
+      "counts": {
+        "tests": 9,
+        "pass": 9,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "corrected-r1",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "matches_expected": true,
+      "counts": {
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "unaffected-controls",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "matches_expected": true,
+      "counts": {
+        "tests": 6,
+        "pass": 6,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "baseline-corrected-r1-red",
+      "exit_code": 1,
+      "expected_exit": 1,
+      "matches_expected": true,
+      "counts": {
+        "tests": 1,
+        "pass": 0,
+        "fail": 1,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "auth-revalidation",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "matches_expected": true,
+      "counts": {
+        "tests": 12,
+        "pass": 12,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "typecheck",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "matches_expected": true,
+      "counts": {}
+    },
+    {
+      "name": "diff-check",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "matches_expected": true,
+      "counts": {}
+    }
+  ],
+  "independent_reproduction": {
+    "source": "evidence/context-review-1/review.test.ts preserved unchanged",
+    "adapted_test": "evidence/context-review-2/corrected-review.test.ts",
+    "adaptation_diff": "evidence/context-review-2/adaptation.diff",
+    "corrected_observation": "Competing conversation 409 idempotency_conflict; original upload 201 ready; one conversation, file/blob/cache and file.ready event; exact 201 replay and file persistence after real PostgreSQL/application restart; actual content download verified.",
+    "negative_control": "Identical corrected assertions against pre-fix snapshot failed exactly at expected409 versus actual201; original upload500/pending/cache collision observed. This is an expected negative control, not an acceptance pass."
+  },
+  "preservation_and_cleanup": {
+    "protected_files_unchanged": true,
+    "changed_outside_review_directory": [],
+    "temporary_files_remaining": [],
+    "owned_processes_remaining": []
+  },
+  "limitations": [
+    "Existing documented single-active-instance local encrypted development adapter boundary retained. R2 is one of the six unaffected controls, not a reopened blocker.",
+    "No cloud/KMS/providers/UI/voice, distributed coordination, production readiness or full J0 approval.",
+    "Only selected tests independently rerun here: nine permanent R1, one corrected original reproduction, six unaffected controls and twelve auth tests. Parent-reported 48/48 is not presented as this reviewer's execution.",
+    "No implementation/test/original-evidence edits, commits, legacy access, installs or external calls."
+  ],
+  "harness_notes": [
+    "Initial count parser expected TAP # lines but Node emitted spec reporter ℹ lines. Raw successful logs preserved; evidence-only parser corrected and exact counts reparsed with assertions in finalize.py. No application failure.",
+    "First cleanup verification found only reviewer-owned Node/tsx compilation caches, no fixture DB/blob roots or processes. Initial inventory preserved in cleanup-before-cache-removal.json; caches removed and clean verification rerun successfully."
+  ],
+  "files_created": "Only evidence/context-review-2/*; hashes, baseline diff, corrected evidence tests, execution logs, exact commands, verified results, preservation/cleanup and report."
+}

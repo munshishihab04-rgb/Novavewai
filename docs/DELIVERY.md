@@ -38,7 +38,7 @@ External effects in foundation tests are SYNTHETIC ADAPTERS. There is no authori
 - Restart/reopen reads canonical state, not an in-process cache.
 - Independent security review after implementer tests; parent reruns relevant tests.
 
-Passing this subset is NOT completion of full J0: object storage, file lifecycle, retention, user onboarding and production backup gates must be tracked explicitly if not implemented.
+Passing this subset is NOT completion of full J0. The conversational continuation now implements messages, exact-revision Source/Evidence and an encrypted local development file lifecycle (docs/NEXT-FOUNDATION.md; evidence/context-foundation/report.md). Cloud object storage, retention scheduling, onboarding and production backup/key-management gates remain unimplemented.
 
 ## Ordered continuation
 

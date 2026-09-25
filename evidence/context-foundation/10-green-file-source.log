@@ -1,0 +1,13 @@
+✔ PROVENANCE: exact revision, literal snapshot, conversation boundaries and declared scopes (1621.171842ms)
+✔ MESSAGES: immutable owned sequence, replay, pagination and restart (1732.589681ms)
+✔ FILE SOURCE: owner-bound immutable UTF-8 snapshot and purge cascade (1835.672127ms)
+✔ FILES PURGE: remove bytes and cascaded context, never resurrect a late reservation (2031.076974ms)
+✔ FILES: real encrypted immutable private bytes, owner download and restart (1763.805223ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 9594.133655

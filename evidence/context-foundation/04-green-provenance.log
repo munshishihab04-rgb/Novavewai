@@ -1,0 +1,10 @@
+✔ PROVENANCE: exact revision, literal snapshot, conversation boundaries and declared scopes (1578.900122ms)
+✔ MESSAGES: immutable owned sequence, replay, pagination and restart (1681.756781ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3608.671138

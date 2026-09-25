@@ -1,0 +1,22 @@
+{"caseId":"R2","observed":{"before":[{"id":"a4ba6e85-983d-44cd-90ae-55868533ff6e","state":"pending"}],"secondStartup":"listening","result":{"status":409,"body":{"error":"upload_cancelled"}},"after":[],"names":[".key"]}}
+✔ R2 observation: same-host startup cancels active reservation gap (1513.997246ms)
+{"caseId":"startup-active-put","observed":{"status":201,"waitingObserved":true,"files":[{"state":"ready"}],"cleanup":0}}
+✔ CONTROL: startup waits for owner-locked active put and preserves ready file (1727.153403ms)
+{"caseId":"revoke-after-read-download","observed":{"status":401,"body":{"error":"unauthorized"}}}
+{"caseId":"revoke-after-read-source","observed":{"status":401,"body":{"error":"unauthorized"}}}
+{"caseId":"revoke-after-read-persisted","observed":{"sources":0,"files":[{"state":"ready"}]}}
+✔ CONTROL: exact-session revocation after filesystem read blocks download and source commit (1664.023936ms)
+{"caseId":"pending-aad-purge","observed":{"replay":{"status":409,"body":{"error":"upload_pending"}},"conflict":{"status":409,"body":{"error":"idempotency_conflict"}},"foreign":{"status":404,"body":{"error":"not_found"}},"swapped":{"status":409,"body":{"error":"file_integrity_failure"}},"purged":{"status":200,"body":{"status":"purged"}},"names":[".key"],"files":0,"cleanup":0}}
+✔ CONTROL: same-key pending retry, foreign-owner scoping, AAD substitution and purge (1738.769117ms)
+{"caseId":"context-controls","observed":{"forged":{"status":400,"body":{"error":"invalid_request"}},"forgedTrust":{"status":400,"body":{"error":"invalid_request"}},"forgedStatus":{"status":400,"body":{"error":"invalid_request"}},"crossed":{"status":404,"body":{"error":"not_found"}},"storedEvidence":[{"revision":1,"status":"unverified","verification_method":"literal_excerpt"}],"storedSource":[{"trust":"user_supplied"}]}}
+✔ CONTROL: forged provenance, immutable DB checks and exact revision/conversation scopes (1575.01665ms)
+{"caseId":"key-binding","observed":{"symlinkStartup":"rejected","replacedKeyStartup":"rejected","bindings":1}}
+✔ CONTROL: root symlink and replaced persisted key fail startup closed (1669.481623ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 10169.979456

@@ -1,0 +1,7 @@
+{"name": "permanent-idempotency", "exit_code": 0, "expected_exit": 0, "matches_expected": true, "counts": {}}
+{"name": "corrected-r1", "exit_code": 0, "expected_exit": 0, "matches_expected": true, "counts": {}}
+{"name": "unaffected-controls", "exit_code": 0, "expected_exit": 0, "matches_expected": true, "counts": {}}
+{"name": "baseline-corrected-r1-red", "exit_code": 1, "expected_exit": 1, "matches_expected": true, "counts": {}}
+{"name": "auth-revalidation", "exit_code": 0, "expected_exit": 0, "matches_expected": true, "counts": {}}
+{"name": "typecheck", "exit_code": 0, "expected_exit": 0, "matches_expected": true, "counts": {}}
+{"name": "diff-check", "exit_code": 0, "expected_exit": 0, "matches_expected": true, "counts": {}}

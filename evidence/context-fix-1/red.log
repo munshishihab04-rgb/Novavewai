@@ -1,0 +1,38 @@
+✖ R1 acceptance: pending upload owns shared key, completes once and replays after restart (1490.359125ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1833.918703
+
+✖ failing tests:
+
+test at tests/idempotency-files.test.ts:28:1
+✖ R1 acceptance: pending upload owns shared key, completes once and replays after restart (1490.359125ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+      body: {
+  +     id: 'a38d0914-f3cc-4019-b5c2-b147fbad6f27',
+  +     title: 'must not persist'
+  -     error: 'idempotency_conflict'
+      },
+  +   status: 201
+  -   status: 409
+    }
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/idempotency-files.test.ts:36:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { status: 201, body: { id: 'a38d0914-f3cc-4019-b5c2-b147fbad6f27', title: 'must not persist' } },
+    expected: { status: 409, body: { error: 'idempotency_conflict' } },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

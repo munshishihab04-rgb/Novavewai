@@ -1,0 +1,24 @@
+{"case":"AUTH-EXPIRY-mutation","observedHttpStatus":401,"ownerStatus":"active","lateWrites":0}
+✔ AUTH-EXPIRY mutation: session must still be fresh after owner-lock wait (3419.648288ms)
+{"case":"AUTH-EXPIRY-export","observedHttpStatus":401,"ownerStatus":"active","lateWrites":0}
+✔ AUTH-EXPIRY export: session must still be fresh after owner-lock wait (3648.633229ms)
+{"case":"AUTH-EXPIRY-purge","observedHttpStatus":401,"ownerStatus":"active","lateWrites":0}
+✔ AUTH-EXPIRY purge: session must still be fresh after owner-lock wait (3715.593441ms)
+{"case":"AUTH-REVOKE-mutation","observedHttpStatus":401,"ownerStatus":"active"}
+✔ AUTH-REVOKE mutation: revoked session cannot survive owner-lock wait (1487.565854ms)
+{"case":"AUTH-REVOKE-export","observedHttpStatus":401,"ownerStatus":"active"}
+✔ AUTH-REVOKE export: revoked session cannot survive owner-lock wait (1544.356867ms)
+{"case":"AUTH-REVOKE-purge","observedHttpStatus":401,"ownerStatus":"active"}
+✔ AUTH-REVOKE purge: revoked session cannot survive owner-lock wait (1701.103162ms)
+✔ CONTROL: owner-scoped idempotency canonical replay, conflict and cross-owner execution/revocation (1613.808943ms)
+✔ CONTROL: actual DB connection termination after synthetic I/O recovers unknown without resend (1508.863247ms)
+✔ CONTROL: revocation, cancellation and revision wait behind real in-flight owner lock (4767.939621ms)
+✔ CONTROL: purge after timed-out uncooperative adapter blocks late persistence and replay (1556.050059ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 25254.575674

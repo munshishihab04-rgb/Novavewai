@@ -1,0 +1,9 @@
+✔ Local bootstrap CLI writes private credential file; real server subprocess restarts and serves persisted tasks (2923.267269ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3092.930278

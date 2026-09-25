@@ -1,0 +1,11 @@
+{"caseId":"R1","observed":{"conflicting":{"status":409,"body":{"error":"idempotency_conflict"}},"upload":{"status":201,"body":{"id":"2f7e2b7a-1504-49b6-898f-5e8b75299552","conversationId":"508c25fd-3839-443b-9cc7-9122a657ada2","name":"review.txt","mime":"text/plain","size":30,"hash":"3cf0fe195c598de55b54dd7cb599112132010655da31bf441e891ff5683b620e","state":"ready","storage":"local-encrypted-development"}},"persisted":[{"state":"ready","request_key":"92a6059f-39c6-412e-bb7f-6907eb09b5b8"}],"cache":[{"response":{"id":"2f7e2b7a-1504-49b6-898f-5e8b75299552","hash":"3cf0fe195c598de55b54dd7cb599112132010655da31bf441e891ff5683b620e","mime":"text/plain","name":"review.txt","size":30,"state":"ready","storage":"local-encrypted-development","conversationId":"508c25fd-3839-443b-9cc7-9122a657ada2"},"status":201}],"readyEvents":1,"retry":{"status":201,"body":{"id":"2f7e2b7a-1504-49b6-898f-5e8b75299552","hash":"3cf0fe195c598de55b54dd7cb599112132010655da31bf441e891ff5683b620e","mime":"text/plain","name":"review.txt","size":30,"state":"ready","storage":"local-encrypted-development","conversationId":"508c25fd-3839-443b-9cc7-9122a657ada2"}},"blobCount":1}}
+{"caseId":"R1-after-restart","observed":{"files":1,"names":[".key","2f7e2b7a-1504-49b6-898f-5e8b75299552"],"retry":{"status":201,"body":{"id":"2f7e2b7a-1504-49b6-898f-5e8b75299552","hash":"3cf0fe195c598de55b54dd7cb599112132010655da31bf441e891ff5683b620e","mime":"text/plain","name":"review.txt","size":30,"state":"ready","storage":"local-encrypted-development","conversationId":"508c25fd-3839-443b-9cc7-9122a657ada2"}}}}
+✔ R1 corrected acceptance: pending upload protects shared key and replays after restart (1929.018488ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2274.865138

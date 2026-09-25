@@ -1,0 +1,51 @@
+
+> nova-community-agent@0.1.0 test
+> tsx --test --test-concurrency=1 tests/*.test.ts
+
+✔ Approval binds exact revision/account/recipient; concurrent consumption yields one durable synthetic effect (1823.794308ms)
+✔ Artifact append-only revisions, concurrent conflict and owner-scoped revision export (1979.275783ms)
+✔ AUTH-RECHECK expiry mutation: reject stale authentication after owner-lock wait (3821.29156ms)
+✔ AUTH-RECHECK expiry replay: reject stale authentication after owner-lock wait (3707.319851ms)
+✔ AUTH-RECHECK expiry export: reject stale authentication after owner-lock wait (3800.50446ms)
+✔ AUTH-RECHECK expiry purge: reject stale authentication after owner-lock wait (3714.637246ms)
+✔ AUTH-RECHECK revoke mutation: reject stale authentication after owner-lock wait (1705.14445ms)
+✔ AUTH-RECHECK revoke replay: reject stale authentication after owner-lock wait (1201.037739ms)
+✔ AUTH-RECHECK revoke export: reject stale authentication after owner-lock wait (1496.878793ms)
+✔ AUTH-RECHECK revoke purge: reject stale authentication after owner-lock wait (1622.205009ms)
+✔ AUTH-RECHECK rebind mutation: reject stale authentication after owner-lock wait (1551.609892ms)
+✔ AUTH-RECHECK rebind replay: reject stale authentication after owner-lock wait (1551.963743ms)
+✔ AUTH-RECHECK rebind export: reject stale authentication after owner-lock wait (1516.285955ms)
+✔ AUTH-RECHECK rebind purge: reject stale authentication after owner-lock wait (1499.840544ms)
+✔ Local bootstrap CLI writes private credential file; real server subprocess restarts and serves persisted tasks (3240.431315ms)
+✔ CONTEXT AUTH: exact token revoked during owner lock blocks message read and append (1910.330344ms)
+✔ PROVENANCE: exact revision, literal snapshot, conversation boundaries and declared scopes (1764.104509ms)
+✔ MESSAGES: immutable owned sequence, replay, pagination and restart (1832.814857ms)
+✔ FILE KEY: a previously populated unbound key is never imported (1836.813949ms)
+✔ FILE AUTH: expiry during real blob write rejects ready commit, recovery cleans pending bytes (3058.313768ms)
+✔ FILE FS BOUNDARY: write failure reserves quota but produces no ready cache, byte quota serializes (1999.457911ms)
+✔ FILE STORE IDENTITY: wrong root and missing key fail closed, no replacement key on existing data (1778.572271ms)
+✔ FILE RECOVERY: real DB failure after blob fsync, pending hidden and startup conservative cleanup (1734.169505ms)
+✔ FILE VALIDATION: paths, MIME, strict UTF-8, oversize, quotas and authenticated corruption failures (1833.028723ms)
+✔ FILE PURGING: filesystem failure keeps durable cleanup, restart completes deletion (1810.883956ms)
+✔ FILE SOURCE: owner-bound immutable UTF-8 snapshot and purge cascade (1539.970707ms)
+✔ FILES PURGE: remove bytes and cascaded context, never resurrect a late reservation (1800.569177ms)
+✔ FILES: real encrypted immutable private bytes, owner download and restart (1713.197868ms)
+✔ HTTP authenticated task persists through application and PostgreSQL restart (2072.080549ms)
+✔ Task lifecycle optimistic locking rejects stale/illegal transitions and resumes persisted checkpoint (2157.530717ms)
+✔ Owner export and purge revoke all sessions and prevent stale worker/direct database resurrection (2169.51628ms)
+✔ Revoked and expired approval cannot authorize queued dispatch (3002.750249ms)
+✔ Ambiguous adapter exception and malformed receipt never retry or expose provider secrets (1616.443634ms)
+✔ Expired lease fences old worker; crash executing marker recovers unknown without repeating effect (1767.427273ms)
+✔ Cancelled task invalidates queued policy before dispatch (1252.806411ms)
+✔ Timeout after synthetic dispatch becomes unknown and a late return cannot overwrite it (1667.444705ms)
+✔ Worker revalidates queued revision, session expiry and intent expiry before any call (4792.944304ms)
+✔ Purge during in-flight synthetic call waits and late completion cannot recreate records (1561.555966ms)
+✔ Closed query and body schemas, redacted parser/DB errors, expired sessions and cross-owner foreign keys (1937.523666ms)
+ℹ tests 39
+ℹ suites 0
+ℹ pass 39
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 85093.833277

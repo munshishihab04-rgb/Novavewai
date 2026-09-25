@@ -1,0 +1,14 @@
+✔ FILE RECOVERY: real DB failure after blob fsync, pending hidden and startup conservative cleanup (1690.354025ms)
+✔ FILE VALIDATION: paths, MIME, strict UTF-8, oversize, quotas and authenticated corruption failures (1828.146283ms)
+✔ FILE PURGING: filesystem failure keeps durable cleanup, restart completes deletion (1693.893817ms)
+✔ FILE SOURCE: owner-bound immutable UTF-8 snapshot and purge cascade (1607.517455ms)
+✔ FILES PURGE: remove bytes and cascaded context, never resurrect a late reservation (2058.227211ms)
+✔ FILES: real encrypted immutable private bytes, owner download and restart (1846.854848ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 11067.880495

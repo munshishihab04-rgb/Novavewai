@@ -1,0 +1,38 @@
+{"caseId":"R1","observed":{"conflicting":{"status":201,"body":{"id":"c28e6e64-a163-4ed7-b3f3-ee66a6f83c84","title":"same key other route"}},"upload":{"status":500,"body":{"error":"internal_error"}},"persisted":[{"state":"pending","request_key":"5189c92b-3162-4675-9e67-6ccd56502b93"}],"cache":[{"response":{"id":"c28e6e64-a163-4ed7-b3f3-ee66a6f83c84","title":"same key other route"},"status":201}],"readyEvents":0,"retry":{"status":409,"body":{"error":"idempotency_conflict"}},"blobCount":1}}
+✖ R1 corrected acceptance: pending upload protects shared key and replays after restart (1810.709919ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2210.313842
+
+✖ failing tests:
+
+test at evidence/context-review-2/corrected-baseline.test.ts:31:1
+✖ R1 corrected acceptance: pending upload protects shared key and replays after restart (1810.709919ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+      body: {
+  +     id: 'c28e6e64-a163-4ed7-b3f3-ee66a6f83c84',
+  +     title: 'same key other route'
+  -     error: 'idempotency_conflict'
+      },
+  +   status: 201
+  -   status: 409
+    }
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/evidence/context-review-2/corrected-baseline.test.ts:44:12)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { status: 201, body: { id: 'c28e6e64-a163-4ed7-b3f3-ee66a6f83c84', title: 'same key other route' } },
+    expected: { status: 409, body: { error: 'idempotency_conflict' } },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

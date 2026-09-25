@@ -1,0 +1,29 @@
+{"caseId":"R1","observed":{"conflicting":{"status":409,"body":{"error":"idempotency_conflict"}},"upload":{"status":201,"body":{"id":"e6fa4bb3-a62b-46f9-af70-6a18736e5f4a","conversationId":"4f982d1f-8600-4f01-ba92-82bcfd983602","name":"review.txt","mime":"text/plain","size":30,"hash":"3cf0fe195c598de55b54dd7cb599112132010655da31bf441e891ff5683b620e","state":"ready","storage":"local-encrypted-development"}},"persisted":[{"state":"ready","request_key":"f0349b5c-cb00-4716-9b88-ab36235b3958"}],"cache":[{"response":{"id":"e6fa4bb3-a62b-46f9-af70-6a18736e5f4a","hash":"3cf0fe195c598de55b54dd7cb599112132010655da31bf441e891ff5683b620e","mime":"text/plain","name":"review.txt","size":30,"state":"ready","storage":"local-encrypted-development","conversationId":"4f982d1f-8600-4f01-ba92-82bcfd983602"},"status":201}],"readyEvents":1,"retry":{"status":201,"body":{"id":"e6fa4bb3-a62b-46f9-af70-6a18736e5f4a","hash":"3cf0fe195c598de55b54dd7cb599112132010655da31bf441e891ff5683b620e","mime":"text/plain","name":"review.txt","size":30,"state":"ready","storage":"local-encrypted-development","conversationId":"4f982d1f-8600-4f01-ba92-82bcfd983602"}},"blobCount":1}}
+✖ R1 reproduction: pending file key is consumed by another endpoint (1834.26052ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2123.470212
+
+✖ failing tests:
+
+test at evidence/context-review-1/review.test.ts:31:1
+✖ R1 reproduction: pending file key is consumed by another endpoint (1834.26052ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  409 !== 201
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/evidence/context-review-1/review.test.ts:44:12)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 409,
+    expected: 201,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

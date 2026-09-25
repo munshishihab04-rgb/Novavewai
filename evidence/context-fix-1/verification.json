@@ -1,0 +1,113 @@
+{
+  "base": "75e1600b4e984d4f073d0796378496e2e5f56d47",
+  "changed_existing_files_since_snapshot": [
+    "src/app.ts",
+    "src/files.ts"
+  ],
+  "new_test": "tests/idempotency-files.test.ts",
+  "original_review_evidence_unchanged": true,
+  "baseline_source_migrations_tests_hash_verified": true,
+  "logs": {
+    "baseline-main": {
+      "tests": 39,
+      "pass": 39,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    "red": {
+      "tests": 1,
+      "pass": 0,
+      "fail": 1,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    "green-first": {
+      "tests": 1,
+      "pass": 1,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    "green-expanded": {
+      "tests": 7,
+      "pass": 7,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    "red-expanded": {
+      "tests": 9,
+      "pass": 5,
+      "fail": 4,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    "final-main": {
+      "tests": 48,
+      "pass": 48,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    "unaffected-controls": {
+      "tests": 6,
+      "pass": 6,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    "old-bug-assertion": {
+      "tests": 1,
+      "pass": 0,
+      "fail": 1,
+      "cancelled": 0,
+      "skipped": 0
+    }
+  },
+  "final_typecheck_exit": 0,
+  "initial_typecheck_failure": "typecheck.log: TS2345 key narrowing; corrected using return fail without auth or validation behavior change",
+  "diff_check": {
+    "exit": 0,
+    "output": ""
+  },
+  "index_empty": true,
+  "test_postgres_processes": [],
+  "fix_temp_roots": [],
+  "source_sha256": {
+    "src/actions.ts": "6339e41ac789d583f2695f23b442a70f5a0fcc1ef97d399b396f7d228a43b10c",
+    "src/app.ts": "15132136f48563ba5c065b23b4ebfdac8a3b5acbd4e21bdf58314d9c8e51dfc2",
+    "src/context.ts": "18eee9876a8c5ed680d750eab29908050770e70314ad4609b45aa810844b2942",
+    "src/file-lifecycle.ts": "8bb050a1f91e1ff2f874d6a72cff9b87c7a193b3f5e5cdfdb55a15bdf1aae84a",
+    "src/files.ts": "264e82d2893a3b6d2fdffdfadb5da4cfbeef6ba206cde4aa3cca89a8e6c93139",
+    "src/local-files.ts": "68b23f330a0fb456b7abed939ca14ff5c9ec938be0cf81152c284242794c8976",
+    "src/privacy.ts": "51b96899eee741d42d64f95e1dfbbb16432ffaf1df4e5994d679e43872aea0ac",
+    "src/provenance.ts": "b47413d56ba0a7a8c073b47c2950b4107c997cf74c73800818a6f70d295d2183",
+    "src/worker.ts": "a0e5a665b1b24df0850396b8ec68886c079a6f9b3121b7682ec35cba6fc2f967",
+    "migrations/001_core.sql": "fbf42ca547be888d74f15ae4bb8f1af29b76646999d655e17f04773861afa946",
+    "migrations/002_artifacts.sql": "146b1596553581750f89f7d0b0cc92f32d1d61674f352f8f32f115df3c5dad6f",
+    "migrations/003_actions.sql": "a4f9b60d17b76ff767e4809b6b161219c861d1b1eeb5c10502d7c802aced5e83",
+    "migrations/004_privacy.sql": "468837e7e07540d0996c8fb2eb28e0db12202c18352ed7ee393b7b13c9dbec68",
+    "migrations/005_task_states.sql": "9bbdaaaacc78a456836c878ebe1f6f80fb46ea6effca0ea50c250f824fdb4329",
+    "migrations/006_messages.sql": "28c419ca2f5a59f41c5a09881d415d6c7ce52e142154a372d7d79a95b6684bd6",
+    "migrations/007_provenance.sql": "c0ff58d802092b4600e9b6e59a1fada509e7bf46636ed39abddeeace5c107ca2",
+    "migrations/008_files.sql": "69978c4e3d988f9912025fbbc1fbfee3a60d9f08746af3b103516a0d0a3fb7f0",
+    "migrations/009_file_cleanup.sql": "f9fd82a6feb3ca0d9f2e3ffc3b9514ce6f9ef08a893008a34dfeb137ec274733",
+    "migrations/010_file_sources.sql": "fb0fe279eab207aaae06863dccd773b5ab8e37679491a76a9bdbfc0850fb5f13",
+    "migrations/011_local_storage_binding.sql": "8b8f0577f81884650c673e42ab0a31071d57486dfb68fbdaf20106892dc47959",
+    "tests/actions.test.ts": "7d28e24b0a68146d49c582cdde6f2f3fb8dfc6e3708cc07b77dd284371be9364",
+    "tests/artifacts.test.ts": "042463c18438d92a08bb47557925b9d2b94eea473b495bcd5d685e7c1bafd988",
+    "tests/auth-revalidation.test.ts": "dae41932d70870159e4bfcb5e5182d7de1da87a8cdd6fea89775fd210f7569d5",
+    "tests/cli.test.ts": "f5f242249536a4d3ca9bd9d33378e809661c71cb27b6e7d0710d359118626408",
+    "tests/context.test.ts": "92cf208954a1eb88d2d5ad1c206618b600e05a8a584da7392e5ff6790270cd49",
+    "tests/files.test.ts": "23cfcde92f479304d8d5c1ab7beac607d7fbb1eb878f5571c5149d8b2c642339",
+    "tests/foundation.test.ts": "c6cfd0ce8f9815036cca0aa68eb06540c85cdc4f4fcd63d93ee7a4c979764ae9",
+    "tests/helpers.ts": "c10b613416dfe62bcd043bb50ada27bb9f1ebd4e21b27aff127ce36319945eb0",
+    "tests/idempotency-files.test.ts": "01b4029223078ef566433b9abb2a34457dd9b234eb090c1c87e667a61b348b76",
+    "tests/lifecycle.test.ts": "e351751a0f7fea16869ec6b9e258e7e55489f5f559473c76b4d1a7c78c2f532a",
+    "tests/privacy.test.ts": "bf3b23fcd6885653b84d742fe38b3401f8518a63aa287b71b93c490cb3f67262",
+    "tests/recovery.test.ts": "6f7c38f566e64edfbe53ff2a7f1649c1532bae344446197cb10c725d8b1612aa",
+    "tests/security.test.ts": "c22e4b7b71610416875b8aca874eee50440db2c12655d5667d1434fae74fcde7"
+  },
+  "git_status": " M docs/API.md\n M docs/DELIVERY.md\n M scripts/server.ts\n M src/app.ts\n M src/privacy.ts\n M tests/cli.test.ts\n?? docs/NEXT-FOUNDATION.md\n?? evidence/context-fix-1/\n?? evidence/context-foundation/\n?? evidence/context-review-1/\n?? migrations/006_messages.sql\n?? migrations/007_provenance.sql\n?? migrations/008_files.sql\n?? migrations/009_file_cleanup.sql\n?? migrations/010_file_sources.sql\n?? migrations/011_local_storage_binding.sql\n?? src/context.ts\n?? src/file-lifecycle.ts\n?? src/files.ts\n?? src/local-files.ts\n?? src/provenance.ts\n?? tests/context.test.ts\n?? tests/files.test.ts\n?? tests/idempotency-files.test.ts\n"
+}

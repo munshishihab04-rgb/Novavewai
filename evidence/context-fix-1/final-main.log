@@ -1,0 +1,60 @@
+
+> nova-community-agent@0.1.0 test
+> tsx --test --test-concurrency=1 tests/*.test.ts
+
+✔ Approval binds exact revision/account/recipient; concurrent consumption yields one durable synthetic effect (1905.532952ms)
+✔ Artifact append-only revisions, concurrent conflict and owner-scoped revision export (1960.528461ms)
+✔ AUTH-RECHECK expiry mutation: reject stale authentication after owner-lock wait (3873.290457ms)
+✔ AUTH-RECHECK expiry replay: reject stale authentication after owner-lock wait (3795.067639ms)
+✔ AUTH-RECHECK expiry export: reject stale authentication after owner-lock wait (3809.610005ms)
+✔ AUTH-RECHECK expiry purge: reject stale authentication after owner-lock wait (3674.186243ms)
+✔ AUTH-RECHECK revoke mutation: reject stale authentication after owner-lock wait (1741.683887ms)
+✔ AUTH-RECHECK revoke replay: reject stale authentication after owner-lock wait (1619.599704ms)
+✔ AUTH-RECHECK revoke export: reject stale authentication after owner-lock wait (1679.460767ms)
+✔ AUTH-RECHECK revoke purge: reject stale authentication after owner-lock wait (1503.870915ms)
+✔ AUTH-RECHECK rebind mutation: reject stale authentication after owner-lock wait (1265.408538ms)
+✔ AUTH-RECHECK rebind replay: reject stale authentication after owner-lock wait (1469.824256ms)
+✔ AUTH-RECHECK rebind export: reject stale authentication after owner-lock wait (1631.64127ms)
+✔ AUTH-RECHECK rebind purge: reject stale authentication after owner-lock wait (1624.003242ms)
+✔ Local bootstrap CLI writes private credential file; real server subprocess restarts and serves persisted tasks (3205.504632ms)
+✔ CONTEXT AUTH: exact token revoked during owner lock blocks message read and append (1796.107321ms)
+✔ PROVENANCE: exact revision, literal snapshot, conversation boundaries and declared scopes (1870.828972ms)
+✔ MESSAGES: immutable owned sequence, replay, pagination and restart (1490.221518ms)
+✔ FILE KEY: a previously populated unbound key is never imported (1629.503945ms)
+✔ FILE AUTH: expiry during real blob write rejects ready commit, recovery cleans pending bytes (2902.068307ms)
+✔ FILE FS BOUNDARY: write failure reserves quota but produces no ready cache, byte quota serializes (1895.513829ms)
+✔ FILE STORE IDENTITY: wrong root and missing key fail closed, no replacement key on existing data (1845.564497ms)
+✔ FILE RECOVERY: real DB failure after blob fsync, pending hidden and startup conservative cleanup (1695.19241ms)
+✔ FILE VALIDATION: paths, MIME, strict UTF-8, oversize, quotas and authenticated corruption failures (1901.720222ms)
+✔ FILE PURGING: filesystem failure keeps durable cleanup, restart completes deletion (1714.011851ms)
+✔ FILE SOURCE: owner-bound immutable UTF-8 snapshot and purge cascade (1709.397251ms)
+✔ FILES PURGE: remove bytes and cascaded context, never resurrect a late reservation (1894.180806ms)
+✔ FILES: real encrypted immutable private bytes, owner download and restart (1694.982906ms)
+✔ HTTP authenticated task persists through application and PostgreSQL restart (1954.482961ms)
+✔ R1 acceptance: pending upload owns shared key, completes once and replays after restart (1980.526775ms)
+✔ R1 all generic routes conflict before DB or file side effects; owners remain independent (1612.598407ms)
+✔ R1 reverse direction: completed generic key rejects upload before reservation or blob write (1494.582063ms)
+✔ R1 DB failure: reservation blocks other routes until recovery, then same request retries once (1853.30698ms)
+✔ R1 FS failure: reservation blocks other routes until recovery, then same request retries once (1853.541347ms)
+✔ R1 cancelled reservation cannot disturb a replacement completed cache; purge releases only its owner (1544.272212ms)
+✔ R1 pending purge releases reservation and leaves another owner same-key cache intact (1661.742411ms)
+✔ R1 cancelled upload retry with identical key and body gets a new reservation, old request cannot finalize it (1620.87404ms)
+✔ R1 recovery of legacy collision preserves the completed same-owner same-key response (1737.048007ms)
+✔ Task lifecycle optimistic locking rejects stale/illegal transitions and resumes persisted checkpoint (2003.802039ms)
+✔ Owner export and purge revoke all sessions and prevent stale worker/direct database resurrection (2176.741979ms)
+✔ Revoked and expired approval cannot authorize queued dispatch (2847.652408ms)
+✔ Ambiguous adapter exception and malformed receipt never retry or expose provider secrets (1696.854286ms)
+✔ Expired lease fences old worker; crash executing marker recovers unknown without repeating effect (1776.888395ms)
+✔ Cancelled task invalidates queued policy before dispatch (1282.79612ms)
+✔ Timeout after synthetic dispatch becomes unknown and a late return cannot overwrite it (1616.121135ms)
+✔ Worker revalidates queued revision, session expiry and intent expiry before any call (4943.757561ms)
+✔ Purge during in-flight synthetic call waits and late completion cannot recreate records (1571.00301ms)
+✔ Closed query and body schemas, redacted parser/DB errors, expired sessions and cross-owner foreign keys (2016.553802ms)
+ℹ tests 48
+ℹ suites 0
+ℹ pass 48
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 100600.566353

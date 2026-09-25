@@ -1,0 +1,127 @@
+✖ R1 acceptance: pending upload owns shared key, completes once and replays after restart (1493.55955ms)
+✖ R1 all generic routes conflict before DB or file side effects; owners remain independent (1749.135863ms)
+✔ R1 reverse direction: completed generic key rejects upload before reservation or blob write (1401.642755ms)
+✖ R1 DB failure: reservation blocks other routes until recovery, then same request retries once (1647.789832ms)
+✖ R1 FS failure: reservation blocks other routes until recovery, then same request retries once (1660.19758ms)
+✔ R1 cancelled reservation cannot disturb a replacement completed cache; purge releases only its owner (1681.603637ms)
+✔ R1 pending purge releases reservation and leaves another owner same-key cache intact (1588.226542ms)
+✔ R1 cancelled upload retry with identical key and body gets a new reservation, old request cannot finalize it (1664.020013ms)
+✔ R1 recovery of legacy collision preserves the completed same-owner same-key response (1710.892433ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 5
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 14983.186649
+
+✖ failing tests:
+
+test at evidence/context-fix-1/baseline/tests/idempotency-files.test.ts:36:1
+✖ R1 acceptance: pending upload owns shared key, completes once and replays after restart (1493.55955ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+      body: {
+  +     id: 'b596b7d6-12de-43fa-a8e1-63b38c2c5d3f',
+  +     title: 'must not persist'
+  -     error: 'idempotency_conflict'
+      },
+  +   status: 201
+  -   status: 409
+    }
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/evidence/context-fix-1/baseline/tests/idempotency-files.test.ts:44:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { status: 201, body: { id: 'b596b7d6-12de-43fa-a8e1-63b38c2c5d3f', title: 'must not persist' } },
+    expected: { status: 409, body: { error: 'idempotency_conflict' } },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at evidence/context-fix-1/baseline/tests/idempotency-files.test.ts:56:1
+✖ R1 all generic routes conflict before DB or file side effects; owners remain independent (1749.135863ms)
+  AssertionError [ERR_ASSERTION]: /conversations
+  + actual - expected
+  
+    {
+      body: {
+  +     id: 'c32da40e-d2be-4fed-aede-e47a51cf5a16',
+  +     title: 'blocked'
+  -     error: 'idempotency_conflict'
+      },
+  +   status: 201
+  -   status: 409
+    }
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/evidence/context-fix-1/baseline/tests/idempotency-files.test.ts:90:50)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: { status: 201, body: { id: 'c32da40e-d2be-4fed-aede-e47a51cf5a16', title: 'blocked' } },
+    expected: { status: 409, body: { error: 'idempotency_conflict' } },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at evidence/context-fix-1/baseline/tests/idempotency-files.test.ts:113:46
+✖ R1 DB failure: reservation blocks other routes until recovery, then same request retries once (1647.789832ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+      body: {
+  +     id: 'b4ad7f4f-1249-4ca4-afc4-0a810fccf533',
+  +     title: 'cannot steal failed reservation'
+  -     error: 'idempotency_conflict'
+      },
+  +   status: 201
+  -   status: 409
+    }
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/evidence/context-fix-1/baseline/tests/idempotency-files.test.ts:122:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { status: 201, body: { id: 'b4ad7f4f-1249-4ca4-afc4-0a810fccf533', title: 'cannot steal failed reservation' } },
+    expected: { status: 409, body: { error: 'idempotency_conflict' } },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at evidence/context-fix-1/baseline/tests/idempotency-files.test.ts:113:46
+✖ R1 FS failure: reservation blocks other routes until recovery, then same request retries once (1660.19758ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+      body: {
+  +     id: '9f8b7958-9223-4153-bc39-01639c006119',
+  +     title: 'cannot steal failed reservation'
+  -     error: 'idempotency_conflict'
+      },
+  +   status: 201
+  -   status: 409
+    }
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/evidence/context-fix-1/baseline/tests/idempotency-files.test.ts:122:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { status: 201, body: { id: '9f8b7958-9223-4153-bc39-01639c006119', title: 'cannot steal failed reservation' } },
+    expected: { status: 409, body: { error: 'idempotency_conflict' } },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

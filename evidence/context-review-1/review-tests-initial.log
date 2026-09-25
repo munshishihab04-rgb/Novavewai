@@ -1,0 +1,51 @@
+{"caseId":"R1","observed":{"conflicting":{"status":201,"body":{"id":"7a356c6b-2211-4d7a-82b3-e63afcc64944","title":"same key other route"}},"upload":{"status":500,"body":{"error":"internal_error"}},"persisted":[{"state":"pending","request_key":"387281c7-b504-4426-9188-0697c2e3dda6"}],"cache":[{"response":{"id":"7a356c6b-2211-4d7a-82b3-e63afcc64944","title":"same key other route"},"status":201}],"readyEvents":0,"retry":{"status":409,"body":{"error":"idempotency_conflict"}},"blobCount":1}}
+{"caseId":"R1-after-restart","observed":{"files":0,"names":[".key"],"retry":{"status":409,"body":{"error":"idempotency_conflict"}}}}
+✔ R1 reproduction: pending file key is consumed by another endpoint (1600.996994ms)
+{"caseId":"R2","observed":{"before":[{"id":"e83b9e54-703e-43f9-a33f-824e9a07337e","state":"pending"}],"secondStartup":"listening","result":{"status":409,"body":{"error":"upload_cancelled"}},"after":[],"names":[".key"]}}
+✔ R2 observation: same-host startup cancels active reservation gap (1520.176155ms)
+{"caseId":"startup-active-put","observed":{"status":201,"waitingObserved":true,"files":[{"state":"ready"}],"cleanup":0}}
+✔ CONTROL: startup waits for owner-locked active put and preserves ready file (1578.989823ms)
+✖ CONTROL: exact-session revocation after filesystem read blocks download and source commit (1474.754205ms)
+{"caseId":"pending-aad-purge","observed":{"replay":{"status":409,"body":{"error":"upload_pending"}},"conflict":{"status":409,"body":{"error":"idempotency_conflict"}},"foreign":{"status":404,"body":{"error":"not_found"}},"swapped":{"status":409,"body":{"error":"file_integrity_failure"}},"purged":{"status":200,"body":{"status":"purged"}},"names":[".key"],"files":0,"cleanup":0}}
+✔ CONTROL: same-key pending retry, foreign-owner scoping, AAD substitution and purge (1734.345665ms)
+{"caseId":"context-controls","observed":{"forged":{"status":400,"body":{"error":"invalid_request"}},"forgedTrust":{"status":400,"body":{"error":"invalid_request"}},"forgedStatus":{"status":400,"body":{"error":"invalid_request"}},"crossed":{"status":404,"body":{"error":"not_found"}},"storedEvidence":[{"revision":1,"status":"unverified","verification_method":"literal_excerpt"}],"storedSource":[{"trust":"user_supplied"}]}}
+✔ CONTROL: forged provenance, immutable DB checks and exact revision/conversation scopes (1690.941153ms)
+{"caseId":"key-binding","observed":{"symlinkStartup":"rejected","replacedKeyStartup":"rejected","bindings":1}}
+✔ CONTROL: root symlink and replaced persisted key fail startup closed (1665.928389ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 6
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 11604.844919
+
+✖ failing tests:
+
+test at evidence/context-review-1/review.test.ts:80:1
+✖ CONTROL: exact-session revocation after filesystem read blocks download and source commit (1474.754205ms)
+  error: owner immutable
+      at /home/azureuser/nova-community-agent/node_modules/pg-pool/index.js:45:11
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/home/azureuser/nova-community-agent/evidence/context-review-1/review.test.ts:86:7)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    length: 133,
+    severity: 'ERROR',
+    code: 'P0001',
+    detail: undefined,
+    hint: undefined,
+    position: undefined,
+    internalPosition: undefined,
+    internalQuery: undefined,
+    where: 'PL/pgSQL function active_owner_write() line 5 at RAISE',
+    schema: undefined,
+    table: undefined,
+    column: undefined,
+    dataType: undefined,
+    constraint: undefined,
+    file: 'pl_exec.c',
+    line: '3911',
+    routine: 'exec_stmt_raise'
+  }

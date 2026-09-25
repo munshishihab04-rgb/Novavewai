@@ -1,0 +1,51 @@
+
+> nova-community-agent@0.1.0 test
+> tsx --test --test-concurrency=1 tests/*.test.ts
+
+✔ Approval binds exact revision/account/recipient; concurrent consumption yields one durable synthetic effect (1886.725352ms)
+✔ Artifact append-only revisions, concurrent conflict and owner-scoped revision export (1905.900906ms)
+✔ AUTH-RECHECK expiry mutation: reject stale authentication after owner-lock wait (3903.758575ms)
+✔ AUTH-RECHECK expiry replay: reject stale authentication after owner-lock wait (3668.094355ms)
+✔ AUTH-RECHECK expiry export: reject stale authentication after owner-lock wait (3649.965721ms)
+✔ AUTH-RECHECK expiry purge: reject stale authentication after owner-lock wait (3753.072681ms)
+✔ AUTH-RECHECK revoke mutation: reject stale authentication after owner-lock wait (1248.949316ms)
+✔ AUTH-RECHECK revoke replay: reject stale authentication after owner-lock wait (1218.758451ms)
+✔ AUTH-RECHECK revoke export: reject stale authentication after owner-lock wait (1623.443617ms)
+✔ AUTH-RECHECK revoke purge: reject stale authentication after owner-lock wait (1682.29222ms)
+✔ AUTH-RECHECK rebind mutation: reject stale authentication after owner-lock wait (1623.847516ms)
+✔ AUTH-RECHECK rebind replay: reject stale authentication after owner-lock wait (1676.004424ms)
+✔ AUTH-RECHECK rebind export: reject stale authentication after owner-lock wait (1669.473413ms)
+✔ AUTH-RECHECK rebind purge: reject stale authentication after owner-lock wait (1638.603802ms)
+✔ Local bootstrap CLI writes private credential file; real server subprocess restarts and serves persisted tasks (3225.116246ms)
+✔ CONTEXT AUTH: exact token revoked during owner lock blocks message read and append (1780.160028ms)
+✔ PROVENANCE: exact revision, literal snapshot, conversation boundaries and declared scopes (1842.849515ms)
+✔ MESSAGES: immutable owned sequence, replay, pagination and restart (1707.325871ms)
+✔ FILE KEY: a previously populated unbound key is never imported (1832.763852ms)
+✔ FILE AUTH: expiry during real blob write rejects ready commit, recovery cleans pending bytes (2866.39262ms)
+✔ FILE FS BOUNDARY: write failure reserves quota but produces no ready cache, byte quota serializes (1924.314373ms)
+✔ FILE STORE IDENTITY: wrong root and missing key fail closed, no replacement key on existing data (1845.92566ms)
+✔ FILE RECOVERY: real DB failure after blob fsync, pending hidden and startup conservative cleanup (1789.779371ms)
+✔ FILE VALIDATION: paths, MIME, strict UTF-8, oversize, quotas and authenticated corruption failures (1928.816429ms)
+✔ FILE PURGING: filesystem failure keeps durable cleanup, restart completes deletion (1807.443186ms)
+✔ FILE SOURCE: owner-bound immutable UTF-8 snapshot and purge cascade (1644.91622ms)
+✔ FILES PURGE: remove bytes and cascaded context, never resurrect a late reservation (1822.429722ms)
+✔ FILES: real encrypted immutable private bytes, owner download and restart (1651.321158ms)
+✔ HTTP authenticated task persists through application and PostgreSQL restart (2088.118764ms)
+✔ Task lifecycle optimistic locking rejects stale/illegal transitions and resumes persisted checkpoint (2117.367206ms)
+✔ Owner export and purge revoke all sessions and prevent stale worker/direct database resurrection (2268.473332ms)
+✔ Revoked and expired approval cannot authorize queued dispatch (2934.791003ms)
+✔ Ambiguous adapter exception and malformed receipt never retry or expose provider secrets (1664.166215ms)
+✔ Expired lease fences old worker; crash executing marker recovers unknown without repeating effect (1828.029992ms)
+✔ Cancelled task invalidates queued policy before dispatch (1635.325512ms)
+✔ Timeout after synthetic dispatch becomes unknown and a late return cannot overwrite it (1490.3155ms)
+✔ Worker revalidates queued revision, session expiry and intent expiry before any call (4641.853805ms)
+✔ Purge during in-flight synthetic call waits and late completion cannot recreate records (1657.13782ms)
+✔ Closed query and body schemas, redacted parser/DB errors, expired sessions and cross-owner foreign keys (2008.94052ms)
+ℹ tests 39
+ℹ suites 0
+ℹ pass 39
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 85509.691384

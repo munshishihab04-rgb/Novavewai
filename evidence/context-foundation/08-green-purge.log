@@ -1,0 +1,10 @@
+✔ FILES PURGE: remove bytes and cascaded context, never resurrect a late reservation (1777.852299ms)
+✔ FILES: real encrypted immutable private bytes, owner download and restart (1790.682179ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3927.417651

@@ -1,0 +1,34 @@
+--- evidence/context-review-1/review.test.ts
++++ evidence/context-review-2/corrected-review.test.ts
+@@ -28,7 +28,7 @@
+   };
+ }
+ 
+-test('R1 reproduction: pending file key is consumed by another endpoint', async () => {
++test('R1 corrected acceptance: pending upload protects shared key and replays after restart', async () => {
+   const entered = gate(), release = gate();
+   const f = await fixture({ fileHooks: { afterReservation: async () => { entered.release(); await release.wait; } } });
+   let pending: Promise<any> | undefined;
+@@ -41,9 +41,20 @@
+     const readyEvents = (await f.db.pool.query("SELECT count(*)::int n FROM outbox WHERE kind='file.ready'")).rows[0].n;
+     const retry = await f.post('/files', body, key);
+     record('R1', { conflicting, upload, persisted, cache, readyEvents, retry, blobCount: (await readdir(f.root)).filter(x => x !== '.key').length });
+-    assert.equal(conflicting.status, 201); assert.equal(upload.status, 500); assert.equal(persisted[0].state, 'pending'); assert.equal(readyEvents, 0); assert.equal(retry.status, 409);
++    assert.deepEqual(conflicting, { status: 409, body: { error: 'idempotency_conflict' } });
++    assert.equal(upload.status, 201); assert.equal(upload.body.state, 'ready');
++    assert.deepEqual(persisted, [{ state: 'ready', request_key: key }]);
++    assert.equal(readyEvents, 1); assert.deepEqual(retry, upload);
++    assert.deepEqual(cache, [{ response: upload.body, status: 201 }]);
++    assert.equal((await f.db.pool.query('SELECT count(*)::int n FROM conversations WHERE owner_id=$1', [f.a.userId])).rows[0].n, 1);
++    assert.deepEqual((await readdir(f.root)).sort(), ['.key', upload.body.id].sort());
++    const download = await fetch(f.base + `/files/${upload.body.id}/content`, { headers: { authorization: `Bearer ${f.a.token}` } });
++    assert.equal(download.status, 200); assert.equal(await download.text(), 'review private বাংলা');
+     await f.restart();
+-    record('R1-after-restart', { files: (await f.db.pool.query('SELECT count(*)::int n FROM files')).rows[0].n, names: await readdir(f.root), retry: await f.post('/files', body, key) });
++    const afterRestart = { files: (await f.db.pool.query('SELECT count(*)::int n FROM files')).rows[0].n, names: (await readdir(f.root)).sort(), retry: await f.post('/files', body, key) };
++    record('R1-after-restart', afterRestart);
++    assert.deepEqual(afterRestart, { files: 1, names: ['.key', upload.body.id].sort(), retry: upload });
++    assert.equal((await f.db.pool.query("SELECT count(*)::int n FROM outbox WHERE kind='file.ready'")).rows[0].n, 1);
+   } finally { release.release(); await pending?.catch(() => {}); await f.close(); }
+ });
+ 

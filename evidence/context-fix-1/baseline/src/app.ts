@@ -57,16 +57,6 @@ export async function authenticatedOwner(c: PoolClient, r: FastifyRequest) {
   if (!(await c.query('SELECT 1 FROM sessions WHERE owner_id=$1 AND token_hash=$2 AND expires_at>clock_timestamp()', [owner, hash(r.headers.authorization!.slice(7))])).rowCount) fail(401, 'unauthorized');
   return owner;
 }
-// Call only after authenticatedOwner: the owner lock serializes BOTH durable
-// namespaces. files.request_key is the upload reservation; idempotency contains
-// completed responses only. Recovery releases reservations by deleting pending
-// files, never by deleting a possibly unrelated completed response.
-export async function idempotentResult(c: PoolClient, owner: string, key: string, fingerprint: string) {
-  const old = (await c.query('SELECT fingerprint,response,status FROM idempotency WHERE owner_id=$1 AND key=$2', [owner, key])).rows[0];
-  if (old) { if (old.fingerprint !== fingerprint) fail(409, 'idempotency_conflict'); return old; }
-  const pending = (await c.query('SELECT fingerprint FROM files WHERE owner_id=$1 AND request_key=$2', [owner, key])).rows[0];
-  if (pending) fail(409, pending.fingerprint === fingerprint ? 'upload_pending' : 'idempotency_conflict');
-}
 export function buildApp(pool: Pool, options: FileOptions = {}) {
   const app = Fastify({ logger: false, bodyLimit: 65536, ajv: { customOptions: { removeAdditional: false, coerceTypes: false } } });
   app.decorateRequest('owner', '');
@@ -85,12 +75,12 @@ export function buildApp(pool: Pool, options: FileOptions = {}) {
   app.setNotFoundHandler((_r, reply) => reply.status(404).send({ error: 'not_found' }));
   const mutate = (run: (c: PoolClient, owner: string, body: any, r: FastifyRequest) => Promise<any>, status = 201) => async (r: FastifyRequest, reply: any) => {
     const key = r.headers['idempotency-key'];
-    if (typeof key !== 'string' || !/^[A-Za-z0-9_-]{1,100}$/.test(key)) return fail(400, 'idempotency_key_required');
+    if (typeof key !== 'string' || !/^[A-Za-z0-9_-]{1,100}$/.test(key)) fail(400, 'idempotency_key_required');
     const owner = identity(r), fingerprint = hash(canonical({ method: r.method, url: r.url, body: r.body ?? null }));
     const result = await transaction(pool, async c => {
       await authenticatedOwner(c, r);
-      const old = await idempotentResult(c, owner, key, fingerprint);
-      if (old) return { status: old.status, body: old.response };
+      const old = (await c.query('SELECT * FROM idempotency WHERE owner_id=$1 AND key=$2', [owner, key])).rows[0];
+      if (old) { if (old.fingerprint !== fingerprint) fail(409, 'idempotency_conflict'); return { status: old.status, body: old.response }; }
       const body = await run(c, owner, r.body, r);
       await c.query('INSERT INTO idempotency(owner_id,key,fingerprint,response,status) VALUES($1,$2,$3,$4,$5)', [owner, key, fingerprint, body, status]);
       return { status, body };
