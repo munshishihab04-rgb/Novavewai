@@ -1,0 +1,50 @@
+{
+  "passed": false,
+  "security_concerns": [
+    {
+      "id": "R1-AUTH-EXPIRY",
+      "severity": "medium",
+      "blocking": true,
+      "title": "POST session revalidation uses transaction-start time after waiting for the owner lock",
+      "locations": ["src/app.ts:69-75", "src/app.ts:38-40"],
+      "contract": ["docs/API.md:42", "docs/API.md:88-90"],
+      "cause": "mutate starts a transaction, waits in active(), then compares session expiry to now(). PostgreSQL now() is fixed at transaction start, not the time the owner lock is acquired. A session that expired while blocked still passes the purported recheck and authorizes a new durable mutation.",
+      "reproduction": "cd /home/azureuser/nova-community-agent && node --import tsx --test --test-concurrency=1 --test-name-pattern='AUTH-EXPIRY mutation' evidence/review-1/adversarial.test.ts",
+      "setup": "Real private PostgreSQL harness. Shorten the fixture session to two seconds, hold its owner row in a separate transaction, send an authenticated POST, observe that request waiting in pg_stat_activity, wait until SQL confirms expiry, and release the lock. The explicit lock reproduces the same serialization point used by the bounded in-flight worker.",
+      "expected": "401 unauthorized, no new conversation.",
+      "observed": "201; one conversation with the requested title exists after expiry. Request initially arrived while the session was valid; this is a lock-wait/revalidation issue, not acceptance of an already-expired session at HTTP ingress.",
+      "evidence": ["evidence/review-1/adversarial-final.log:1-2", "evidence/review-1/adversarial-final.log:28-43"],
+      "recommendation": "Use a wall-clock expiry check, bound to the authenticated owner and token, after acquiring the owner lock and before replaying cached responses or invoking the mutation. Add the lock-wait regression test. No implementation changes were made."
+    },
+    {
+      "id": "R1-PRIVACY-REAUTH",
+      "severity": "high",
+      "blocking": true,
+      "title": "Privacy export and destructive purge do not revalidate the session after acquiring the owner lock",
+      "locations": ["src/privacy.ts:6-8", "src/privacy.ts:24-29", "src/app.ts:53-58"],
+      "contract": ["docs/API.md:42", "docs/API.md:96-99"],
+      "cause": "The privacy routes bypass mutate and trust only the owner identity established by onRequest. active() checks the user status, not the session. An HTTP request blocked on the owner row subsequently exports all owner content or purges the owner even when its session has expired or its deletion/revocation committed before the protected operation began.",
+      "reproduction": "cd /home/azureuser/nova-community-agent && node --import tsx --test --test-concurrency=1 --test-name-pattern='AUTH-(EXPIRY|REVOKE) (export|purge)' evidence/review-1/adversarial.test.ts",
+      "setup": "For expiry: same verified owner-lock wait as R1-AUTH-EXPIRY. For revocation: hold the owner lock, allow the request to authenticate and block, delete that owner's session within the lock-holding transaction, commit, and inspect the HTTP response plus persisted user state. Revocation here is a local operator session deletion in the private harness; there is no claimed public session-revocation endpoint. The expiry variants require no revocation feature.",
+      "expected": "401 unauthorized without exporting content or purging the owner.",
+      "observed": "Both expiry and revocation variants return 200. Export includes the fixture task; DELETE leaves the user purged. The POST control under identical session-deletion ordering correctly returns 401, isolating the missing privacy-route recheck.",
+      "evidence": ["evidence/review-1/adversarial-final.log:3-12", "evidence/review-1/adversarial-final.log:46-115"],
+      "recommendation": "Apply shared owner-and-session revalidation using clock_timestamp() inside both privacy transactions after the owner lock. Preserve the existing purge tombstone and cascade protections. No implementation changes were made."
+    }
+  ],
+  "logic_errors": [],
+  "suggestions": [
+    {
+      "id": "R1-WORKER-BATCH-CLARITY",
+      "locations": ["src/worker.ts:12-21", "src/worker.ts:82-84", "docs/API.md:23"],
+      "blocking": false,
+      "description": "Clarify that a successful bounded worker batch is not proof the entire queue is empty: SKIP LOCKED can return null when candidates are busy, and LIMIT 32 before locking can hide unlocked work behind one busy owner. Consider an explicit deferred/busy outcome or a later wake-up mechanism when evolving beyond manual local batches. This is not reported as a production-readiness blocker."
+    },
+    {
+      "id": "R1-TEST-COVERAGE",
+      "blocking": false,
+      "description": "Retain adversarial tests for auth lock-wait expiry/revocation and actual post-I/O PostgreSQL connection termination. The existing recovery test sets the executing marker directly; the independent test exercised a real terminated connection and confirmed conservative recovery without a second adapter call."
+    }
+  ],
+  "summary": "FAIL-CLOSED: reviewed the entire staged src/scripts/migrations/tests/package.json diff and API contract. Two reproduced authentication revalidation defects block approval. Independent baseline: 14/14 tests and typecheck pass. Added 10 PostgreSQL-backed adversarial tests: five pass, five fail across those two defects. Passing controls cover cross-owner authorization/idempotency, revocation/cancel/revision during in-flight work, actual connection-loss recovery without resend, and timeout/purge late-completion non-resurrection. No implementation edits, commits, real sends, cloud access, or access to prior products."
+}

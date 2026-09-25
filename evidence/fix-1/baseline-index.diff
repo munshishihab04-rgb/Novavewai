@@ -1,0 +1,4151 @@
+diff --git a/.gitignore b/.gitignore
+new file mode 100644
+index 0000000..16fdbb2
+--- /dev/null
++++ b/.gitignore
+@@ -0,0 +1,7 @@
++node_modules/
++.runtime/
++.env
++.env.*
++!.env.example
++coverage/
++dist/
+diff --git a/docs/API.md b/docs/API.md
+new file mode 100644
+index 0000000..f068c4c
+--- /dev/null
++++ b/docs/API.md
+@@ -0,0 +1,103 @@
++# NOVA Community Agent — J0 local foundation API
++
++This is an executable **foundation slice, not an MVP or a public service**. There is no UI, LLM, voice, real email, browser automation, object storage, PDF renderer or provider integration. Generic artifacts currently use a closed `{text, language}` schema (`it|bn|en`). Source/Evidence entities are not yet implemented; this slice does not claim the entirety of architecture J0 is complete.
++
++## Run and verify
++
++From `/home/azureuser/nova-community-agent`:
++
++```sh
++npm test
++npm run typecheck
++npm audit
++```
++
++Tests provision real embedded PostgreSQL 17 clusters with random in-memory passwords, SCRAM authentication, `127.0.0.1` binding and private temporary directories. They start real HTTP sockets and subprocesses, restart PostgreSQL and API processes, and stop/remove their own resources in `finally`. No global database service, sudo or cloud account is used. Dependencies (including `tsx`) must be installed with development dependencies for this local foundation.
++
++For operator use against an **independent, already-running local PostgreSQL database**, set `PGHOST=127.0.0.1`, `PGPORT`, `PGUSER`, `PGPASSWORD`, `PGDATABASE` securely in the process environment. Do not put credentials in chat, command history, committed files or evidence. Scripts reject non-loopback database configuration.
++
++```sh
++# Parent directory must already exist and be private; output file must not exist.
++npm run bootstrap -- /private/path/session.json
++PORT=3000 npm start
++# Separate foreground terminal; bounded batch, exits when queue is empty.
++npm run worker
++```
++
++Bootstrap runs migrations, creates a fresh opaque user and a random 256-bit bearer session with 24h expiry, and writes credentials using exclusive create and mode `0600`. It never prints credentials. Bootstrap is a **local database-operator privilege**, not a web signup mechanism. There is no public identity/session issuing endpoint, account recovery, session renewal or password flow. Protect and delete the credential file as appropriate. Startup migrations are transactional, serialized and tracked; SQL files must remain immutable after deployment. API binds only `127.0.0.1`. `SIGINT`/`SIGTERM` closes its HTTP listener and pool.
++
++## Common contract
++
++All routes, including unknown routes, authenticate `Authorization: Bearer <opaque-session>` in `onRequest`, before parsing/validation or resource access. Only SHA-256 session hashes are stored. Ownership comes exclusively from the authenticated session; client/model `owner` fields are rejected. Cross-owner references return the same `404` as missing records.
++
++POST routes require `Idempotency-Key: <1..100 ASCII letters/digits/_/->`. Keys are scoped to the owner, fingerprint method + exact URL + canonical JSON body and cache the safe response in the mutation transaction. Identical replays return the original status/body; different input yields `409 idempotency_conflict`. Keys are currently retained until purge, without automatic TTL. Use fresh keys for new operations. DELETE purge does not require a key and revokes the caller's session, so a retry returns `401`.
++
++Bodies, path parameters and queries are closed schemas. Unknown fields/queries are rejected; maximum request body is 64 KiB. UUID IDs; no implicit type coercion. All response objects are explicit projections (never `SELECT *` returned to clients). Errors expose only `{ "error": "stable_code" }`; no SQL, stack, raw parser input, provider exception, token hash or session hash. HTTP logging is disabled. No CORS or cookie auth is configured.
++
++| Status | Meaning |
++|---|---|
++| 200 | Read/export/purge |
++| 201 | Accepted durable mutation (including queued execution) |
++| 400 | Invalid schema or missing/malformed idempotency key |
++| 401 | Missing, expired, revoked or purged session |
++| 404 | Resource absent or not owned |
++| 409 | Optimistic-lock, idempotency, intent/approval or transition conflict |
++| 413 | Body too large |
++| 500 | Redacted internal failure; transaction rolled back |
++
++## Conversations and tasks
++
++- `POST /conversations` — `{ "title": "..." }`; returns `{id,title}`.
++- `POST /tasks` — `{ "conversationId": "uuid", "goal": "..." }`; returns `{id,conversationId,goal,status,version}`.
++- `GET /tasks/:id` — persisted state, same safe fields.
++- `POST /tasks/:id/transition` — `{ "baseVersion": 1, "status": "active" }`; returns `{id,status,version}`.
++
++Title/goal maximum 300 characters. Allowed transitions: `created → active|cancelled`, `active → paused|completed|cancelled`, `paused → active|cancelled`. Terminal tasks cannot resume. This is checkpoint/lifecycle storage, not an autonomous task planner. Mutation and event/outbox insertion commit together.
++
++## Canonical artifacts
++
++- `POST /artifacts` — `{ "taskId":"uuid", "title":"Draft", "content":{"text":"...","language":"it"} }`.
++- `POST /artifacts/:id/revisions` — `{ "baseRevision":1, "content":{"text":"Updated","language":"it"} }`.
++- `GET /artifacts/:id/revisions/:revision` — `{id,revision,content,hash}`.
++- `GET /artifacts/:id/revisions/:revision/export` — same fields plus `renderer: "canonical-json-v1"`.
++
++Artifact content max 20,000 characters. SHA-256 is over canonical JSON **content**, not HTTP response bytes. Revision numbers increase monotonically. Writes reject stale bases with `409 revision_conflict`; DB triggers reject revision UPDATE/DELETE except owner purge. Historic revisions remain readable and exportable even when superseded. Export is JSON derived from that exact immutable revision; **not PDF or a binary object store**.
++
++## Policy, intent, approval and receipts
++
++1. `POST /intents`
++   ```json
++   {
++     "artifactId":"uuid",
++     "revision":1,
++     "operation":"simulate.send",
++     "account":"synthetic-account",
++     "recipient":"fixture@example.invalid",
++     "expiresInSeconds":300
++   }
++   ```
++   Only synthetic operation/account and `@example.invalid` recipients are accepted; expiry 1..900 seconds. Payload is loaded server-side from the owned revision, never supplied by the caller. Response includes id, operation, account, recipient, artifactId, revision, payload, expiresAt, bindingHash, consequence and `policy: require_approval`. Hash freezes those fields **plus owner and intent ID**. Intent rows are immutable.
++2. `POST /intents/:id/approve` — `{ "bindingHash":"64 lowercase hex" }`; returns approval `{id,intentId,status,bindingHash}`. Authenticated owner must explicitly acknowledge the displayed binding. Only one approval exists per intent; revocation requires a new intent, not reapproval.
++3. `POST /intents/:id/execute` — `{ "approvalId":"uuid", "bindingHash":"..." }`. Revalidates revision/hash/expiry, atomically consumes one approval, writes one queued receipt and outbox entry. Response `{id,intentId,status:"queued"}` is **not a successful send**. Receipt and approval unique constraints prevent repeated consumption.
++4. `npm run worker` dispatches the queue through the explicitly synthetic adapter. There is no network send implementation. Before I/O it revalidates owner, session expiry, approval state/binding/expiry, current revision and task status (`created|active`). Invalid queued work is cancelled.
++5. `GET /receipts/:id` — `{id,intentId,status,reference}`. Status is `queued|executing|succeeded|outcome_unknown|cancelled`. A `synthetic-*` reference denotes simulation, not an external receipt.
++6. `POST /approvals/:id/revoke` — `{}`; revokes authorization for future dispatch. It cannot undo an effect already in flight/completed.
++
++### Durable worker semantics
++
++Claims use short DB transactions, owner `FOR UPDATE SKIP LOCKED`, unique random lease token, DB-time lease expiry and conditional update. A stale token cannot process a reclaimed lease. All application mutations serialize on owner row first (conservative per-owner throughput).
++
++The worker commits `executing` **before I/O**. Then it takes the owner lock, rechecks policy/fence, performs bounded synthetic I/O, persists the redacted outcome and completes outbox atomically. While in flight, purge/revision/revocation/claim serialize behind that owner lock. Purge cannot undo already-started work; after purge commits no owned data/capability can be recreated. A claim recovered with an existing `executing` marker becomes `outcome_unknown`, never retried automatically. Even a crash before I/O can conservatively become unknown.
++
++Timeout, thrown adapter error or malformed result becomes `outcome_unknown`; late resolution cannot overwrite it. Default call timeout 5s and lease 30s. AbortSignal is advisory: JavaScript cannot guarantee cancellation of an uncooperative future provider. This is a reason **not** to add real connectors without an independent design/review and remote idempotency/reconciliation. Unknown outcomes have no reconciliation API yet. Non-action outbox events are acknowledged by the local worker but not pushed to clients.
++
++## Privacy
++
++- `GET /me/export` — owner-locked consistent snapshot containing conversations, tasks, artifacts, revisions, intents, approvals, receipts, outbox events and audit. Excludes session secrets/hashes, execution session bindings and idempotency caches. Currently in-memory/unpaginated: local foundation only.
++- `DELETE /me` — `{ "confirm":"purge" }`. Marks immutable user tombstone and removes sessions, cached responses, events, audit and all cascaded product data in one transaction. Returns `{status:"purged"}`. Subsequent calls receive `401`.
++
++The retained tombstone contains only opaque ID, status, creation/purge timestamps. DB triggers reject writes for inactive owners, owner reassignment and tombstone deletion/reactivation. Database administrator/superuser bypass remains outside the application threat boundary. Purge here covers this database only; no claim is made about external storage or backups, which are not implemented.
++
++## Explicit release limits
++
++Independent security/concurrency review is required before advancing release gates. No public exposure: rate limiting, quotas, TLS, telemetry redaction pipeline, least-privilege DB runtime role/RLS, retention scheduling, backup/restore deletion replay, migration checksum verification, session rotation/recovery and export pagination are not production-ready. No Evidence/source model, object store or user-facing product flow is included. See `evidence/foundation/report.md` for actual test evidence and residual risks.
+diff --git a/docs/DELIVERY.md b/docs/DELIVERY.md
+new file mode 100644
+index 0000000..c9f6d16
+--- /dev/null
++++ b/docs/DELIVERY.md
+@@ -0,0 +1,60 @@
++# NOVA Community Agent — delivery ledger
++
++## Authority and boundary
++
++The user approved the A–K architecture and autonomous implementation. Request intervention only for genuinely missing access, new consequential costs or blocking scope decisions. No repetitive approval per engineering phase.
++
++Canonical planning material: `/home/azureuser/nova-community-agent-spec-v2/`.
++
++This repository is a NEW product. Do not inspect, import, migrate or deploy the old NOVA, Nexus or LicenzPol. No inherited secrets, users, datasets, production service units, design approvals or verification claims.
++
++## Runtime decision ADR-001
++
++Use TypeScript, Fastify and the PostgreSQL wire protocol (`pg`). During local development, a pinned embedded-postgres package starts a genuine PostgreSQL process bound to loopback, under this user's permissions, with an isolated data directory and random credentials. It is NOT an in-memory replacement for PostgreSQL, nor a recommendation to deploy an embedded dev cluster to production.
++
++System discovery found Node 26.8.2 and npm 11.19.1, but no Docker or PostgreSQL installation. Therefore no global package/service changes are needed for the first tests. Production runtime and database deployment remain a separate gate. Test on an explicitly chosen supported deployment runtime before release; current local tests alone establish only local runtime behavior.
++
++Dependencies must remain pinned in package-lock.json. `npm audit` is a dependency check, not a proof of supply-chain safety. Initial package intelligence lookup timed out for some sources; preserve this limitation rather than reporting complete supply-chain vetting.
++
++## Current work boundary
++
++J0 first vertical: authenticated HTTP operation → durable Task → canonical Artifact revision → revision-bound read/export → process/database restart and resume → side-effect policy/receipts → owner isolation and purge.
++
++External effects in foundation tests are SYNTHETIC ADAPTERS. There is no authorized live email/candidature/booking send. A JSON revision export is not a PDF renderer. Developer-provisioned opaque sessions are not completed consumer onboarding/authentication.
++
++## Foundation completion requirements
++
++- Test-first RED/GREEN evidence for new behavior.
++- Actual PostgreSQL transactions, constraints and concurrent requests.
++- Actual HTTP listener smoke, not Fastify inject alone.
++- Sessions hashed at rest; no raw token/secret in tracked evidence.
++- Closed request schemas and owner-scoped access.
++- Revision conflicts reject rather than silently overwrite.
++- Approval bound to exact account/recipient/payload/revision and expiry.
++- Idempotency and replay protection persisted before side effect.
++- Ambiguous outcomes remain unknown until reconciled; no blind resend.
++- Outbox event and mutation committed together; lease fencing for stale workers.
++- Purge revokes sessions and prevents queued writes from recreating owner data.
++- Restart/reopen reads canonical state, not an in-process cache.
++- Independent security review after implementer tests; parent reruns relevant tests.
++
++Passing this subset is NOT completion of full J0: object storage, file lifecycle, retention, user onboarding and production backup gates must be tracked explicitly if not implemented.
++
++## Ordered continuation
++
++1. J0 complete outstanding foundation boundaries, not merely tables.
++2. J1 implement real conversational orchestration with a provider adapter and bounded tools. No canned replies sold as an agent.
++3. J2 canonical Artifact and contextual Studio in a mobile-first shell.
++4. J3 CV end-to-end: natural conversation, correction, preview, template, exact PDF and reopen.
++5. J4 real voice ↔ text continuity, provider and device audio tests.
++6. J5 document/OCR/translation/checklist with extraction coverage and provenance.
++7. J6 permitted multi-source research/jobs, dedup and source evidence.
++8. J7 visible recurring tasks/reminders/notifications and disable/revoke.
++9. J8 application package preparation.
++10. J9 individually verified external connectors with explicit action approval.
++
++Keep the complete master-spec matrix alongside these narrow slices. Do not replace the requested product with an endlessly polished CV database, nor call a broad UI demo the completed agent.
++
++## Reporting
++
++Only verified milestones; distinguish implementation, local controlled tests, real provider tests and public production. No invented percentages, deployment, memory, sources, verification or capability claims.
+diff --git a/docs/acceptance-matrix.json b/docs/acceptance-matrix.json
+new file mode 100644
+index 0000000..fd87a1e
+--- /dev/null
++++ b/docs/acceptance-matrix.json
+@@ -0,0 +1,194 @@
++{
++  "source": "NOVA master v2 section 108",
++  "criteria": [
++    {
++      "id": "AC-01",
++      "requirement": "l'utente può iniziare solo parlando;",
++      "phase": "J4",
++      "status": "not_verified",
++      "evidence": []
++    },
++    {
++      "id": "AC-02",
++      "requirement": "NOVA può capire un obiettivo complesso;",
++      "phase": "J1",
++      "status": "not_verified",
++      "evidence": []
++    },
++    {
++      "id": "AC-03",
++      "requirement": "NOVA può creare un task persistente;",
++      "phase": "J0/J1",
++      "status": "not_verified",
++      "evidence": []
++    },
++    {
++      "id": "AC-04",
++      "requirement": "NOVA può decidere quali tool usare;",
++      "phase": "J1",
++      "status": "not_verified",
++      "evidence": []
++    },
++    {
++      "id": "AC-05",
++      "requirement": "NOVA può fare ricerche multi-step;",
++      "phase": "J6",
++      "status": "not_verified",
++      "evidence": []
++    },
++    {
++      "id": "AC-06",
++      "requirement": "NOVA può usare browser;",
++      "phase": "J6/J9",
++      "status": "not_verified",
++      "evidence": []
++    },
++    {
++      "id": "AC-07",
++      "requirement": "NOVA può leggere documenti;",
++      "phase": "J5",
++      "status": "not_verified",
++      "evidence": []
++    },
++    {
++      "id": "AC-08",
++      "requirement": "NOVA può creare artifact;",
++      "phase": "J2",
++      "status": "not_verified",
++      "evidence": []
++    },
++    {
++      "id": "AC-09",
++      "requirement": "NOVA può mostrare lo Studio senza cambiare prodotto;",
++      "phase": "J2",
++      "status": "not_verified",
++      "evidence": []
++    },
++    {
++      "id": "AC-10",
++      "requirement": "chat e artifact condividono lo stesso dato;",
++      "phase": "J2",
++      "status": "not_verified",
++      "evidence": []
++    },
++    {
++      "id": "AC-11",
++      "requirement": "NOVA può usare italiano/bengalese/inglese;",
++      "phase": "J3/J4",
++      "status": "not_verified",
++      "evidence": []
++    },
++    {
++      "id": "AC-12",
++      "requirement": "NOVA può trovare lavoro da più fonti;",
++      "phase": "J6",
++      "status": "not_verified",
++      "evidence": []
++    },
++    {
++      "id": "AC-13",
++      "requirement": "NOVA deduplica i risultati;",
++      "phase": "J6",
++      "status": "not_verified",
++      "evidence": []
++    },
++    {
++      "id": "AC-14",
++      "requirement": "NOVA mostra le fonti;",
++      "phase": "J5/J6",
++      "status": "not_verified",
++      "evidence": []
++    },
++    {
++      "id": "AC-15",
++      "requirement": "NOVA non inventa informazioni;",
++      "phase": "ALL",
++      "status": "not_verified",
++      "evidence": []
++    },
++    {
++      "id": "AC-16",
++      "requirement": "NOVA chiede conferma prima delle azioni sensibili;",
++      "phase": "J0/J9",
++      "status": "not_verified",
++      "evidence": []
++    },
++    {
++      "id": "AC-17",
++      "requirement": "NOVA può generare CV;",
++      "phase": "J3",
++      "status": "not_verified",
++      "evidence": []
++    },
++    {
++      "id": "AC-18",
++      "requirement": "NOVA può modificare il CV in chat;",
++      "phase": "J3",
++      "status": "not_verified",
++      "evidence": []
++    },
++    {
++      "id": "AC-19",
++      "requirement": "NOVA può modificare il CV in Studio;",
++      "phase": "J3",
++      "status": "not_verified",
++      "evidence": []
++    },
++    {
++      "id": "AC-20",
++      "requirement": "NOVA può esportare PDF;",
++      "phase": "J2/J3",
++      "status": "not_verified",
++      "evidence": []
++    },
++    {
++      "id": "AC-21",
++      "requirement": "NOVA può spiegare documenti;",
++      "phase": "J5",
++      "status": "not_verified",
++      "evidence": []
++    },
++    {
++      "id": "AC-22",
++      "requirement": "NOVA può creare checklist;",
++      "phase": "J5",
++      "status": "not_verified",
++      "evidence": []
++    },
++    {
++      "id": "AC-23",
++      "requirement": "NOVA può impostare reminder;",
++      "phase": "J7",
++      "status": "not_verified",
++      "evidence": []
++    },
++    {
++      "id": "AC-24",
++      "requirement": "NOVA può riprendere task dopo giorni;",
++      "phase": "J1",
++      "status": "not_verified",
++      "evidence": []
++    },
++    {
++      "id": "AC-25",
++      "requirement": "NOVA recupera da errori;",
++      "phase": "ALL",
++      "status": "not_verified",
++      "evidence": []
++    },
++    {
++      "id": "AC-26",
++      "requirement": "NOVA non perde dati confermati;",
++      "phase": "J0/J2",
++      "status": "not_verified",
++      "evidence": []
++    },
++    {
++      "id": "AC-27",
++      "requirement": "NOVA non espone la complessità tecnica all'utente.",
++      "phase": "ALL",
++      "status": "not_verified",
++      "evidence": []
++    }
++  ]
++}
+diff --git a/evidence/foundation/01-red-task.log b/evidence/foundation/01-red-task.log
+new file mode 100644
+index 0000000..1b8182a
+--- /dev/null
++++ b/evidence/foundation/01-red-task.log
+@@ -0,0 +1,30 @@
++
++> nova-community-agent@0.1.0 test
++> tsx --test --test-concurrency=1 tests/*.test.ts
++
++✖ HTTP authenticated task persists through application and PostgreSQL restart (967.171174ms)
++ℹ tests 1
++ℹ suites 0
++ℹ pass 0
++ℹ fail 1
++ℹ cancelled 0
++ℹ skipped 0
++ℹ todo 0
++ℹ duration_ms 1203.445279
++
++✖ failing tests:
++
++test at tests/foundation.test.ts:5:2
++✖ HTTP authenticated task persists through application and PostgreSQL restart (967.171174ms)
++  AssertionError [ERR_ASSERTION]: foundation API must exist
++      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/foundation.test.ts:10:12)
++      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
++      at async Test.run (node:internal/test_runner/test:1409:7)
++      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
++    generatedMessage: false,
++    code: 'ERR_ASSERTION',
++    actual: null,
++    expected: true,
++    operator: '==',
++    diff: 'simple'
++  }
+diff --git a/evidence/foundation/02-green-task.log b/evidence/foundation/02-green-task.log
+new file mode 100644
+index 0000000..fd6457f
+--- /dev/null
++++ b/evidence/foundation/02-green-task.log
+@@ -0,0 +1,13 @@
++
++> nova-community-agent@0.1.0 test
++> tsx --test --test-concurrency=1 tests/*.test.ts
++
++✔ HTTP authenticated task persists through application and PostgreSQL restart (1542.658111ms)
++ℹ tests 1
++ℹ suites 0
++ℹ pass 1
++ℹ fail 0
++ℹ cancelled 0
++ℹ skipped 0
++ℹ todo 0
++ℹ duration_ms 1725.128144
+diff --git a/evidence/foundation/03-red-artifact.log b/evidence/foundation/03-red-artifact.log
+new file mode 100644
+index 0000000..143e03a
+--- /dev/null
++++ b/evidence/foundation/03-red-artifact.log
+@@ -0,0 +1,34 @@
++
++> nova-community-agent@0.1.0 test
++> tsx --test --test-concurrency=1 tests/*.test.ts
++
++✖ Artifact append-only revisions, concurrent conflict and owner-scoped revision export (1268.721896ms)
++✔ HTTP authenticated task persists through application and PostgreSQL restart (1761.661969ms)
++ℹ tests 2
++ℹ suites 0
++ℹ pass 1
++ℹ fail 1
++ℹ cancelled 0
++ℹ skipped 0
++ℹ todo 0
++ℹ duration_ms 3425.925607
++
++✖ failing tests:
++
++test at tests/artifacts.test.ts:6:1
++✖ Artifact append-only revisions, concurrent conflict and owner-scoped revision export (1268.721896ms)
++  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++  
++  404 !== 201
++  
++      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/artifacts.test.ts:16:12)
++      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
++      at async Test.run (node:internal/test_runner/test:1409:7)
++      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
++    generatedMessage: true,
++    code: 'ERR_ASSERTION',
++    actual: 404,
++    expected: 201,
++    operator: 'strictEqual',
++    diff: 'simple'
++  }
+diff --git a/evidence/foundation/04-green-artifact.log b/evidence/foundation/04-green-artifact.log
+new file mode 100644
+index 0000000..79df886
+--- /dev/null
++++ b/evidence/foundation/04-green-artifact.log
+@@ -0,0 +1,14 @@
++
++> nova-community-agent@0.1.0 test
++> tsx --test --test-concurrency=1 tests/*.test.ts
++
++✔ Artifact append-only revisions, concurrent conflict and owner-scoped revision export (1415.616661ms)
++✔ HTTP authenticated task persists through application and PostgreSQL restart (1831.933088ms)
++ℹ tests 2
++ℹ suites 0
++ℹ pass 2
++ℹ fail 0
++ℹ cancelled 0
++ℹ skipped 0
++ℹ todo 0
++ℹ duration_ms 3594.892059
+diff --git a/evidence/foundation/05-red-action.log b/evidence/foundation/05-red-action.log
+new file mode 100644
+index 0000000..e6e4e75
+--- /dev/null
++++ b/evidence/foundation/05-red-action.log
+@@ -0,0 +1,35 @@
++
++> nova-community-agent@0.1.0 test
++> tsx --test --test-concurrency=1 tests/*.test.ts
++
++✖ Approval binds exact revision/account/recipient; concurrent consumption yields one durable synthetic effect (1222.491953ms)
++✔ Artifact append-only revisions, concurrent conflict and owner-scoped revision export (1621.270062ms)
++✔ HTTP authenticated task persists through application and PostgreSQL restart (1715.416689ms)
++ℹ tests 3
++ℹ suites 0
++ℹ pass 2
++ℹ fail 1
++ℹ cancelled 0
++ℹ skipped 0
++ℹ todo 0
++ℹ duration_ms 5126.401755
++
++✖ failing tests:
++
++test at tests/actions.test.ts:6:1
++✖ Approval binds exact revision/account/recipient; concurrent consumption yields one durable synthetic effect (1222.491953ms)
++  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++  
++  404 !== 201
++  
++      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/actions.test.ts:18:12)
++      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
++      at async Test.run (node:internal/test_runner/test:1409:7)
++      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
++    generatedMessage: true,
++    code: 'ERR_ASSERTION',
++    actual: 404,
++    expected: 201,
++    operator: 'strictEqual',
++    diff: 'simple'
++  }
+diff --git a/evidence/foundation/06-green-action.log b/evidence/foundation/06-green-action.log
+new file mode 100644
+index 0000000..6905cf7
+--- /dev/null
++++ b/evidence/foundation/06-green-action.log
+@@ -0,0 +1,15 @@
++
++> nova-community-agent@0.1.0 test
++> tsx --test --test-concurrency=1 tests/*.test.ts
++
++✔ Approval binds exact revision/account/recipient; concurrent consumption yields one durable synthetic effect (1624.956531ms)
++✔ Artifact append-only revisions, concurrent conflict and owner-scoped revision export (1717.168542ms)
++✔ HTTP authenticated task persists through application and PostgreSQL restart (1907.432553ms)
++ℹ tests 3
++ℹ suites 0
++ℹ pass 3
++ℹ fail 0
++ℹ cancelled 0
++ℹ skipped 0
++ℹ todo 0
++ℹ duration_ms 5760.197786
+diff --git a/evidence/foundation/07-red-privacy.log b/evidence/foundation/07-red-privacy.log
+new file mode 100644
+index 0000000..7d1330b
+--- /dev/null
++++ b/evidence/foundation/07-red-privacy.log
+@@ -0,0 +1,36 @@
++
++> nova-community-agent@0.1.0 test
++> tsx --test --test-concurrency=1 tests/*.test.ts
++
++✔ Approval binds exact revision/account/recipient; concurrent consumption yields one durable synthetic effect (1598.348937ms)
++✔ Artifact append-only revisions, concurrent conflict and owner-scoped revision export (1817.22555ms)
++✔ HTTP authenticated task persists through application and PostgreSQL restart (1884.589206ms)
++✖ Owner export and purge revoke all sessions and prevent stale worker/direct database resurrection (1807.941233ms)
++ℹ tests 4
++ℹ suites 0
++ℹ pass 3
++ℹ fail 1
++ℹ cancelled 0
++ℹ skipped 0
++ℹ todo 0
++ℹ duration_ms 7853.148002
++
++✖ failing tests:
++
++test at tests/privacy.test.ts:6:1
++✖ Owner export and purge revoke all sessions and prevent stale worker/direct database resurrection (1807.941233ms)
++  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++  
++  404 !== 200
++  
++      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/privacy.test.ts:20:12)
++      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
++      at async Test.run (node:internal/test_runner/test:1409:7)
++      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
++    generatedMessage: true,
++    code: 'ERR_ASSERTION',
++    actual: 404,
++    expected: 200,
++    operator: 'strictEqual',
++    diff: 'simple'
++  }
+diff --git a/evidence/foundation/08-green-privacy.log b/evidence/foundation/08-green-privacy.log
+new file mode 100644
+index 0000000..82a43a8
+--- /dev/null
++++ b/evidence/foundation/08-green-privacy.log
+@@ -0,0 +1,16 @@
++
++> nova-community-agent@0.1.0 test
++> tsx --test --test-concurrency=1 tests/*.test.ts
++
++✔ Approval binds exact revision/account/recipient; concurrent consumption yields one durable synthetic effect (1783.137158ms)
++✔ Artifact append-only revisions, concurrent conflict and owner-scoped revision export (1847.324425ms)
++✔ HTTP authenticated task persists through application and PostgreSQL restart (1889.214632ms)
++✔ Owner export and purge revoke all sessions and prevent stale worker/direct database resurrection (1965.814072ms)
++ℹ tests 4
++ℹ suites 0
++ℹ pass 4
++ℹ fail 0
++ℹ cancelled 0
++ℹ skipped 0
++ℹ todo 0
++ℹ duration_ms 8142.611962
+diff --git a/evidence/foundation/09-red-recovery.log b/evidence/foundation/09-red-recovery.log
+new file mode 100644
+index 0000000..1dce44f
+--- /dev/null
++++ b/evidence/foundation/09-red-recovery.log
+@@ -0,0 +1,40 @@
++
++> nova-community-agent@0.1.0 test
++> tsx --test --test-concurrency=1 tests/*.test.ts
++
++✔ Approval binds exact revision/account/recipient; concurrent consumption yields one durable synthetic effect (1675.007144ms)
++✔ Artifact append-only revisions, concurrent conflict and owner-scoped revision export (1756.554592ms)
++✔ HTTP authenticated task persists through application and PostgreSQL restart (1999.412008ms)
++✔ Owner export and purge revoke all sessions and prevent stale worker/direct database resurrection (1996.854014ms)
++✖ Revoked and expired approval cannot authorize queued dispatch (1418.201941ms)
++✔ Ambiguous adapter exception and malformed receipt never retry or expose provider secrets (1532.194238ms)
++✔ Expired lease fences old worker; crash executing marker recovers unknown without repeating effect (1595.014769ms)
++✔ Purge during in-flight synthetic call waits and late completion cannot recreate records (1570.468455ms)
++ℹ tests 8
++ℹ suites 0
++ℹ pass 7
++ℹ fail 1
++ℹ cancelled 0
++ℹ skipped 0
++ℹ todo 0
++ℹ duration_ms 14563.477224
++
++✖ failing tests:
++
++test at tests/recovery.test.ts:25:1
++✖ Revoked and expired approval cannot authorize queued dispatch (1418.201941ms)
++  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++  
++  404 !== 201
++  
++      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/recovery.test.ts:29:12)
++      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
++      at async Test.run (node:internal/test_runner/test:1409:7)
++      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
++    generatedMessage: true,
++    code: 'ERR_ASSERTION',
++    actual: 404,
++    expected: 201,
++    operator: 'strictEqual',
++    diff: 'simple'
++  }
+diff --git a/evidence/foundation/10-green-recovery.log b/evidence/foundation/10-green-recovery.log
+new file mode 100644
+index 0000000..9c3d07d
+--- /dev/null
++++ b/evidence/foundation/10-green-recovery.log
+@@ -0,0 +1,20 @@
++
++> nova-community-agent@0.1.0 test
++> tsx --test --test-concurrency=1 tests/*.test.ts
++
++✔ Approval binds exact revision/account/recipient; concurrent consumption yields one durable synthetic effect (1775.515224ms)
++✔ Artifact append-only revisions, concurrent conflict and owner-scoped revision export (1811.337649ms)
++✔ HTTP authenticated task persists through application and PostgreSQL restart (1861.307986ms)
++✔ Owner export and purge revoke all sessions and prevent stale worker/direct database resurrection (1920.545699ms)
++✔ Revoked and expired approval cannot authorize queued dispatch (2847.920157ms)
++✔ Ambiguous adapter exception and malformed receipt never retry or expose provider secrets (1637.754801ms)
++✔ Expired lease fences old worker; crash executing marker recovers unknown without repeating effect (1594.820418ms)
++✔ Purge during in-flight synthetic call waits and late completion cannot recreate records (1583.42878ms)
++ℹ tests 8
++ℹ suites 0
++ℹ pass 8
++ℹ fail 0
++ℹ cancelled 0
++ℹ skipped 0
++ℹ todo 0
++ℹ duration_ms 15978.386394
+diff --git a/evidence/foundation/11-red-lifecycle.log b/evidence/foundation/11-red-lifecycle.log
+new file mode 100644
+index 0000000..43242de
+--- /dev/null
++++ b/evidence/foundation/11-red-lifecycle.log
+@@ -0,0 +1,41 @@
++
++> nova-community-agent@0.1.0 test
++> tsx --test --test-concurrency=1 tests/*.test.ts
++
++✔ Approval binds exact revision/account/recipient; concurrent consumption yields one durable synthetic effect (1655.259953ms)
++✔ Artifact append-only revisions, concurrent conflict and owner-scoped revision export (1836.652823ms)
++✔ HTTP authenticated task persists through application and PostgreSQL restart (1976.810609ms)
++✖ Task lifecycle optimistic locking rejects stale/illegal transitions and resumes persisted checkpoint (1788.206901ms)
++✔ Owner export and purge revoke all sessions and prevent stale worker/direct database resurrection (1710.402469ms)
++✔ Revoked and expired approval cannot authorize queued dispatch (2908.937527ms)
++✔ Ambiguous adapter exception and malformed receipt never retry or expose provider secrets (1676.300755ms)
++✔ Expired lease fences old worker; crash executing marker recovers unknown without repeating effect (1671.898314ms)
++✔ Purge during in-flight synthetic call waits and late completion cannot recreate records (1489.590849ms)
++ℹ tests 9
++ℹ suites 0
++ℹ pass 8
++ℹ fail 1
++ℹ cancelled 0
++ℹ skipped 0
++ℹ todo 0
++ℹ duration_ms 17873.486956
++
++✖ failing tests:
++
++test at tests/lifecycle.test.ts:6:1
++✖ Task lifecycle optimistic locking rejects stale/illegal transitions and resumes persisted checkpoint (1788.206901ms)
++  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++  
++  404 !== 201
++  
++      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/lifecycle.test.ts:14:12)
++      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
++      at async Test.run (node:internal/test_runner/test:1409:7)
++      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
++    generatedMessage: true,
++    code: 'ERR_ASSERTION',
++    actual: 404,
++    expected: 201,
++    operator: 'strictEqual',
++    diff: 'simple'
++  }
+diff --git a/evidence/foundation/12-green-lifecycle.log b/evidence/foundation/12-green-lifecycle.log
+new file mode 100644
+index 0000000..66c32ee
+--- /dev/null
++++ b/evidence/foundation/12-green-lifecycle.log
+@@ -0,0 +1,21 @@
++
++> nova-community-agent@0.1.0 test
++> tsx --test --test-concurrency=1 tests/*.test.ts
++
++✔ Approval binds exact revision/account/recipient; concurrent consumption yields one durable synthetic effect (1766.765068ms)
++✔ Artifact append-only revisions, concurrent conflict and owner-scoped revision export (1861.717011ms)
++✔ HTTP authenticated task persists through application and PostgreSQL restart (1993.815258ms)
++✔ Task lifecycle optimistic locking rejects stale/illegal transitions and resumes persisted checkpoint (2036.782503ms)
++✔ Owner export and purge revoke all sessions and prevent stale worker/direct database resurrection (2030.589518ms)
++✔ Revoked and expired approval cannot authorize queued dispatch (2781.364594ms)
++✔ Ambiguous adapter exception and malformed receipt never retry or expose provider secrets (1548.579067ms)
++✔ Expired lease fences old worker; crash executing marker recovers unknown without repeating effect (1652.474562ms)
++✔ Purge during in-flight synthetic call waits and late completion cannot recreate records (1623.062194ms)
++ℹ tests 9
++ℹ suites 0
++ℹ pass 9
++ℹ fail 0
++ℹ cancelled 0
++ℹ skipped 0
++ℹ todo 0
++ℹ duration_ms 18384.328858
+diff --git a/evidence/foundation/13-red-cli.log b/evidence/foundation/13-red-cli.log
+new file mode 100644
+index 0000000..f19bdbb
+--- /dev/null
++++ b/evidence/foundation/13-red-cli.log
+@@ -0,0 +1,29 @@
++✖ Local bootstrap CLI writes private credential file; real server subprocess restarts and serves persisted tasks (1025.207224ms)
++ℹ tests 1
++ℹ suites 0
++ℹ pass 0
++ℹ fail 1
++ℹ cancelled 0
++ℹ skipped 0
++ℹ todo 0
++ℹ duration_ms 1265.39141
++
++✖ failing tests:
++
++test at tests/cli.test.ts:15:1
++✖ Local bootstrap CLI writes private credential file; real server subprocess restarts and serves persisted tasks (1025.207224ms)
++  AssertionError [ERR_ASSERTION]: local bootstrap CLI must succeed
++  
++  1 !== 0
++  
++      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/cli.test.ts:21:12)
++      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
++      at async Test.run (node:internal/test_runner/test:1409:7)
++      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
++    generatedMessage: false,
++    code: 'ERR_ASSERTION',
++    actual: 1,
++    expected: 0,
++    operator: 'strictEqual',
++    diff: 'simple'
++  }
+diff --git a/evidence/foundation/14-green-cli.log b/evidence/foundation/14-green-cli.log
+new file mode 100644
+index 0000000..5968cd2
+--- /dev/null
++++ b/evidence/foundation/14-green-cli.log
+@@ -0,0 +1,22 @@
++
++> nova-community-agent@0.1.0 test
++> tsx --test --test-concurrency=1 tests/*.test.ts
++
++✔ Approval binds exact revision/account/recipient; concurrent consumption yields one durable synthetic effect (1603.31731ms)
++✔ Artifact append-only revisions, concurrent conflict and owner-scoped revision export (1817.808456ms)
++✔ Local bootstrap CLI writes private credential file; real server subprocess restarts and serves persisted tasks (2845.036868ms)
++✔ HTTP authenticated task persists through application and PostgreSQL restart (2009.663237ms)
++✔ Task lifecycle optimistic locking rejects stale/illegal transitions and resumes persisted checkpoint (2048.425978ms)
++✔ Owner export and purge revoke all sessions and prevent stale worker/direct database resurrection (1992.378502ms)
++✔ Revoked and expired approval cannot authorize queued dispatch (2543.072352ms)
++✔ Ambiguous adapter exception and malformed receipt never retry or expose provider secrets (1548.887089ms)
++✔ Expired lease fences old worker; crash executing marker recovers unknown without repeating effect (1583.369758ms)
++✔ Purge during in-flight synthetic call waits and late completion cannot recreate records (1532.129387ms)
++ℹ tests 10
++ℹ suites 0
++ℹ pass 10
++ℹ fail 0
++ℹ cancelled 0
++ℹ skipped 0
++ℹ todo 0
++ℹ duration_ms 20888.515956
+diff --git a/evidence/foundation/15-red-security.log b/evidence/foundation/15-red-security.log
+new file mode 100644
+index 0000000..5991876
+--- /dev/null
++++ b/evidence/foundation/15-red-security.log
+@@ -0,0 +1,29 @@
++✖ Closed query and body schemas, redacted parser/DB errors, expired sessions and cross-owner foreign keys (1394.097162ms)
++ℹ tests 1
++ℹ suites 0
++ℹ pass 0
++ℹ fail 1
++ℹ cancelled 0
++ℹ skipped 0
++ℹ todo 0
++ℹ duration_ms 1629.051236
++
++✖ failing tests:
++
++test at tests/security.test.ts:6:1
++✖ Closed query and body schemas, redacted parser/DB errors, expired sessions and cross-owner foreign keys (1394.097162ms)
++  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++  
++  200 !== 400
++  
++      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/security.test.ts:14:10)
++      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
++      at async Test.run (node:internal/test_runner/test:1409:7)
++      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
++    generatedMessage: true,
++    code: 'ERR_ASSERTION',
++    actual: 200,
++    expected: 400,
++    operator: 'strictEqual',
++    diff: 'simple'
++  }
+diff --git a/evidence/foundation/16-green-security.log b/evidence/foundation/16-green-security.log
+new file mode 100644
+index 0000000..7b40a98
+--- /dev/null
++++ b/evidence/foundation/16-green-security.log
+@@ -0,0 +1,23 @@
++
++> nova-community-agent@0.1.0 test
++> tsx --test --test-concurrency=1 tests/*.test.ts
++
++✔ Approval binds exact revision/account/recipient; concurrent consumption yields one durable synthetic effect (1852.580372ms)
++✔ Artifact append-only revisions, concurrent conflict and owner-scoped revision export (1860.846892ms)
++✔ Local bootstrap CLI writes private credential file; real server subprocess restarts and serves persisted tasks (2745.895561ms)
++✔ HTTP authenticated task persists through application and PostgreSQL restart (1972.046447ms)
++✔ Task lifecycle optimistic locking rejects stale/illegal transitions and resumes persisted checkpoint (1915.369697ms)
++✔ Owner export and purge revoke all sessions and prevent stale worker/direct database resurrection (2005.4612ms)
++✔ Revoked and expired approval cannot authorize queued dispatch (2853.055354ms)
++✔ Ambiguous adapter exception and malformed receipt never retry or expose provider secrets (1680.930789ms)
++✔ Expired lease fences old worker; crash executing marker recovers unknown without repeating effect (1657.889366ms)
++✔ Purge during in-flight synthetic call waits and late completion cannot recreate records (1455.588511ms)
++✔ Closed query and body schemas, redacted parser/DB errors, expired sessions and cross-owner foreign keys (1828.486684ms)
++ℹ tests 11
++ℹ suites 0
++ℹ pass 11
++ℹ fail 0
++ℹ cancelled 0
++ℹ skipped 0
++ℹ todo 0
++ℹ duration_ms 23197.430759
+diff --git a/evidence/foundation/17-red-cancel-policy.log b/evidence/foundation/17-red-cancel-policy.log
+new file mode 100644
+index 0000000..2a04a69
+--- /dev/null
++++ b/evidence/foundation/17-red-cancel-policy.log
+@@ -0,0 +1,45 @@
++
++> nova-community-agent@0.1.0 test
++> tsx --test --test-concurrency=1 tests/*.test.ts
++
++✔ Approval binds exact revision/account/recipient; concurrent consumption yields one durable synthetic effect (1691.053023ms)
++✔ Artifact append-only revisions, concurrent conflict and owner-scoped revision export (1816.535858ms)
++✔ Local bootstrap CLI writes private credential file; real server subprocess restarts and serves persisted tasks (2721.022919ms)
++✔ HTTP authenticated task persists through application and PostgreSQL restart (2011.058058ms)
++✔ Task lifecycle optimistic locking rejects stale/illegal transitions and resumes persisted checkpoint (1900.005729ms)
++✔ Owner export and purge revoke all sessions and prevent stale worker/direct database resurrection (1525.113071ms)
++✔ Revoked and expired approval cannot authorize queued dispatch (2885.986446ms)
++✔ Ambiguous adapter exception and malformed receipt never retry or expose provider secrets (1611.991624ms)
++✔ Expired lease fences old worker; crash executing marker recovers unknown without repeating effect (1613.029185ms)
++✖ Cancelled task invalidates queued policy before dispatch (1449.25628ms)
++✔ Timeout after synthetic dispatch becomes unknown and a late return cannot overwrite it (1491.103879ms)
++✔ Purge during in-flight synthetic call waits and late completion cannot recreate records (1458.834845ms)
++✔ Closed query and body schemas, redacted parser/DB errors, expired sessions and cross-owner foreign keys (1892.178108ms)
++ℹ tests 13
++ℹ suites 0
++ℹ pass 12
++ℹ fail 1
++ℹ cancelled 0
++ℹ skipped 0
++ℹ todo 0
++ℹ duration_ms 25599.191607
++
++✖ failing tests:
++
++test at tests/recovery.test.ts:75:1
++✖ Cancelled task invalidates queued policy before dispatch (1449.25628ms)
++  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++  
++  1 !== 0
++  
++      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/recovery.test.ts:81:10)
++      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
++      at async Test.run (node:internal/test_runner/test:1409:7)
++      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
++    generatedMessage: true,
++    code: 'ERR_ASSERTION',
++    actual: 1,
++    expected: 0,
++    operator: 'strictEqual',
++    diff: 'simple'
++  }
+diff --git a/evidence/foundation/18-green-cancel-policy.log b/evidence/foundation/18-green-cancel-policy.log
+new file mode 100644
+index 0000000..4cedca9
+--- /dev/null
++++ b/evidence/foundation/18-green-cancel-policy.log
+@@ -0,0 +1,25 @@
++
++> nova-community-agent@0.1.0 test
++> tsx --test --test-concurrency=1 tests/*.test.ts
++
++✔ Approval binds exact revision/account/recipient; concurrent consumption yields one durable synthetic effect (1730.800994ms)
++✔ Artifact append-only revisions, concurrent conflict and owner-scoped revision export (1877.999527ms)
++✔ Local bootstrap CLI writes private credential file; real server subprocess restarts and serves persisted tasks (2814.973486ms)
++✔ HTTP authenticated task persists through application and PostgreSQL restart (1852.956734ms)
++✔ Task lifecycle optimistic locking rejects stale/illegal transitions and resumes persisted checkpoint (1593.894901ms)
++✔ Owner export and purge revoke all sessions and prevent stale worker/direct database resurrection (1969.720237ms)
++✔ Revoked and expired approval cannot authorize queued dispatch (2898.070211ms)
++✔ Ambiguous adapter exception and malformed receipt never retry or expose provider secrets (1684.953445ms)
++✔ Expired lease fences old worker; crash executing marker recovers unknown without repeating effect (1668.13341ms)
++✔ Cancelled task invalidates queued policy before dispatch (1577.561714ms)
++✔ Timeout after synthetic dispatch becomes unknown and a late return cannot overwrite it (1525.460589ms)
++✔ Purge during in-flight synthetic call waits and late completion cannot recreate records (1580.763679ms)
++✔ Closed query and body schemas, redacted parser/DB errors, expired sessions and cross-owner foreign keys (1645.51753ms)
++ℹ tests 13
++ℹ suites 0
++ℹ pass 13
++ℹ fail 0
++ℹ cancelled 0
++ℹ skipped 0
++ℹ todo 0
++ℹ duration_ms 25871.419839
+diff --git a/evidence/foundation/19-red-worker-cli.log b/evidence/foundation/19-red-worker-cli.log
+new file mode 100644
+index 0000000..754d268
+--- /dev/null
++++ b/evidence/foundation/19-red-worker-cli.log
+@@ -0,0 +1,29 @@
++✖ Local bootstrap CLI writes private credential file; real server subprocess restarts and serves persisted tasks (1838.811656ms)
++ℹ tests 1
++ℹ suites 0
++ℹ pass 0
++ℹ fail 1
++ℹ cancelled 0
++ℹ skipped 0
++ℹ todo 0
++ℹ duration_ms 2078.045475
++
++✖ failing tests:
++
++test at tests/cli.test.ts:15:1
++✖ Local bootstrap CLI writes private credential file; real server subprocess restarts and serves persisted tasks (1838.811656ms)
++  AssertionError [ERR_ASSERTION]: bounded synthetic worker CLI must succeed
++  
++  1 !== 0
++  
++      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/cli.test.ts:39:12)
++      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
++      at async Test.run (node:internal/test_runner/test:1409:7)
++      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
++    generatedMessage: false,
++    code: 'ERR_ASSERTION',
++    actual: 1,
++    expected: 0,
++    operator: 'strictEqual',
++    diff: 'simple'
++  }
+diff --git a/evidence/foundation/20-final-tests.log b/evidence/foundation/20-final-tests.log
+new file mode 100644
+index 0000000..43ab2dd
+--- /dev/null
++++ b/evidence/foundation/20-final-tests.log
+@@ -0,0 +1,26 @@
++
++> nova-community-agent@0.1.0 test
++> tsx --test --test-concurrency=1 tests/*.test.ts
++
++✔ Approval binds exact revision/account/recipient; concurrent consumption yields one durable synthetic effect (1562.305063ms)
++✔ Artifact append-only revisions, concurrent conflict and owner-scoped revision export (1743.925729ms)
++✔ Local bootstrap CLI writes private credential file; real server subprocess restarts and serves persisted tasks (2978.867527ms)
++✔ HTTP authenticated task persists through application and PostgreSQL restart (1857.242587ms)
++✔ Task lifecycle optimistic locking rejects stale/illegal transitions and resumes persisted checkpoint (1505.853486ms)
++✔ Owner export and purge revoke all sessions and prevent stale worker/direct database resurrection (1927.805099ms)
++✔ Revoked and expired approval cannot authorize queued dispatch (2729.863692ms)
++✔ Ambiguous adapter exception and malformed receipt never retry or expose provider secrets (1483.917727ms)
++✔ Expired lease fences old worker; crash executing marker recovers unknown without repeating effect (1525.107388ms)
++✔ Cancelled task invalidates queued policy before dispatch (1416.822324ms)
++✔ Timeout after synthetic dispatch becomes unknown and a late return cannot overwrite it (1417.344598ms)
++✔ Worker revalidates queued revision, session expiry and intent expiry before any call (4228.049756ms)
++✔ Purge during in-flight synthetic call waits and late completion cannot recreate records (1428.796072ms)
++✔ Closed query and body schemas, redacted parser/DB errors, expired sessions and cross-owner foreign keys (1848.412581ms)
++ℹ tests 14
++ℹ suites 0
++ℹ pass 14
++ℹ fail 0
++ℹ cancelled 0
++ℹ skipped 0
++ℹ todo 0
++ℹ duration_ms 29134.704866
+diff --git a/evidence/foundation/cleanup.json b/evidence/foundation/cleanup.json
+new file mode 100644
+index 0000000..63a2fe8
+--- /dev/null
++++ b/evidence/foundation/cleanup.json
+@@ -0,0 +1,4 @@
++{
++  "owned_test_processes": [],
++  "temporary_cluster_or_credential_directories": []
++}
+diff --git a/evidence/foundation/npm-audit.json b/evidence/foundation/npm-audit.json
+new file mode 100644
+index 0000000..1d3d489
+--- /dev/null
++++ b/evidence/foundation/npm-audit.json
+@@ -0,0 +1,22 @@
++{
++  "auditReportVersion": 2,
++  "vulnerabilities": {},
++  "metadata": {
++    "vulnerabilities": {
++      "info": 0,
++      "low": 0,
++      "moderate": 0,
++      "high": 0,
++      "critical": 0,
++      "total": 0
++    },
++    "dependencies": {
++      "prod": 62,
++      "dev": 63,
++      "optional": 56,
++      "peer": 0,
++      "peerOptional": 0,
++      "total": 125
++    }
++  }
++}
+diff --git a/evidence/foundation/report.md b/evidence/foundation/report.md
+new file mode 100644
+index 0000000..c9da569
+--- /dev/null
++++ b/evidence/foundation/report.md
+@@ -0,0 +1,73 @@
++# J0 foundation — execution report
++
++## Verdict
++
++**Bounded local foundation implemented and exercised; not an MVP and not full architecture J0 completion.** Real TypeScript/Fastify HTTP API and PostgreSQL storage are working. No previous NOVA/Nexus/LicenzPol repository, service, credential or code was consulted. No cloud provisioning, public listening socket or external delivery was performed. No commit was made.
++
++**Latest full run:** `20-final-tests.log`: 14 tests passed, 0 failed, 0 skipped. `typecheck.log`: strict TypeScript passed. `npm-audit.json`: 0 reported vulnerabilities across the installed dependency graph. `cleanup.json`: no owned test processes or temporary PostgreSQL/credential directories remained. These are actual command outputs, not synthetic summaries.
++
++Runtime observed: Node `v26.8.2`, npm `11.19.1`; Fastify `5.12.5`, pg `8.23.0`, embedded-postgres `17.10.0-beta.17`. esbuild transform and embedded-postgres import succeeded, and actual cluster init/start/restart/shutdown succeeded; no install-script bypass or global PostgreSQL service was needed.
++
++## Implemented and verified
++
++- Opaque 256-bit sessions with SHA-256 at rest, expiry and active-owner enforcement. Local bootstrap CLI writes mode-0600 exclusive credential file; no public identity issuance route. Session tokens/passwords are absent from evidence.
++- Closed request body/path/query schemas, authentication before body parsing, parameterized owner predicates/composite FKs, explicit safe response projections and redacted errors. Unknown owner fields and cross-owner entity references rejected.
++- Conversations/tasks with transactional idempotency responses and outbox events; task lifecycle CAS/version checks and restart/resume.
++- Immutable artifact revisions enforced with DB trigger; optimistic lock rejects competing writes; immutable revision-bound JSON read/export and content hash.
++- Server-loaded payload, immutable ActionIntent binding owner/id/payload/account/recipient/artifact revision/expiry; explicit authenticated hash approval; one approval per intent and atomic single-use consumption.
++- Unique/idempotent receipts and durable action outbox; two competing workers; lease-token fencing; recovery from a persisted executing crash marker without a second effect.
++- Synthetic-only adapter, dispatch-time session/approval/revision/task revalidation; revoked, expired, superseded or cancelled queued work cannot call adapter.
++- Throw, malformed result, timeout and late return produce `outcome_unknown`, never blind resend. Provider error strings are not persisted/returned.
++- Owner-scoped export without credentials/session bindings; atomic purge removes content/caches/events/audit/sessions, retains immutable minimal tombstone; stale worker and direct DB writes cannot resurrect an owner.
++- Application process restart, full PostgreSQL restart and CLI bootstrap/server/worker subprocesses tested over real loopback sockets. In-flight synthetic action plus purge tested with a controlled synchronization barrier.
++- Fault-injected outbox insert failure proves task mutation rolls back with its event. Auth parser ordering, raw DB-error redaction, SCRAM-only HBA rules and loopback DB binding asserted.
++
++## TDD evidence
++
++Vertical RED→GREEN progression is preserved rather than overwritten:
++
++| Slice | RED | GREEN |
++|---|---|---|
++| Auth, task, persistence | `01-red-task.log` | `02-green-task.log` |
++| Artifact revision/export | `03-red-artifact.log` | `04-green-artifact.log` |
++| Intent/approval/worker | `05-red-action.log` | `06-green-action.log` |
++| Export/purge/tombstone | `07-red-privacy.log` | `08-green-privacy.log` |
++| Revocation/recovery | `09-red-recovery.log` | `10-green-recovery.log` |
++| Task lifecycle | `11-red-lifecycle.log` | `12-green-lifecycle.log` |
++| Operator CLI/process restart | `13-red-cli.log` | `14-green-cli.log` |
++| Query schema closure | `15-red-security.log` | `16-green-security.log` |
++| Cancelled-task dispatch policy | `17-red-cancel-policy.log` | `18-green-cancel-policy.log` |
++| Bounded worker CLI | `19-red-worker-cli.log` | `20-final-tests.log` |
++
++Initial RED failures were asserted absence of API/route/behavior, not fake storage or fabricated provider output. Additional adversarial tests validated already-green worker branches (timeout, lease recovery, redaction, restart). Initial typecheck found one nullable auth variable and was corrected; all subsequent recorded checks passed. The cancelled-task regression genuinely caught an unwanted synthetic adapter call and drove dispatch-policy fix.
++
++## Commands
++
++```sh
++cd /home/azureuser/nova-community-agent
++npm test
++npm run typecheck
++npm audit
++# Local operator configuration only; no password/token on command line:
++npm run bootstrap -- /private/path/session.json
++PORT=3000 npm start
++npm run worker
++```
++
++The test harness generates SCRAM credentials in memory, creates a private temporary cluster, chooses a loopback port and owns cleanup. `npm start`/bootstrap/worker require independent local PostgreSQL `PGHOST=127.0.0.1`, `PGPORT`, `PGUSER`, `PGPASSWORD`, `PGDATABASE` environment configuration; the repository does not contain those secrets. Detailed contracts: `docs/API.md`.
++
++## Deliberate limits / review priorities
++
++1. **Independent review remains required.** Implementer performed tests and self-inspection, not independent security approval. Parent should assign a fresh reviewer for owner/auth boundaries, approval binding, worker races, migration constraints and purge/recovery before calling this release-ready.
++2. **External effects remain disabled.** There is no provider lookup/read-back/reconciliation. `succeeded` means only synthetic adapter success. `outcome_unknown` has no reconciliation API; it must never be presented as sent or automatically retried.
++3. **Conservative locking.** Owner-level serialization includes a bounded in-flight synthetic call. It limits same-owner throughput and delays purge/revocation until the call transaction ends. A purge cannot undo an already-started action. AbortSignal cannot guarantee cancelling an uncooperative future connector; DB connection loss while I/O is in flight needs additional real-provider fencing/idempotency design. No exactly-once external-delivery claim.
++4. **Crash coverage is bounded.** Tests perform clean process and database restarts and inject the durable executing crash boundary, plus timeouts/late outcomes. They do not kill the OS process during a real provider request or simulate filesystem/power-loss failures.
++5. **Foundation subset.** Source/Evidence entities, object storage, binary exports/PDF, messages, planner, UI/LLM/voice and all domain artifact schemas are deferred. Generic artifacts are only closed text/language documents. Full J0 from the architecture still includes Evidence/object storage work; this report does not mark them done.
++6. **Local-only operational posture.** No TLS, rate limits, quotas, production runtime-role separation/RLS, session renewal/account recovery, migration checksums, retention jobs, pagination or bounded export streaming. Installed TS runner is a development dependency. API DB role in ephemeral tests owns the schema; DB administrator bypass is not a defended boundary.
++7. **Retention/privacy scope.** Purge covers live DB rows only; backups/object stores/providers do not exist in this implementation. Minimal opaque tombstone persists. Export excludes internal idempotency cache and capabilities. Idempotency history and audit/outbox are currently retained until purge.
++8. **Operational observability.** Errors are deliberately redacted and logs disabled rather than a full structured-redaction/metrics pipeline. Queue is bounded foreground batch, not a supervisor-managed daemon; first candidate-page contention may require another batch. HTTP response safety uses explicit projections rather than comprehensive generated response schemas/OpenAPI.
++9. **Bootstrap privilege.** A local operator with DB credentials can create users. Session output-file write failure after DB commit could orphan an unused user/session; no remote identity vulnerability, but operator cleanup/transactional provisioning should be hardened before production onboarding.
++
++## Changed scope
++
++New `src/{app,actions,privacy,worker}.ts`; five SQL migrations; `scripts/{bootstrap,config,server,worker}.ts`; real PostgreSQL test harness and eight `*.test.ts` files; package scripts; `docs/API.md`; this report and raw evidence. Existing `tsconfig.json` kept strict NodeNext. Parent-authored documents outside `docs/API.md` were not edited. No UI or existing-product files changed.
+diff --git a/evidence/foundation/typecheck.log b/evidence/foundation/typecheck.log
+new file mode 100644
+index 0000000..3309a5d
+--- /dev/null
++++ b/evidence/foundation/typecheck.log
+@@ -0,0 +1,4 @@
++
++> nova-community-agent@0.1.0 typecheck
++> tsc --noEmit
++
+diff --git a/migrations/001_core.sql b/migrations/001_core.sql
+new file mode 100644
+index 0000000..3c2e7ff
+--- /dev/null
++++ b/migrations/001_core.sql
+@@ -0,0 +1,29 @@
++CREATE TABLE users (
++  id uuid PRIMARY KEY, status text NOT NULL DEFAULT 'active' CHECK (status IN ('active','purged')),
++  created_at timestamptz NOT NULL DEFAULT now(), purged_at timestamptz
++);
++CREATE TABLE sessions (
++  token_hash text PRIMARY KEY CHECK (length(token_hash)=64), owner_id uuid NOT NULL REFERENCES users(id),
++  expires_at timestamptz NOT NULL, created_at timestamptz NOT NULL DEFAULT now()
++);
++CREATE TABLE conversations (
++  id uuid PRIMARY KEY, owner_id uuid NOT NULL REFERENCES users(id), title text NOT NULL,
++  created_at timestamptz NOT NULL DEFAULT now(), UNIQUE(owner_id,id)
++);
++CREATE TABLE tasks (
++  id uuid PRIMARY KEY, owner_id uuid NOT NULL REFERENCES users(id), conversation_id uuid NOT NULL,
++  goal text NOT NULL, status text NOT NULL DEFAULT 'created', version integer NOT NULL DEFAULT 1,
++  created_at timestamptz NOT NULL DEFAULT now(), UNIQUE(owner_id,id),
++  FOREIGN KEY(owner_id,conversation_id) REFERENCES conversations(owner_id,id) ON DELETE CASCADE
++);
++CREATE TABLE outbox (
++  id uuid PRIMARY KEY, owner_id uuid NOT NULL REFERENCES users(id), kind text NOT NULL,
++  resource_id uuid NOT NULL, state text NOT NULL DEFAULT 'pending' CHECK(state IN ('pending','leased','done')),
++  lease_token uuid, lease_until timestamptz, attempts integer NOT NULL DEFAULT 0,
++  created_at timestamptz NOT NULL DEFAULT now(), UNIQUE(owner_id,id)
++);
++CREATE TABLE idempotency (
++  owner_id uuid NOT NULL REFERENCES users(id), key text NOT NULL, fingerprint text NOT NULL,
++  response jsonb NOT NULL, status integer NOT NULL, created_at timestamptz NOT NULL DEFAULT now(),
++  PRIMARY KEY(owner_id,key)
++);
+diff --git a/migrations/002_artifacts.sql b/migrations/002_artifacts.sql
+new file mode 100644
+index 0000000..4be442b
+--- /dev/null
++++ b/migrations/002_artifacts.sql
+@@ -0,0 +1,18 @@
++CREATE TABLE artifacts (
++ id uuid PRIMARY KEY, owner_id uuid NOT NULL REFERENCES users(id), task_id uuid NOT NULL,
++ title text NOT NULL, current_revision integer NOT NULL CHECK(current_revision>0),
++ created_at timestamptz NOT NULL DEFAULT now(), UNIQUE(owner_id,id),
++ FOREIGN KEY(owner_id,task_id) REFERENCES tasks(owner_id,id) ON DELETE CASCADE
++);
++CREATE TABLE artifact_revisions (
++ owner_id uuid NOT NULL, artifact_id uuid NOT NULL, revision integer NOT NULL CHECK(revision>0),
++ content jsonb NOT NULL, hash text NOT NULL CHECK(length(hash)=64), created_at timestamptz NOT NULL DEFAULT now(),
++ PRIMARY KEY(artifact_id,revision), UNIQUE(owner_id,artifact_id,revision),
++ FOREIGN KEY(owner_id,artifact_id) REFERENCES artifacts(owner_id,id) ON DELETE CASCADE
++);
++CREATE FUNCTION immutable_revision() RETURNS trigger LANGUAGE plpgsql AS $$
++BEGIN
++ IF TG_OP='DELETE' AND EXISTS(SELECT 1 FROM users WHERE id=OLD.owner_id AND status='purged') THEN RETURN OLD; END IF;
++ RAISE EXCEPTION 'immutable revision';
++END $$;
++CREATE TRIGGER immutable_revision BEFORE UPDATE OR DELETE ON artifact_revisions FOR EACH ROW EXECUTE FUNCTION immutable_revision();
+diff --git a/migrations/003_actions.sql b/migrations/003_actions.sql
+new file mode 100644
+index 0000000..d422f0d
+--- /dev/null
++++ b/migrations/003_actions.sql
+@@ -0,0 +1,28 @@
++CREATE TABLE action_intents (
++ id uuid PRIMARY KEY, owner_id uuid NOT NULL REFERENCES users(id), artifact_id uuid NOT NULL, revision integer NOT NULL,
++ operation text NOT NULL CHECK(operation='simulate.send'), account text NOT NULL CHECK(account='synthetic-account'),
++ recipient text NOT NULL CHECK(recipient LIKE '%@example.invalid'), payload jsonb NOT NULL,
++ binding_hash text NOT NULL, expires_at timestamptz NOT NULL, created_at timestamptz NOT NULL DEFAULT now(),
++ UNIQUE(owner_id,id), FOREIGN KEY(owner_id,artifact_id,revision) REFERENCES artifact_revisions(owner_id,artifact_id,revision) ON DELETE CASCADE
++);
++CREATE TRIGGER immutable_intent BEFORE UPDATE OR DELETE ON action_intents FOR EACH ROW EXECUTE FUNCTION immutable_revision();
++CREATE TABLE approvals (
++ id uuid PRIMARY KEY, owner_id uuid NOT NULL, intent_id uuid NOT NULL UNIQUE,
++ binding_hash text NOT NULL, expires_at timestamptz NOT NULL,
++ status text NOT NULL DEFAULT 'approved' CHECK(status IN ('approved','consumed','revoked')),
++ consumed_at timestamptz, created_at timestamptz NOT NULL DEFAULT now(), UNIQUE(owner_id,id),
++ FOREIGN KEY(owner_id,intent_id) REFERENCES action_intents(owner_id,id) ON DELETE CASCADE
++);
++CREATE TABLE receipts (
++ id uuid PRIMARY KEY, owner_id uuid NOT NULL, intent_id uuid NOT NULL UNIQUE, approval_id uuid NOT NULL UNIQUE,
++ status text NOT NULL CHECK(status IN ('queued','executing','succeeded','outcome_unknown','cancelled')),
++ reference text, session_hash text NOT NULL, started_at timestamptz, finished_at timestamptz,
++ created_at timestamptz NOT NULL DEFAULT now(), UNIQUE(owner_id,id),
++ FOREIGN KEY(owner_id,intent_id) REFERENCES action_intents(owner_id,id) ON DELETE CASCADE,
++ FOREIGN KEY(owner_id,approval_id) REFERENCES approvals(owner_id,id) ON DELETE CASCADE
++);
++CREATE TABLE audit_events (
++ id uuid PRIMARY KEY, owner_id uuid NOT NULL REFERENCES users(id), action text NOT NULL,
++ resource_id uuid NOT NULL, created_at timestamptz NOT NULL DEFAULT now()
++);
++CREATE INDEX outbox_claim ON outbox(state,lease_until,created_at);
+diff --git a/migrations/004_privacy.sql b/migrations/004_privacy.sql
+new file mode 100644
+index 0000000..23168f0
+--- /dev/null
++++ b/migrations/004_privacy.sql
+@@ -0,0 +1,18 @@
++CREATE FUNCTION active_owner_write() RETURNS trigger LANGUAGE plpgsql AS $$
++BEGIN
++ PERFORM id FROM users WHERE id=NEW.owner_id AND status='active' FOR UPDATE;
++ IF NOT FOUND THEN RAISE EXCEPTION 'owner inactive'; END IF;
++ IF TG_OP='UPDATE' AND NEW.owner_id<>OLD.owner_id THEN RAISE EXCEPTION 'owner immutable'; END IF;
++ RETURN NEW;
++END $$;
++DO $$ DECLARE t text; BEGIN
++ FOREACH t IN ARRAY ARRAY['sessions','conversations','tasks','outbox','idempotency','artifacts','artifact_revisions','action_intents','approvals','receipts','audit_events'] LOOP
++ EXECUTE format('CREATE TRIGGER active_owner BEFORE INSERT OR UPDATE ON %I FOR EACH ROW EXECUTE FUNCTION active_owner_write()',t);
++ END LOOP;
++END $$;
++CREATE FUNCTION preserve_tombstone() RETURNS trigger LANGUAGE plpgsql AS $$
++BEGIN
++ IF TG_OP='DELETE' OR OLD.status='purged' OR NEW.id<>OLD.id THEN RAISE EXCEPTION 'tombstone immutable'; END IF;
++ RETURN NEW;
++END $$;
++CREATE TRIGGER preserve_tombstone BEFORE UPDATE OR DELETE ON users FOR EACH ROW EXECUTE FUNCTION preserve_tombstone();
+diff --git a/migrations/005_task_states.sql b/migrations/005_task_states.sql
+new file mode 100644
+index 0000000..3157dcc
+--- /dev/null
++++ b/migrations/005_task_states.sql
+@@ -0,0 +1,2 @@
++ALTER TABLE tasks ADD CONSTRAINT task_status CHECK(status IN ('created','active','paused','completed','cancelled'));
++ALTER TABLE tasks ADD CONSTRAINT task_version CHECK(version>0);
+diff --git a/package-lock.json b/package-lock.json
+new file mode 100644
+index 0000000..9596bb0
+--- /dev/null
++++ b/package-lock.json
+@@ -0,0 +1,1895 @@
++{
++  "name": "nova-community-agent",
++  "version": "0.1.0",
++  "lockfileVersion": 3,
++  "requires": true,
++  "packages": {
++    "": {
++      "name": "nova-community-agent",
++      "version": "0.1.0",
++      "dependencies": {
++        "fastify": "5.12.5",
++        "pg": "8.23.0"
++      },
++      "devDependencies": {
++        "@types/node": "26.6.2",
++        "@types/pg": "8.23.1",
++        "embedded-postgres": "17.10.0-beta.17",
++        "tsx": "4.23.15",
++        "typescript": "7.0.2"
++      },
++      "engines": {
++        "node": ">=22"
++      }
++    },
++    "node_modules/@embedded-postgres/darwin-arm64": {
++      "version": "17.10.0-beta.17",
++      "resolved": "https://registry.npmjs.org/@embedded-postgres/darwin-arm64/-/darwin-arm64-17.10.0-beta.17.tgz",
++      "integrity": "sha512-E2dxhSllrcyAJBHuvgTrBTx2BaPlX2vvjXClPKHxfwBezk+nTZ01uAEraKiRJMpzHSCyN8J1dTjKh4q/uTsBLQ==",
++      "cpu": [
++        "arm64"
++      ],
++      "dev": true,
++      "hasInstallScript": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "darwin"
++      ],
++      "engines": {
++        "node": ">=16"
++      }
++    },
++    "node_modules/@embedded-postgres/darwin-x64": {
++      "version": "17.10.0-beta.17",
++      "resolved": "https://registry.npmjs.org/@embedded-postgres/darwin-x64/-/darwin-x64-17.10.0-beta.17.tgz",
++      "integrity": "sha512-gXk65MIyttD/PWo6NDSmu/n4vzPcqZQmxVWjEKuecwlyGmWO984AZ3Ljb7F0bwPvXhqcovH4FGN4ydr0fGeJxg==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "hasInstallScript": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "darwin"
++      ],
++      "engines": {
++        "node": ">=16"
++      }
++    },
++    "node_modules/@embedded-postgres/linux-arm": {
++      "version": "17.10.0-beta.17",
++      "resolved": "https://registry.npmjs.org/@embedded-postgres/linux-arm/-/linux-arm-17.10.0-beta.17.tgz",
++      "integrity": "sha512-XQrRydqjgPrvvCKF1PrLvMljMbeXXT4GbB70+z7viqUWg3bgq31nGMkupa2TXHLqRnfmEhz1u3gn3xgQIphLZQ==",
++      "cpu": [
++        "arm"
++      ],
++      "dev": true,
++      "hasInstallScript": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=16"
++      }
++    },
++    "node_modules/@embedded-postgres/linux-arm64": {
++      "version": "17.10.0-beta.17",
++      "resolved": "https://registry.npmjs.org/@embedded-postgres/linux-arm64/-/linux-arm64-17.10.0-beta.17.tgz",
++      "integrity": "sha512-mC+bQvaBEf0WDD0nPWW3eGUXDUVzoyCzMtgl+Fw6Jy9DkQFK+jcPtzkzqhhrS/fGzn5telNpKInl8xPqDh71Ig==",
++      "cpu": [
++        "arm64"
++      ],
++      "dev": true,
++      "hasInstallScript": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=16"
++      }
++    },
++    "node_modules/@embedded-postgres/linux-ia32": {
++      "version": "17.10.0-beta.17",
++      "resolved": "https://registry.npmjs.org/@embedded-postgres/linux-ia32/-/linux-ia32-17.10.0-beta.17.tgz",
++      "integrity": "sha512-ck2QlYCPmmNRJotXp0cJnnB5Yn/bk89qT3cjVCxUfkS1b/56Odu9ID6zvAYFebvYeHU69UwOEbplikV4saRYWw==",
++      "cpu": [
++        "ia32"
++      ],
++      "dev": true,
++      "hasInstallScript": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=16"
++      }
++    },
++    "node_modules/@embedded-postgres/linux-ppc64": {
++      "version": "17.10.0-beta.17",
++      "resolved": "https://registry.npmjs.org/@embedded-postgres/linux-ppc64/-/linux-ppc64-17.10.0-beta.17.tgz",
++      "integrity": "sha512-+Mb0E41rvlwBhAV11eZf51rlxSHA8ancPHPFxhyljg+ZJ62QB1YryBf+rIkphpG2bnt4aJwxd1JOUk3PonlrLA==",
++      "cpu": [
++        "ppc64"
++      ],
++      "dev": true,
++      "hasInstallScript": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=16"
++      }
++    },
++    "node_modules/@embedded-postgres/linux-x64": {
++      "version": "17.10.0-beta.17",
++      "resolved": "https://registry.npmjs.org/@embedded-postgres/linux-x64/-/linux-x64-17.10.0-beta.17.tgz",
++      "integrity": "sha512-hU4Sgna19ixDP/l3P/zkHhQ9B0JDV39qA97RNz55QcngeRjFC5/1G36LZjODVJ84kVJHUTQMmly7nzWO8js8kg==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "hasInstallScript": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=16"
++      }
++    },
++    "node_modules/@embedded-postgres/windows-x64": {
++      "version": "17.10.0-beta.17",
++      "resolved": "https://registry.npmjs.org/@embedded-postgres/windows-x64/-/windows-x64-17.10.0-beta.17.tgz",
++      "integrity": "sha512-q6xIETTkv67i1QlTWz1LAKb3Z+vG2V3qrp+BjLEWhCQ9jE4hbbsQ/J/3wiOPFLJbuwak7CfHC9EUJG7txAbGKw==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "hasInstallScript": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "win32"
++      ],
++      "engines": {
++        "node": ">=16"
++      }
++    },
++    "node_modules/@esbuild/aix-ppc64": {
++      "version": "0.28.2",
++      "resolved": "https://registry.npmjs.org/@esbuild/aix-ppc64/-/aix-ppc64-0.28.2.tgz",
++      "integrity": "sha512-XExcO+dvLKvVtNTibSTBej1NCAbaGhWn9Ww1ZPx80qsahhPFe/8jgWP0IchNe0F3HwkU7n8ejhH8bjonqht8mQ==",
++      "cpu": [
++        "ppc64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "aix"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/android-arm": {
++      "version": "0.28.2",
++      "resolved": "https://registry.npmjs.org/@esbuild/android-arm/-/android-arm-0.28.2.tgz",
++      "integrity": "sha512-kXXoiPVVGQcnIYGOeaovwOURpniDBpSq4A03qkQ+BMQqtGG6HYap3xne9C1O1yo4TR3qxlCX5IqqmX6fFo2Lqg==",
++      "cpu": [
++        "arm"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "android"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/android-arm64": {
++      "version": "0.28.2",
++      "resolved": "https://registry.npmjs.org/@esbuild/android-arm64/-/android-arm64-0.28.2.tgz",
++      "integrity": "sha512-5YfKeeI8qWfBZIX+u2xZC3Zlb3Os/gLS2sbEKM+I4ZOcsWmHS2WLysCcQZDAFRslDUU5Oiq44gf6PYN1vGwG5A==",
++      "cpu": [
++        "arm64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "android"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/android-x64": {
++      "version": "0.28.2",
++      "resolved": "https://registry.npmjs.org/@esbuild/android-x64/-/android-x64-0.28.2.tgz",
++      "integrity": "sha512-O387ite7SzUyCcy3JQX4P4bLtEA7bLLkx+esve5JHnyYfNTxcVpXZo9jhdB0lTKN44gztELTdU7nS8Nr16Fs1Q==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "android"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/darwin-arm64": {
++      "version": "0.28.2",
++      "resolved": "https://registry.npmjs.org/@esbuild/darwin-arm64/-/darwin-arm64-0.28.2.tgz",
++      "integrity": "sha512-n4KqkOQrraxHJcgjM1RvwbigfQKIKJVpM7xp+KsxiyUSrRdIXnt73VhrPAx0fV44hgfmIVKjxMN9J1t5jySVkw==",
++      "cpu": [
++        "arm64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "darwin"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/darwin-x64": {
++      "version": "0.28.2",
++      "resolved": "https://registry.npmjs.org/@esbuild/darwin-x64/-/darwin-x64-0.28.2.tgz",
++      "integrity": "sha512-uq6suIWYP37qzGddBKPw5QEQPi6HiLGsO7UmkpfyaYNQ3D+rN6w6WfwH+nuqcGXWvawGwxOEroO4YGnFh95azw==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "darwin"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/freebsd-arm64": {
++      "version": "0.28.2",
++      "resolved": "https://registry.npmjs.org/@esbuild/freebsd-arm64/-/freebsd-arm64-0.28.2.tgz",
++      "integrity": "sha512-n+I0BTSRIoy+d6RPKnEVwql5UwBJolytvY4mAOIEJorKlqgPII8ix6slVVrfZ5Tnj7glIZvloylbB/EJPMWEXw==",
++      "cpu": [
++        "arm64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "freebsd"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/freebsd-x64": {
++      "version": "0.28.2",
++      "resolved": "https://registry.npmjs.org/@esbuild/freebsd-x64/-/freebsd-x64-0.28.2.tgz",
++      "integrity": "sha512-78XJTJkvPs0kz2w61301PJjXl4g7q3JqiYMZ/M/yVI73EHBrCRTgkhu9oqG7vPqq+a/yadEW8aD+agKlk5xrmg==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "freebsd"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/linux-arm": {
++      "version": "0.28.2",
++      "resolved": "https://registry.npmjs.org/@esbuild/linux-arm/-/linux-arm-0.28.2.tgz",
++      "integrity": "sha512-XlDnu2q5yoqems+xay6wSAcg9DDD7K9RLKZEBOMZm3ckNpJBvOX20tSfby8KfrrhINDyv9V2YVZKY/SpoGJI8w==",
++      "cpu": [
++        "arm"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/linux-arm64": {
++      "version": "0.28.2",
++      "resolved": "https://registry.npmjs.org/@esbuild/linux-arm64/-/linux-arm64-0.28.2.tgz",
++      "integrity": "sha512-pW4AC0P3it8c7do9MVM4p51FzHzdM/TZrerurgRcHJ2WTa1VQ1CIq18xncfpBJw4ojkiZZrKW2yIBWBP92j6Ug==",
++      "cpu": [
++        "arm64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/linux-ia32": {
++      "version": "0.28.2",
++      "resolved": "https://registry.npmjs.org/@esbuild/linux-ia32/-/linux-ia32-0.28.2.tgz",
++      "integrity": "sha512-CYbnj78HsIeA+DhgUKgFCfvNsTHFhMMrinUrMZpDXJXKN8T3XViTZ/+wtHeVxEWY8ewSzTFN+nRmSwO2tZaLUQ==",
++      "cpu": [
++        "ia32"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/linux-loong64": {
++      "version": "0.28.2",
++      "resolved": "https://registry.npmjs.org/@esbuild/linux-loong64/-/linux-loong64-0.28.2.tgz",
++      "integrity": "sha512-buwkd8nsph4R+ajRvw0qM5Hja/TXQow3ptzWO2EbG/cqcIkHloRrdlBtQlshyYGTNFvfkfJ5tpPLVkY4DtsPfQ==",
++      "cpu": [
++        "loong64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/linux-mips64el": {
++      "version": "0.28.2",
++      "resolved": "https://registry.npmjs.org/@esbuild/linux-mips64el/-/linux-mips64el-0.28.2.tgz",
++      "integrity": "sha512-ZVykbDyk7519VwiNb9Lcj9m8XM6v5V9uKPvrEMkkEedVewf+0itkhahp4HDpgERXhwLRpWFypsGbG/J8s0QjJA==",
++      "cpu": [
++        "mips64el"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/linux-ppc64": {
++      "version": "0.28.2",
++      "resolved": "https://registry.npmjs.org/@esbuild/linux-ppc64/-/linux-ppc64-0.28.2.tgz",
++      "integrity": "sha512-CAXl+Dtd9UUuJd8pKKdwh6MLm3MUMiqMPmhZ3tTSXPqfyQ3vDl6R5hZdZ/kYojK4ofXtdfSv1tFq8XzWx3heNQ==",
++      "cpu": [
++        "ppc64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/linux-riscv64": {
++      "version": "0.28.2",
++      "resolved": "https://registry.npmjs.org/@esbuild/linux-riscv64/-/linux-riscv64-0.28.2.tgz",
++      "integrity": "sha512-GeXCej4IQtU1B+QlDV8W/RRvbzI3O/Stss+/bCXv4lZls5WGRtu2a+3JkA3i4qIUlMXpcHebWpF8AkJhATowuA==",
++      "cpu": [
++        "riscv64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/linux-s390x": {
++      "version": "0.28.2",
++      "resolved": "https://registry.npmjs.org/@esbuild/linux-s390x/-/linux-s390x-0.28.2.tgz",
++      "integrity": "sha512-3H1weTYZPxt/WOhByszQZybS9w5lKzUn1FDMsgEChbHWQwHYQQRfBxgCcZvPhjHfKyJjIievvMmEUawJrdY9Dg==",
++      "cpu": [
++        "s390x"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/linux-x64": {
++      "version": "0.28.2",
++      "resolved": "https://registry.npmjs.org/@esbuild/linux-x64/-/linux-x64-0.28.2.tgz",
++      "integrity": "sha512-4xTZr1FUmSoQW4XIWmit3tzQrUTZM+N3P0XV8xROKYF50XfI7xeO90+1bZvNwxIufQ9hDQVRJH5YhgPVF8A/HQ==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/netbsd-arm64": {
++      "version": "0.28.2",
++      "resolved": "https://registry.npmjs.org/@esbuild/netbsd-arm64/-/netbsd-arm64-0.28.2.tgz",
++      "integrity": "sha512-sSATRjPeDBg3pdgHoQfoYBob11Kk1FGa9lui5RIHZCoCkJa9QKlvl3/vKz2usCmYYjs7ymJR/2Nnsqe+Hjt5nw==",
++      "cpu": [
++        "arm64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "netbsd"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/netbsd-x64": {
++      "version": "0.28.2",
++      "resolved": "https://registry.npmjs.org/@esbuild/netbsd-x64/-/netbsd-x64-0.28.2.tgz",
++      "integrity": "sha512-lqnzCV+mM0gIADaKihiCg6ifgfU2L3h5E33rNQBN1Y4MaVGnzryzmvvf7UHxprpQdE8hpqLolJ9Rl+SkIRDpyw==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "netbsd"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/openbsd-arm64": {
++      "version": "0.28.2",
++      "resolved": "https://registry.npmjs.org/@esbuild/openbsd-arm64/-/openbsd-arm64-0.28.2.tgz",
++      "integrity": "sha512-AL2qJILH7lNjrDmCQDvdxMfAUIv8KMNZOvrwAQ8i8//ntL9FflhOyMJ8OZSMBb8/AWXe3/5v5S20y3zCoZWKoQ==",
++      "cpu": [
++        "arm64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "openbsd"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/openbsd-x64": {
++      "version": "0.28.2",
++      "resolved": "https://registry.npmjs.org/@esbuild/openbsd-x64/-/openbsd-x64-0.28.2.tgz",
++      "integrity": "sha512-QtiuPytchRyC4rwUKhexJdQKvDuZ6hWloi3igqPQNUJCS1/v9EiO3UTOXR6A3FoMo4fnAKbWJdqaIwhOzh8qEw==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "openbsd"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/openharmony-arm64": {
++      "version": "0.28.2",
++      "resolved": "https://registry.npmjs.org/@esbuild/openharmony-arm64/-/openharmony-arm64-0.28.2.tgz",
++      "integrity": "sha512-WkhYDmpTjLvGlScA1rwjRUmhl4k8oXR3cIbtqWmELgU/dFeHHlEllxDvdWcNJV9rbzCexB5vz8gtNewWLgCT7Q==",
++      "cpu": [
++        "arm64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "openharmony"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/sunos-x64": {
++      "version": "0.28.2",
++      "resolved": "https://registry.npmjs.org/@esbuild/sunos-x64/-/sunos-x64-0.28.2.tgz",
++      "integrity": "sha512-GPMSkTOtMnv2U2F8gxe4Io6qmVs+YKyp832Etqqxr0hFngmXQ3rzwytelm3GIn7T4VviRUlf3sOgBOiTdvaf7g==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "sunos"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/win32-arm64": {
++      "version": "0.28.2",
++      "resolved": "https://registry.npmjs.org/@esbuild/win32-arm64/-/win32-arm64-0.28.2.tgz",
++      "integrity": "sha512-PIhhEkE9uPBleRBrQEJpUn7MBnibZzbGzYWPmY3x+YoVg/95zbjB4CxPPOQ8l5tYYM4mMaCthF8/1DIfBQQyWQ==",
++      "cpu": [
++        "arm64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "win32"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/win32-ia32": {
++      "version": "0.28.2",
++      "resolved": "https://registry.npmjs.org/@esbuild/win32-ia32/-/win32-ia32-0.28.2.tgz",
++      "integrity": "sha512-YmJbfTlvU7Sdn9BB+4PRES4oB6pxgS37MAONj+hBr/cpXS1aBPKXxNnDbu+QCWPj0o9dgyxeq79g6c5P8KeuYA==",
++      "cpu": [
++        "ia32"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "win32"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/win32-x64": {
++      "version": "0.28.2",
++      "resolved": "https://registry.npmjs.org/@esbuild/win32-x64/-/win32-x64-0.28.2.tgz",
++      "integrity": "sha512-5ebpxr3nWMzrL/rnUI755Jkuee0bHL/Gq0WTF9lvcpv73wAp5eu8MfBUgWK9bhWvZjj7yX8etf/8tI8Ney695g==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "win32"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@fastify/ajv-compiler": {
++      "version": "4.0.6",
++      "resolved": "https://registry.npmjs.org/@fastify/ajv-compiler/-/ajv-compiler-4.0.6.tgz",
++      "integrity": "sha512-NtuzM0SfaMJbGlnjr9LWQUN5LzgSrbB8tf/wRZNas+4E1O/Nmzl53e7ruT61HDZyRCJGC6FxIogmNZO1c5ETBA==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/fastify"
++        },
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/fastify"
++        }
++      ],
++      "license": "MIT",
++      "dependencies": {
++        "ajv": "^8.12.0",
++        "ajv-formats": "^3.0.1",
++        "fast-uri": "^4.0.0"
++      }
++    },
++    "node_modules/@fastify/error": {
++      "version": "4.2.0",
++      "resolved": "https://registry.npmjs.org/@fastify/error/-/error-4.2.0.tgz",
++      "integrity": "sha512-RSo3sVDXfHskiBZKBPRgnQTtIqpi/7zhJOEmAxCiBcM7d0uwdGdxLlsCaLzGs8v8NnxIRlfG0N51p5yFaOentQ==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/fastify"
++        },
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/fastify"
++        }
++      ],
++      "license": "MIT"
++    },
++    "node_modules/@fastify/fast-json-stringify-compiler": {
++      "version": "5.1.0",
++      "resolved": "https://registry.npmjs.org/@fastify/fast-json-stringify-compiler/-/fast-json-stringify-compiler-5.1.0.tgz",
++      "integrity": "sha512-PxcYtKLbQ8Z+yApiqjK8FwxIwvEj38k2OiLc17u8dkJSlmfi2wHHPaSnaoqBPQqtvF8YVsDgDpP2snDCfFrpfw==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/fastify"
++        },
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/fastify"
++        }
++      ],
++      "license": "MIT",
++      "dependencies": {
++        "fast-json-stringify": "^7.0.0"
++      }
++    },
++    "node_modules/@fastify/forwarded": {
++      "version": "3.0.2",
++      "resolved": "https://registry.npmjs.org/@fastify/forwarded/-/forwarded-3.0.2.tgz",
++      "integrity": "sha512-NE8HgKLgYejV9lDpqkEFaDKMLYelJBVfHekhB0UKvX0ghagXRJqg68feg8er1NPXxG4N9i6vPxzt8E+3wHfcmA==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/fastify"
++        },
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/fastify"
++        }
++      ],
++      "license": "MIT"
++    },
++    "node_modules/@fastify/merge-json-schemas": {
++      "version": "0.2.1",
++      "resolved": "https://registry.npmjs.org/@fastify/merge-json-schemas/-/merge-json-schemas-0.2.1.tgz",
++      "integrity": "sha512-OA3KGBCy6KtIvLf8DINC5880o5iBlDX4SxzLQS8HorJAbqluzLRn80UXU0bxZn7UOFhFgpRJDasfwn9nG4FG4A==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/fastify"
++        },
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/fastify"
++        }
++      ],
++      "license": "MIT",
++      "dependencies": {
++        "dequal": "^2.0.3"
++      }
++    },
++    "node_modules/@fastify/proxy-addr": {
++      "version": "5.1.1",
++      "resolved": "https://registry.npmjs.org/@fastify/proxy-addr/-/proxy-addr-5.1.1.tgz",
++      "integrity": "sha512-zv07Y9GEuDsJPegZoDFd4SDWaZOW8N2pa0GSrYmKpId/tjt1Hgo3BjZBVjdVpfVrHaA+Qv5jawtS2O50J5xM9g==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/fastify"
++        },
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/fastify"
++        }
++      ],
++      "license": "MIT",
++      "dependencies": {
++        "@fastify/forwarded": "^3.0.0",
++        "ipaddr.js": "^2.1.0"
++      }
++    },
++    "node_modules/@pinojs/redact": {
++      "version": "0.4.0",
++      "resolved": "https://registry.npmjs.org/@pinojs/redact/-/redact-0.4.0.tgz",
++      "integrity": "sha512-k2ENnmBugE/rzQfEcdWHcCY+/FM3VLzH9cYEsbdsoqrvzAKRhUZeRNhAZvB8OitQJ1TBed3yqWtdjzS6wJKBwg==",
++      "license": "MIT"
++    },
++    "node_modules/@types/node": {
++      "version": "26.6.2",
++      "resolved": "https://registry.npmjs.org/@types/node/-/node-26.6.2.tgz",
++      "integrity": "sha512-X1P21scMv4zGKLYqjdGjaKa7COa0RKVYYZZN/NfvLQ1JegxFhdhpZG/Lyn8AXx6CDUavKAd11v6BvfpkDByK8g==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "undici-types": "~8.9.0"
++      }
++    },
++    "node_modules/@types/pg": {
++      "version": "8.23.1",
++      "resolved": "https://registry.npmjs.org/@types/pg/-/pg-8.23.1.tgz",
++      "integrity": "sha512-fKVHpikPdg4GKks3JuLEhvwSyvwzF23hnabPy6DD8ljVbC7+6J5dQzdv4arV6jqq57djnMgs1HKBxX4P8aBI3A==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "@types/node": "*",
++        "pg-protocol": "*",
++        "pg-types": "^2.2.0"
++      }
++    },
++    "node_modules/@typescript/typescript-aix-ppc64": {
++      "version": "7.0.2",
++      "resolved": "https://registry.npmjs.org/@typescript/typescript-aix-ppc64/-/typescript-aix-ppc64-7.0.2.tgz",
++      "integrity": "sha512-MTKKkWB7p/0E9xi1d1tHtZ5PiLkGEMIq88pK2CubZjOsLtYTLqhgIgi6zepFa+9GHZ6h05NMCkQxGKiPXMxXtQ==",
++      "cpu": [
++        "ppc64"
++      ],
++      "dev": true,
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "aix"
++      ],
++      "engines": {
++        "node": ">=16.20.0"
++      }
++    },
++    "node_modules/@typescript/typescript-darwin-arm64": {
++      "version": "7.0.2",
++      "resolved": "https://registry.npmjs.org/@typescript/typescript-darwin-arm64/-/typescript-darwin-arm64-7.0.2.tgz",
++      "integrity": "sha512-gowzar9MwS/aRWp6f3a4KUqzRjAZjOsmGNCM6LcTgXum+dBfgsBVMN+AgvOCCbguXyick6LJhpBszxMebJ8syA==",
++      "cpu": [
++        "arm64"
++      ],
++      "dev": true,
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "darwin"
++      ],
++      "engines": {
++        "node": ">=16.20.0"
++      }
++    },
++    "node_modules/@typescript/typescript-darwin-x64": {
++      "version": "7.0.2",
++      "resolved": "https://registry.npmjs.org/@typescript/typescript-darwin-x64/-/typescript-darwin-x64-7.0.2.tgz",
++      "integrity": "sha512-SZ9xZInqApNlNGc9s0W1VSsktYSOe9cFqNOIqmN1Gs8SmkjKZYFt017G4VwPxASInODuAdbTW7sXiFUf893RgA==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "darwin"
++      ],
++      "engines": {
++        "node": ">=16.20.0"
++      }
++    },
++    "node_modules/@typescript/typescript-freebsd-arm64": {
++      "version": "7.0.2",
++      "resolved": "https://registry.npmjs.org/@typescript/typescript-freebsd-arm64/-/typescript-freebsd-arm64-7.0.2.tgz",
++      "integrity": "sha512-W5NH4y/J0plIIS5b2xvTEkU7JFxyqdMAOgf+Ilhl0vHQXKO5dZoxd+C/jEtq56c4F3wk71RB4BMRQ2XdI+bwYQ==",
++      "cpu": [
++        "arm64"
++      ],
++      "dev": true,
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "freebsd"
++      ],
++      "engines": {
++        "node": ">=16.20.0"
++      }
++    },
++    "node_modules/@typescript/typescript-freebsd-x64": {
++      "version": "7.0.2",
++      "resolved": "https://registry.npmjs.org/@typescript/typescript-freebsd-x64/-/typescript-freebsd-x64-7.0.2.tgz",
++      "integrity": "sha512-UMGDx5sTpzNw3WiPebH7l90IWfJggEd+egHt/q6p7/Cm3zqoV7VxkGXt+3DxPIw8CcmvAB0j3sVVfbhX+M4Tpw==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "freebsd"
++      ],
++      "engines": {
++        "node": ">=16.20.0"
++      }
++    },
++    "node_modules/@typescript/typescript-linux-arm": {
++      "version": "7.0.2",
++      "resolved": "https://registry.npmjs.org/@typescript/typescript-linux-arm/-/typescript-linux-arm-7.0.2.tgz",
++      "integrity": "sha512-gffT3xPz9sR7j/YJExkyPntrI0P2EP9XbOyWzth2/Gs0RstK+90RBcO0ncXoXy/beYll1SXw846Nf2zdnEz0QQ==",
++      "cpu": [
++        "arm"
++      ],
++      "dev": true,
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=16.20.0"
++      }
++    },
++    "node_modules/@typescript/typescript-linux-arm64": {
++      "version": "7.0.2",
++      "resolved": "https://registry.npmjs.org/@typescript/typescript-linux-arm64/-/typescript-linux-arm64-7.0.2.tgz",
++      "integrity": "sha512-Qh4eU4/y3yDjnfjjyPYihMj5/ODIlmt+Bzu17OI+fiSRDW57QmU5SiN63exPRNJPKUzcc1INa1NXdrJ+MqHjUQ==",
++      "cpu": [
++        "arm64"
++      ],
++      "dev": true,
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=16.20.0"
++      }
++    },
++    "node_modules/@typescript/typescript-linux-loong64": {
++      "version": "7.0.2",
++      "resolved": "https://registry.npmjs.org/@typescript/typescript-linux-loong64/-/typescript-linux-loong64-7.0.2.tgz",
++      "integrity": "sha512-uEHck9i8hoAzXPiYRib1O7miOnz23SxIeVl6F4LXox+qov1K35jHcEW6VHKvZI+pyvl7fZEP4MCU5LYvIq1GuQ==",
++      "cpu": [
++        "loong64"
++      ],
++      "dev": true,
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=16.20.0"
++      }
++    },
++    "node_modules/@typescript/typescript-linux-mips64el": {
++      "version": "7.0.2",
++      "resolved": "https://registry.npmjs.org/@typescript/typescript-linux-mips64el/-/typescript-linux-mips64el-7.0.2.tgz",
++      "integrity": "sha512-R4KvAMnE43W5Qeqb0Ly56O3mWMWIAgsMyz36DCaycd5nbg/9kzm0liw3JocfRqyJY0KPmzFjbswozXyW0DnIYA==",
++      "cpu": [
++        "mips64el"
++      ],
++      "dev": true,
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=16.20.0"
++      }
++    },
++    "node_modules/@typescript/typescript-linux-ppc64": {
++      "version": "7.0.2",
++      "resolved": "https://registry.npmjs.org/@typescript/typescript-linux-ppc64/-/typescript-linux-ppc64-7.0.2.tgz",
++      "integrity": "sha512-DORx5b3sd/4S7eayxm4FQv+A7CrkUIGRaHiwI8oiHTAI1fAPWhF4J0vAlkC8biAlHSVVwxMQ3tjZ2/DVbnQiiA==",
++      "cpu": [
++        "ppc64"
++      ],
++      "dev": true,
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=16.20.0"
++      }
++    },
++    "node_modules/@typescript/typescript-linux-riscv64": {
++      "version": "7.0.2",
++      "resolved": "https://registry.npmjs.org/@typescript/typescript-linux-riscv64/-/typescript-linux-riscv64-7.0.2.tgz",
++      "integrity": "sha512-wf0jqEDOjrPRnKwYRyyJDRo11KMbvMFrU+q4zqKyChODBzvlkbhNQfKvLxQCcwTpdDaXSHZTVuh0JoCrKCUMHQ==",
++      "cpu": [
++        "riscv64"
++      ],
++      "dev": true,
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=16.20.0"
++      }
++    },
++    "node_modules/@typescript/typescript-linux-s390x": {
++      "version": "7.0.2",
++      "resolved": "https://registry.npmjs.org/@typescript/typescript-linux-s390x/-/typescript-linux-s390x-7.0.2.tgz",
++      "integrity": "sha512-IkwJc3L7yhytWd/ewjyxNDfOmswCm9GWMJT/ue/dU4aZNbwZeYAetq42VyLmsmSjvoX7z74X6ZaYCtzAr0EuGw==",
++      "cpu": [
++        "s390x"
++      ],
++      "dev": true,
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=16.20.0"
++      }
++    },
++    "node_modules/@typescript/typescript-linux-x64": {
++      "version": "7.0.2",
++      "resolved": "https://registry.npmjs.org/@typescript/typescript-linux-x64/-/typescript-linux-x64-7.0.2.tgz",
++      "integrity": "sha512-EYdf2cNg7rgCWJnxCdJ+F3V39O8ihb37eHAu1LK8oAFizgTQbPOK7zHHXbPt8rX24COqODXeI3sIf0fCXG7H/A==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=16.20.0"
++      }
++    },
++    "node_modules/@typescript/typescript-netbsd-arm64": {
++      "version": "7.0.2",
++      "resolved": "https://registry.npmjs.org/@typescript/typescript-netbsd-arm64/-/typescript-netbsd-arm64-7.0.2.tgz",
++      "integrity": "sha512-+polYF4MF04aPpO5FTkHran9yUQDSXqy5GiSDKpsll5jy3l3+g9QLhpf39T+ePtefhXLOGrLl0QIjkQP6VnelA==",
++      "cpu": [
++        "arm64"
++      ],
++      "dev": true,
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "netbsd"
++      ],
++      "engines": {
++        "node": ">=16.20.0"
++      }
++    },
++    "node_modules/@typescript/typescript-netbsd-x64": {
++      "version": "7.0.2",
++      "resolved": "https://registry.npmjs.org/@typescript/typescript-netbsd-x64/-/typescript-netbsd-x64-7.0.2.tgz",
++      "integrity": "sha512-8YIT0EHM/3dq10ZOVF/A7pc/YSMtbcecct4rWtexrnSCHOPcpC2KTLXfTCR6vDpnSiY12heNb1GiN/wu+T/FyA==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "netbsd"
++      ],
++      "engines": {
++        "node": ">=16.20.0"
++      }
++    },
++    "node_modules/@typescript/typescript-openbsd-arm64": {
++      "version": "7.0.2",
++      "resolved": "https://registry.npmjs.org/@typescript/typescript-openbsd-arm64/-/typescript-openbsd-arm64-7.0.2.tgz",
++      "integrity": "sha512-APT8+ClYnuYm1u9+kgGXoMj2VzWzcymwh2gNSQVySHfkRDGOTVkoWLjCmOQSaO+PoqQ57B0flRp9SA+7GnnkzQ==",
++      "cpu": [
++        "arm64"
++      ],
++      "dev": true,
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "openbsd"
++      ],
++      "engines": {
++        "node": ">=16.20.0"
++      }
++    },
++    "node_modules/@typescript/typescript-openbsd-x64": {
++      "version": "7.0.2",
++      "resolved": "https://registry.npmjs.org/@typescript/typescript-openbsd-x64/-/typescript-openbsd-x64-7.0.2.tgz",
++      "integrity": "sha512-yX7s+Q0Dln0Dt9tEzZsAjXXR/+ytBM7AlglaqyeMPxQszJ1JhlJdZ6jLA+IzldHtflX81em7lDao1xXu+aRRkg==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "openbsd"
++      ],
++      "engines": {
++        "node": ">=16.20.0"
++      }
++    },
++    "node_modules/@typescript/typescript-sunos-x64": {
++      "version": "7.0.2",
++      "resolved": "https://registry.npmjs.org/@typescript/typescript-sunos-x64/-/typescript-sunos-x64-7.0.2.tgz",
++      "integrity": "sha512-dLJDGaLZ1D4HPQn62u1n8mBDkJREwMsAkCdkwd4Ieqw+x3TUyTsqY0YiBCtE6H6OzzgGk3iuZ3vFWRS+E8/d1g==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "sunos"
++      ],
++      "engines": {
++        "node": ">=16.20.0"
++      }
++    },
++    "node_modules/@typescript/typescript-win32-arm64": {
++      "version": "7.0.2",
++      "resolved": "https://registry.npmjs.org/@typescript/typescript-win32-arm64/-/typescript-win32-arm64-7.0.2.tgz",
++      "integrity": "sha512-Gyl1Vy6OsWesLzmq+EP0Fb7b4Nid5232AvcA2SFcdYreldpNtYFFofPjnt62y9hQy7VTaZp65ICJjuAQRaVcIQ==",
++      "cpu": [
++        "arm64"
++      ],
++      "dev": true,
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "win32"
++      ],
++      "engines": {
++        "node": ">=16.20.0"
++      }
++    },
++    "node_modules/@typescript/typescript-win32-x64": {
++      "version": "7.0.2",
++      "resolved": "https://registry.npmjs.org/@typescript/typescript-win32-x64/-/typescript-win32-x64-7.0.2.tgz",
++      "integrity": "sha512-0BQ3HkAHHlKLSp1qRvf3SUhGpGsDuhB/jgFw75guyqbxJqEaS0Cw/VFO8i2nHglJUzQCRtMMR/IBAKE3ETMC4g==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "win32"
++      ],
++      "engines": {
++        "node": ">=16.20.0"
++      }
++    },
++    "node_modules/abstract-logging": {
++      "version": "2.0.1",
++      "resolved": "https://registry.npmjs.org/abstract-logging/-/abstract-logging-2.0.1.tgz",
++      "integrity": "sha512-2BjRTZxTPvheOvGbBslFSYOUkr+SjPtOnrLP33f+VIWLzezQpZcqVg7ja3L4dBXmzzgwT+a029jRx5PCi3JuiA==",
++      "license": "MIT"
++    },
++    "node_modules/ajv": {
++      "version": "8.20.0",
++      "resolved": "https://registry.npmjs.org/ajv/-/ajv-8.20.0.tgz",
++      "integrity": "sha512-Thbli+OlOj+iMPYFBVBfJ3OmCAnaSyNn4M1vz9T6Gka5Jt9ba/HIR56joy65tY6kx/FCF5VXNB819Y7/GUrBGA==",
++      "license": "MIT",
++      "dependencies": {
++        "fast-deep-equal": "^3.1.3",
++        "fast-uri": "^3.0.1",
++        "json-schema-traverse": "^1.0.0",
++        "require-from-string": "^2.0.2"
++      },
++      "funding": {
++        "type": "github",
++        "url": "https://github.com/sponsors/epoberezkin"
++      }
++    },
++    "node_modules/ajv-formats": {
++      "version": "3.0.1",
++      "resolved": "https://registry.npmjs.org/ajv-formats/-/ajv-formats-3.0.1.tgz",
++      "integrity": "sha512-8iUql50EUR+uUcdRQ3HDqa6EVyo3docL8g5WJ3FNcWmu62IbkGUue/pEyLBW8VGKKucTPgqeks4fIU1DA4yowQ==",
++      "license": "MIT",
++      "dependencies": {
++        "ajv": "^8.0.0"
++      },
++      "peerDependencies": {
++        "ajv": "^8.0.0"
++      },
++      "peerDependenciesMeta": {
++        "ajv": {
++          "optional": true
++        }
++      }
++    },
++    "node_modules/ajv/node_modules/fast-uri": {
++      "version": "3.1.8",
++      "resolved": "https://registry.npmjs.org/fast-uri/-/fast-uri-3.1.8.tgz",
++      "integrity": "sha512-GZMtZUTNRpOVIECoXwLNZS5xUGE+mVNbTB8h/7Rwh2TFWcBQiPzTgyZi05BF9UMZKkLJv8XBRJTlU7zg8+ZfMg==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/fastify"
++        },
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/fastify"
++        }
++      ],
++      "license": "BSD-3-Clause"
++    },
++    "node_modules/async-exit-hook": {
++      "version": "2.0.1",
++      "resolved": "https://registry.npmjs.org/async-exit-hook/-/async-exit-hook-2.0.1.tgz",
++      "integrity": "sha512-NW2cX8m1Q7KPA7a5M2ULQeZ2wR5qI5PAbw5L0UOMxdioVk9PMZ0h1TmyZEkPYrCvYjDlFICusOu1dlEKAAeXBw==",
++      "dev": true,
++      "license": "MIT",
++      "engines": {
++        "node": ">=0.12.0"
++      }
++    },
++    "node_modules/atomic-sleep": {
++      "version": "1.0.0",
++      "resolved": "https://registry.npmjs.org/atomic-sleep/-/atomic-sleep-1.0.0.tgz",
++      "integrity": "sha512-kNOjDqAh7px0XWNI+4QbzoiR/nTkHAWNud2uvnJquD1/x5a7EQZMJT0AczqK0Qn67oY/TTQ1LbUKajZpp3I9tQ==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=8.0.0"
++      }
++    },
++    "node_modules/avvio": {
++      "version": "9.3.0",
++      "resolved": "https://registry.npmjs.org/avvio/-/avvio-9.3.0.tgz",
++      "integrity": "sha512-g2tQ7LE7oOSqDfwEm3M+ZCMTJc7KiZCdJ4UwyZJb5ckTKyYu50OYmvv0mCFXPuYXoM4zkSt8zM9XQ9KCvxA74A==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/fastify"
++        },
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/fastify"
++        }
++      ],
++      "license": "MIT",
++      "dependencies": {
++        "@fastify/error": "^4.0.0",
++        "fastq": "^1.17.1"
++      }
++    },
++    "node_modules/cookie": {
++      "version": "1.1.1",
++      "resolved": "https://registry.npmjs.org/cookie/-/cookie-1.1.1.tgz",
++      "integrity": "sha512-ei8Aos7ja0weRpFzJnEA9UHJ/7XQmqglbRwnf2ATjcB9Wq874VKH9kfjjirM6UhU2/E5fFYadylyhFldcqSidQ==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=18"
++      },
++      "funding": {
++        "type": "opencollective",
++        "url": "https://opencollective.com/express"
++      }
++    },
++    "node_modules/dequal": {
++      "version": "2.0.3",
++      "resolved": "https://registry.npmjs.org/dequal/-/dequal-2.0.3.tgz",
++      "integrity": "sha512-0je+qPKHEMohvfRTCEo3CrPG6cAzAYgmzKyxRiYSSDkS6eGJdyVJm7WaYA5ECaAD9wLB2T4EEeymA5aFVcYXCA==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=6"
++      }
++    },
++    "node_modules/embedded-postgres": {
++      "version": "17.10.0-beta.17",
++      "resolved": "https://registry.npmjs.org/embedded-postgres/-/embedded-postgres-17.10.0-beta.17.tgz",
++      "integrity": "sha512-s9ITJA41OTIQmn91RLqQ5X2MVP2BCZ8pb4tQX3MY8VOd8xNCzzlgfHGcXuitDzK800FhbG/3YufFk21KTTvpzA==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "async-exit-hook": "^2.0.1",
++        "pg": "^8.7.3"
++      },
++      "engines": {
++        "node": ">=16"
++      },
++      "optionalDependencies": {
++        "@embedded-postgres/darwin-arm64": "^17.10.0-beta.17",
++        "@embedded-postgres/darwin-x64": "^17.10.0-beta.17",
++        "@embedded-postgres/linux-arm": "^17.10.0-beta.17",
++        "@embedded-postgres/linux-arm64": "^17.10.0-beta.17",
++        "@embedded-postgres/linux-ia32": "^17.10.0-beta.17",
++        "@embedded-postgres/linux-ppc64": "^17.10.0-beta.17",
++        "@embedded-postgres/linux-x64": "^17.10.0-beta.17",
++        "@embedded-postgres/windows-x64": "^17.10.0-beta.17"
++      }
++    },
++    "node_modules/esbuild": {
++      "version": "0.28.2",
++      "resolved": "https://registry.npmjs.org/esbuild/-/esbuild-0.28.2.tgz",
++      "integrity": "sha512-HKVLS8dvII+xoKW9kmqxbRKrnWEXfJJr/FZhhJmiqIB0e053QNYFqOBouTMO/k5sID4MvCiUCvv8b9M4h32wIA==",
++      "dev": true,
++      "hasInstallScript": true,
++      "license": "MIT",
++      "bin": {
++        "esbuild": "bin/esbuild"
++      },
++      "engines": {
++        "node": ">=18"
++      },
++      "optionalDependencies": {
++        "@esbuild/aix-ppc64": "0.28.2",
++        "@esbuild/android-arm": "0.28.2",
++        "@esbuild/android-arm64": "0.28.2",
++        "@esbuild/android-x64": "0.28.2",
++        "@esbuild/darwin-arm64": "0.28.2",
++        "@esbuild/darwin-x64": "0.28.2",
++        "@esbuild/freebsd-arm64": "0.28.2",
++        "@esbuild/freebsd-x64": "0.28.2",
++        "@esbuild/linux-arm": "0.28.2",
++        "@esbuild/linux-arm64": "0.28.2",
++        "@esbuild/linux-ia32": "0.28.2",
++        "@esbuild/linux-loong64": "0.28.2",
++        "@esbuild/linux-mips64el": "0.28.2",
++        "@esbuild/linux-ppc64": "0.28.2",
++        "@esbuild/linux-riscv64": "0.28.2",
++        "@esbuild/linux-s390x": "0.28.2",
++        "@esbuild/linux-x64": "0.28.2",
++        "@esbuild/netbsd-arm64": "0.28.2",
++        "@esbuild/netbsd-x64": "0.28.2",
++        "@esbuild/openbsd-arm64": "0.28.2",
++        "@esbuild/openbsd-x64": "0.28.2",
++        "@esbuild/openharmony-arm64": "0.28.2",
++        "@esbuild/sunos-x64": "0.28.2",
++        "@esbuild/win32-arm64": "0.28.2",
++        "@esbuild/win32-ia32": "0.28.2",
++        "@esbuild/win32-x64": "0.28.2"
++      }
++    },
++    "node_modules/fast-decode-uri-component": {
++      "version": "1.0.1",
++      "resolved": "https://registry.npmjs.org/fast-decode-uri-component/-/fast-decode-uri-component-1.0.1.tgz",
++      "integrity": "sha512-WKgKWg5eUxvRZGwW8FvfbaH7AXSh2cL+3j5fMGzUMCxWBJ3dV3a7Wz8y2f/uQ0e3B6WmodD3oS54jTQ9HVTIIg==",
++      "license": "MIT"
++    },
++    "node_modules/fast-deep-equal": {
++      "version": "3.1.3",
++      "resolved": "https://registry.npmjs.org/fast-deep-equal/-/fast-deep-equal-3.1.3.tgz",
++      "integrity": "sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==",
++      "license": "MIT"
++    },
++    "node_modules/fast-json-stringify": {
++      "version": "7.0.1",
++      "resolved": "https://registry.npmjs.org/fast-json-stringify/-/fast-json-stringify-7.0.1.tgz",
++      "integrity": "sha512-eRSayARSbbwlBjpP4vnTTIRD5QPcIrmihPxDeN1DtKnHPg66UuJLx+8hlK1kaFdjvzyQ/dzALoi4vwAQ+T+iZA==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/fastify"
++        },
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/fastify"
++        }
++      ],
++      "license": "MIT",
++      "dependencies": {
++        "@fastify/merge-json-schemas": "^0.2.0",
++        "ajv": "^8.12.0",
++        "ajv-formats": "^3.0.1",
++        "fast-uri": "^4.0.0",
++        "json-schema-ref-resolver": "^3.0.0",
++        "rfdc": "^1.2.0"
++      }
++    },
++    "node_modules/fast-querystring": {
++      "version": "1.1.2",
++      "resolved": "https://registry.npmjs.org/fast-querystring/-/fast-querystring-1.1.2.tgz",
++      "integrity": "sha512-g6KuKWmFXc0fID8WWH0jit4g0AGBoJhCkJMb1RmbsSEUNvQ+ZC8D6CUZ+GtF8nMzSPXnhiePyyqqipzNNEnHjg==",
++      "license": "MIT",
++      "dependencies": {
++        "fast-decode-uri-component": "^1.0.1"
++      }
++    },
++    "node_modules/fast-uri": {
++      "version": "4.2.1",
++      "resolved": "https://registry.npmjs.org/fast-uri/-/fast-uri-4.2.1.tgz",
++      "integrity": "sha512-TmHQgewjHtMq1E5QKA0tOE0yeYGQs25KZC/ziJpubRtWI15W92e6vPFydWOeZBVROSHBYw/QhD9d5OefdD6LDg==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/fastify"
++        },
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/fastify"
++        }
++      ],
++      "license": "BSD-3-Clause"
++    },
++    "node_modules/fastify": {
++      "version": "5.12.5",
++      "resolved": "https://registry.npmjs.org/fastify/-/fastify-5.12.5.tgz",
++      "integrity": "sha512-OB2k1dlxs5/NAABqeKV2FUHkSD2BbENsCak8yULVcymn3fHIPDVa9TI3SDnJSWYSllZmSYuZXy2gTnsT+Sut1A==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/fastify"
++        },
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/fastify"
++        }
++      ],
++      "license": "MIT",
++      "dependencies": {
++        "@fastify/ajv-compiler": "^4.0.5",
++        "@fastify/error": "^4.0.0",
++        "@fastify/fast-json-stringify-compiler": "^5.0.0",
++        "@fastify/proxy-addr": "^5.0.0",
++        "abstract-logging": "^2.0.1",
++        "avvio": "^9.0.0",
++        "fast-json-stringify": "^7.0.0",
++        "find-my-way": "^9.6.0",
++        "light-my-request": "^6.0.0",
++        "pino": "^9.14.0 || ^10.1.0",
++        "process-warning": "^5.1.0",
++        "rfdc": "^1.3.1",
++        "secure-json-parse": "^4.0.0",
++        "semver": "^7.6.0",
++        "toad-cache": "^3.7.0"
++      }
++    },
++    "node_modules/fastq": {
++      "version": "1.20.3",
++      "resolved": "https://registry.npmjs.org/fastq/-/fastq-1.20.3.tgz",
++      "integrity": "sha512-XKv5nnLs6nLF71NgiKJLIZFLkPyIEuOselLG7ujZnGrRfQK8HpvY+WqKhAJUAdLomwVHErVS4LfxFlPq0/FTAw==",
++      "license": "ISC",
++      "dependencies": {
++        "reusify": "^1.0.4"
++      }
++    },
++    "node_modules/find-my-way": {
++      "version": "9.9.0",
++      "resolved": "https://registry.npmjs.org/find-my-way/-/find-my-way-9.9.0.tgz",
++      "integrity": "sha512-sJsgZ1sQH2UDuowPuMKg8az7Qc8F0jnj+SKkFWU/+T0xcFlgV5skgXOGUqmQzOdmW6ALA7AhJINWx3qFBkbLHA==",
++      "license": "MIT",
++      "dependencies": {
++        "fast-deep-equal": "^3.1.3",
++        "fast-querystring": "^1.0.0",
++        "safe-regex2": "^5.0.0"
++      },
++      "engines": {
++        "node": ">=20"
++      }
++    },
++    "node_modules/fsevents": {
++      "version": "2.3.3",
++      "resolved": "https://registry.npmjs.org/fsevents/-/fsevents-2.3.3.tgz",
++      "integrity": "sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==",
++      "dev": true,
++      "hasInstallScript": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "darwin"
++      ],
++      "engines": {
++        "node": "^8.16.0 || ^10.6.0 || >=11.0.0"
++      }
++    },
++    "node_modules/ipaddr.js": {
++      "version": "2.5.0",
++      "resolved": "https://registry.npmjs.org/ipaddr.js/-/ipaddr.js-2.5.0.tgz",
++      "integrity": "sha512-aq+t5NAc+cS6rZQQVWC2x98CPqGtKKTMDd4Gaodv0wShnItdKg/51djkGJ1hqH+Oy0ivDftCbSLCQob8zso01w==",
++      "license": "MIT",
++      "engines": {
++        "node": ">= 10"
++      }
++    },
++    "node_modules/json-schema-ref-resolver": {
++      "version": "3.0.0",
++      "resolved": "https://registry.npmjs.org/json-schema-ref-resolver/-/json-schema-ref-resolver-3.0.0.tgz",
++      "integrity": "sha512-hOrZIVL5jyYFjzk7+y7n5JDzGlU8rfWDuYyHwGa2WA8/pcmMHezp2xsVwxrebD/Q9t8Nc5DboieySDpCp4WG4A==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/fastify"
++        },
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/fastify"
++        }
++      ],
++      "license": "MIT",
++      "dependencies": {
++        "dequal": "^2.0.3"
++      }
++    },
++    "node_modules/json-schema-traverse": {
++      "version": "1.0.0",
++      "resolved": "https://registry.npmjs.org/json-schema-traverse/-/json-schema-traverse-1.0.0.tgz",
++      "integrity": "sha512-NM8/P9n3XjXhIZn1lLhkFaACTOURQXjWhV4BA/RnOv8xvgqtqpAX9IO4mRQxSx1Rlo4tqzeqb0sOlruaOy3dug==",
++      "license": "MIT"
++    },
++    "node_modules/light-my-request": {
++      "version": "6.6.0",
++      "resolved": "https://registry.npmjs.org/light-my-request/-/light-my-request-6.6.0.tgz",
++      "integrity": "sha512-CHYbu8RtboSIoVsHZ6Ye4cj4Aw/yg2oAFimlF7mNvfDV192LR7nDiKtSIfCuLT7KokPSTn/9kfVLm5OGN0A28A==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/fastify"
++        },
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/fastify"
++        }
++      ],
++      "license": "BSD-3-Clause",
++      "dependencies": {
++        "cookie": "^1.0.1",
++        "process-warning": "^4.0.0",
++        "set-cookie-parser": "^2.6.0"
++      }
++    },
++    "node_modules/light-my-request/node_modules/process-warning": {
++      "version": "4.0.1",
++      "resolved": "https://registry.npmjs.org/process-warning/-/process-warning-4.0.1.tgz",
++      "integrity": "sha512-3c2LzQ3rY9d0hc1emcsHhfT9Jwz0cChib/QN89oME2R451w5fy3f0afAhERFZAwrbDU43wk12d0ORBpDVME50Q==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/fastify"
++        },
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/fastify"
++        }
++      ],
++      "license": "MIT"
++    },
++    "node_modules/on-exit-leak-free": {
++      "version": "2.1.2",
++      "resolved": "https://registry.npmjs.org/on-exit-leak-free/-/on-exit-leak-free-2.1.2.tgz",
++      "integrity": "sha512-0eJJY6hXLGf1udHwfNftBqH+g73EU4B504nZeKpz1sYRKafAghwxEJunB2O7rDZkL4PGfsMVnTXZ2EjibbqcsA==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=14.0.0"
++      }
++    },
++    "node_modules/pg": {
++      "version": "8.23.0",
++      "resolved": "https://registry.npmjs.org/pg/-/pg-8.23.0.tgz",
++      "integrity": "sha512-Ip2EQCngowJLGOfCwkFhPXU7/ljlhn6Rxlmy4XYfL2Y+vyRM59+8uR2xqRWKdYmbXmxCFOAmKxBuSUCdF34qLg==",
++      "license": "MIT",
++      "dependencies": {
++        "pg-connection-string": "^2.14.0",
++        "pg-pool": "^3.14.0",
++        "pg-protocol": "^1.16.0",
++        "pg-types": "2.2.0",
++        "pgpass": "1.0.5"
++      },
++      "engines": {
++        "node": ">= 16.0.0"
++      },
++      "optionalDependencies": {
++        "pg-cloudflare": "^1.4.0"
++      },
++      "peerDependencies": {
++        "pg-native": ">=3.0.1"
++      },
++      "peerDependenciesMeta": {
++        "pg-native": {
++          "optional": true
++        }
++      }
++    },
++    "node_modules/pg-cloudflare": {
++      "version": "1.4.0",
++      "resolved": "https://registry.npmjs.org/pg-cloudflare/-/pg-cloudflare-1.4.0.tgz",
++      "integrity": "sha512-Vo7z/6rrQYxpNRylp4Tlob2elzbh+N/MOQbxFVWCxS7oEx6jF53GTJFxK2WWpKuBRkmiin4Mt+xofFDjx09R0A==",
++      "license": "MIT",
++      "optional": true
++    },
++    "node_modules/pg-connection-string": {
++      "version": "2.14.0",
++      "resolved": "https://registry.npmjs.org/pg-connection-string/-/pg-connection-string-2.14.0.tgz",
++      "integrity": "sha512-XwWDGcLRGCXAR8F/AM5bG7Q+A3Wm2s6QeEjlOKZLlH3UYcguiqCWKyWXVag5TLTIjR7oOJUY8kcADaZgWPyLeg==",
++      "license": "MIT"
++    },
++    "node_modules/pg-int8": {
++      "version": "1.0.1",
++      "resolved": "https://registry.npmjs.org/pg-int8/-/pg-int8-1.0.1.tgz",
++      "integrity": "sha512-WCtabS6t3c8SkpDBUlb1kjOs7l66xsGdKpIPZsg4wR+B3+u9UAum2odSsF9tnvxg80h4ZxLWMy4pRjOsFIqQpw==",
++      "license": "ISC",
++      "engines": {
++        "node": ">=4.0.0"
++      }
++    },
++    "node_modules/pg-pool": {
++      "version": "3.14.0",
++      "resolved": "https://registry.npmjs.org/pg-pool/-/pg-pool-3.14.0.tgz",
++      "integrity": "sha512-gKtPkFdQPU3DksooVLi9LsjZxrsBUZIpa+7aVx+LV5pNh0KzP4Zleud2po+ConrxbuXGBJ6Hfer6hdgpIBpBaw==",
++      "license": "MIT",
++      "peerDependencies": {
++        "pg": ">=8.0"
++      }
++    },
++    "node_modules/pg-protocol": {
++      "version": "1.16.0",
++      "resolved": "https://registry.npmjs.org/pg-protocol/-/pg-protocol-1.16.0.tgz",
++      "integrity": "sha512-sILXutLVjCLjcDuOmvhX5e2Z4cS5qG/6Bu3VkpFwdf/633ElGLpEh9bgmuI5I4sqKqkifQiGyiCcx1HdtrK7tg==",
++      "license": "MIT"
++    },
++    "node_modules/pg-types": {
++      "version": "2.2.0",
++      "resolved": "https://registry.npmjs.org/pg-types/-/pg-types-2.2.0.tgz",
++      "integrity": "sha512-qTAAlrEsl8s4OiEQY69wDvcMIdQN6wdz5ojQiOy6YRMuynxenON0O5oCpJI6lshc6scgAY8qvJ2On/p+CXY0GA==",
++      "license": "MIT",
++      "dependencies": {
++        "pg-int8": "1.0.1",
++        "postgres-array": "~2.0.0",
++        "postgres-bytea": "~1.0.0",
++        "postgres-date": "~1.0.4",
++        "postgres-interval": "^1.1.0"
++      },
++      "engines": {
++        "node": ">=4"
++      }
++    },
++    "node_modules/pgpass": {
++      "version": "1.0.5",
++      "resolved": "https://registry.npmjs.org/pgpass/-/pgpass-1.0.5.tgz",
++      "integrity": "sha512-FdW9r/jQZhSeohs1Z3sI1yxFQNFvMcnmfuj4WBMUTxOrAyLMaTcE1aAMBiTlbMNaXvBCQuVi0R7hd8udDSP7ug==",
++      "license": "MIT",
++      "dependencies": {
++        "split2": "^4.1.0"
++      }
++    },
++    "node_modules/pino": {
++      "version": "10.3.1",
++      "resolved": "https://registry.npmjs.org/pino/-/pino-10.3.1.tgz",
++      "integrity": "sha512-r34yH/GlQpKZbU1BvFFqOjhISRo1MNx1tWYsYvmj6KIRHSPMT2+yHOEb1SG6NMvRoHRF0a07kCOox/9yakl1vg==",
++      "license": "MIT",
++      "dependencies": {
++        "@pinojs/redact": "^0.4.0",
++        "atomic-sleep": "^1.0.0",
++        "on-exit-leak-free": "^2.1.0",
++        "pino-abstract-transport": "^3.0.0",
++        "pino-std-serializers": "^7.0.0",
++        "process-warning": "^5.0.0",
++        "quick-format-unescaped": "^4.0.3",
++        "real-require": "^0.2.0",
++        "safe-stable-stringify": "^2.3.1",
++        "sonic-boom": "^4.0.1",
++        "thread-stream": "^4.0.0"
++      },
++      "bin": {
++        "pino": "bin.js"
++      }
++    },
++    "node_modules/pino-abstract-transport": {
++      "version": "3.0.0",
++      "resolved": "https://registry.npmjs.org/pino-abstract-transport/-/pino-abstract-transport-3.0.0.tgz",
++      "integrity": "sha512-wlfUczU+n7Hy/Ha5j9a/gZNy7We5+cXp8YL+X+PG8S0KXxw7n/JXA3c46Y0zQznIJ83URJiwy7Lh56WLokNuxg==",
++      "license": "MIT",
++      "dependencies": {
++        "split2": "^4.0.0"
++      }
++    },
++    "node_modules/pino-std-serializers": {
++      "version": "7.1.0",
++      "resolved": "https://registry.npmjs.org/pino-std-serializers/-/pino-std-serializers-7.1.0.tgz",
++      "integrity": "sha512-BndPH67/JxGExRgiX1dX0w1FvZck5Wa4aal9198SrRhZjH3GxKQUKIBnYJTdj2HDN3UQAS06HlfcSbQj2OHmaw==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-array": {
++      "version": "2.0.0",
++      "resolved": "https://registry.npmjs.org/postgres-array/-/postgres-array-2.0.0.tgz",
++      "integrity": "sha512-VpZrUqU5A69eQyW2c5CA1jtLecCsN2U/bD6VilrFDWq5+5UIEVO7nazS3TEcHf1zuPYO/sqGvUvW62g86RXZuA==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=4"
++      }
++    },
++    "node_modules/postgres-bytea": {
++      "version": "1.0.1",
++      "resolved": "https://registry.npmjs.org/postgres-bytea/-/postgres-bytea-1.0.1.tgz",
++      "integrity": "sha512-5+5HqXnsZPE65IJZSMkZtURARZelel2oXUEO8rH83VS/hxH5vv1uHquPg5wZs8yMAfdv971IU+kcPUczi7NVBQ==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=0.10.0"
++      }
++    },
++    "node_modules/postgres-date": {
++      "version": "1.0.7",
++      "resolved": "https://registry.npmjs.org/postgres-date/-/postgres-date-1.0.7.tgz",
++      "integrity": "sha512-suDmjLVQg78nMK2UZ454hAG+OAW+HQPZ6n++TNDUX+L0+uUlLywnoxJKDou51Zm+zTCjrCl0Nq6J9C5hP9vK/Q==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=0.10.0"
++      }
++    },
++    "node_modules/postgres-interval": {
++      "version": "1.2.0",
++      "resolved": "https://registry.npmjs.org/postgres-interval/-/postgres-interval-1.2.0.tgz",
++      "integrity": "sha512-9ZhXKM/rw350N1ovuWHbGxnGh/SNJ4cnxHiM0rxE4VN41wsg8P8zWn9hv/buK00RP4WvlOyr/RBDiptyxVbkZQ==",
++      "license": "MIT",
++      "dependencies": {
++        "xtend": "^4.0.0"
++      },
++      "engines": {
++        "node": ">=0.10.0"
++      }
++    },
++    "node_modules/process-warning": {
++      "version": "5.1.0",
++      "resolved": "https://registry.npmjs.org/process-warning/-/process-warning-5.1.0.tgz",
++      "integrity": "sha512-jQSaVHsPgtyw60e1rQ/A+/ArPEj/S8pS/vFnyGa/gYFXrKk/6RuDkoqVDQ5NI5MmS01698ltlAk0NoDBNLujRw==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/fastify"
++        },
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/fastify"
++        }
++      ],
++      "license": "MIT"
++    },
++    "node_modules/quick-format-unescaped": {
++      "version": "4.0.4",
++      "resolved": "https://registry.npmjs.org/quick-format-unescaped/-/quick-format-unescaped-4.0.4.tgz",
++      "integrity": "sha512-tYC1Q1hgyRuHgloV/YXs2w15unPVh8qfu/qCTfhTYamaw7fyhumKa2yGpdSo87vY32rIclj+4fWYQXUMs9EHvg==",
++      "license": "MIT"
++    },
++    "node_modules/real-require": {
++      "version": "0.2.0",
++      "resolved": "https://registry.npmjs.org/real-require/-/real-require-0.2.0.tgz",
++      "integrity": "sha512-57frrGM/OCTLqLOAh0mhVA9VBMHd+9U7Zb2THMGdBUoZVOtGbJzjxsYGDJ3A9AYYCP4hn6y1TVbaOfzWtm5GFg==",
++      "license": "MIT",
++      "engines": {
++        "node": ">= 12.13.0"
++      }
++    },
++    "node_modules/require-from-string": {
++      "version": "2.0.2",
++      "resolved": "https://registry.npmjs.org/require-from-string/-/require-from-string-2.0.2.tgz",
++      "integrity": "sha512-Xf0nWe6RseziFMu+Ap9biiUbmplq6S9/p+7w7YXP/JBHhrUDDUhwa+vANyubuqfZWTveU//DYVGsDG7RKL/vEw==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=0.10.0"
++      }
++    },
++    "node_modules/ret": {
++      "version": "0.5.0",
++      "resolved": "https://registry.npmjs.org/ret/-/ret-0.5.0.tgz",
++      "integrity": "sha512-I1XxrZSQ+oErkRR4jYbAyEEu2I0avBvvMM5JN+6EBprOGRCs63ENqZ3vjavq8fBw2+62G5LF5XelKwuJpcvcxw==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=10"
++      }
++    },
++    "node_modules/reusify": {
++      "version": "1.1.0",
++      "resolved": "https://registry.npmjs.org/reusify/-/reusify-1.1.0.tgz",
++      "integrity": "sha512-g6QUff04oZpHs0eG5p83rFLhHeV00ug/Yf9nZM6fLeUrPguBTkTQOdpAWWspMh55TZfVQDPaN3NQJfbVRAxdIw==",
++      "license": "MIT",
++      "engines": {
++        "iojs": ">=1.0.0",
++        "node": ">=0.10.0"
++      }
++    },
++    "node_modules/rfdc": {
++      "version": "1.4.1",
++      "resolved": "https://registry.npmjs.org/rfdc/-/rfdc-1.4.1.tgz",
++      "integrity": "sha512-q1b3N5QkRUWUl7iyylaaj3kOpIT0N2i9MqIEQXP73GVsN9cw3fdx8X63cEmWhJGi2PPCF23Ijp7ktmd39rawIA==",
++      "license": "MIT"
++    },
++    "node_modules/safe-regex2": {
++      "version": "5.1.1",
++      "resolved": "https://registry.npmjs.org/safe-regex2/-/safe-regex2-5.1.1.tgz",
++      "integrity": "sha512-mOSBvHGDZMuIEZMdOz/aCEYDCv0E7nfcNsIhUF+/P+xC7Hyf3FkvymqgPbg9D1EdSGu+uKbJgy09K/RKKc7kJA==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/fastify"
++        },
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/fastify"
++        }
++      ],
++      "license": "MIT",
++      "dependencies": {
++        "ret": "~0.5.0"
++      },
++      "bin": {
++        "safe-regex2": "bin/safe-regex2.js"
++      }
++    },
++    "node_modules/safe-stable-stringify": {
++      "version": "2.5.0",
++      "resolved": "https://registry.npmjs.org/safe-stable-stringify/-/safe-stable-stringify-2.5.0.tgz",
++      "integrity": "sha512-b3rppTKm9T+PsVCBEOUR46GWI7fdOs00VKZ1+9c1EWDaDMvjQc6tUwuFyIprgGgTcWoVHSKrU8H31ZHA2e0RHA==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=10"
++      }
++    },
++    "node_modules/secure-json-parse": {
++      "version": "4.1.0",
++      "resolved": "https://registry.npmjs.org/secure-json-parse/-/secure-json-parse-4.1.0.tgz",
++      "integrity": "sha512-l4KnYfEyqYJxDwlNVyRfO2E4NTHfMKAWdUuA8J0yve2Dz/E/PdBepY03RvyJpssIpRFwJoCD55wA+mEDs6ByWA==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/fastify"
++        },
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/fastify"
++        }
++      ],
++      "license": "BSD-3-Clause"
++    },
++    "node_modules/semver": {
++      "version": "7.8.5",
++      "resolved": "https://registry.npmjs.org/semver/-/semver-7.8.5.tgz",
++      "integrity": "sha512-Y7/KDsb8LjooZpwaqGyulO6DQlksgCncchHGk+sZIY4SBvUocMBEFH5Ur1fI4dV+Jvl0w6cjvucaIi40puRioA==",
++      "license": "ISC",
++      "bin": {
++        "semver": "bin/semver.js"
++      },
++      "engines": {
++        "node": ">=10"
++      }
++    },
++    "node_modules/set-cookie-parser": {
++      "version": "2.7.2",
++      "resolved": "https://registry.npmjs.org/set-cookie-parser/-/set-cookie-parser-2.7.2.tgz",
++      "integrity": "sha512-oeM1lpU/UvhTxw+g3cIfxXHyJRc/uidd3yK1P242gzHds0udQBYzs3y8j4gCCW+ZJ7ad0yctld8RYO+bdurlvw==",
++      "license": "MIT"
++    },
++    "node_modules/sonic-boom": {
++      "version": "4.2.1",
++      "resolved": "https://registry.npmjs.org/sonic-boom/-/sonic-boom-4.2.1.tgz",
++      "integrity": "sha512-w6AxtubXa2wTXAUsZMMWERrsIRAdrK0Sc+FUytWvYAhBJLyuI4llrMIC1DtlNSdI99EI86KZum2MMq3EAZlF9Q==",
++      "license": "MIT",
++      "dependencies": {
++        "atomic-sleep": "^1.0.0"
++      }
++    },
++    "node_modules/split2": {
++      "version": "4.2.0",
++      "resolved": "https://registry.npmjs.org/split2/-/split2-4.2.0.tgz",
++      "integrity": "sha512-UcjcJOWknrNkF6PLX83qcHM6KHgVKNkV62Y8a5uYDVv9ydGQVwAHMKqHdJje1VTWpljG0WYpCDhrCdAOYH4TWg==",
++      "license": "ISC",
++      "engines": {
++        "node": ">= 10.x"
++      }
++    },
++    "node_modules/thread-stream": {
++      "version": "4.2.0",
++      "resolved": "https://registry.npmjs.org/thread-stream/-/thread-stream-4.2.0.tgz",
++      "integrity": "sha512-e2zZ96wSChazBsbENf/Pcm/4swHt2cEKQ92rhUjkL9GCKiTDJIaTBenjE/m9DXi0QBmTMDkFDdOomUy20A1tDQ==",
++      "license": "MIT",
++      "dependencies": {
++        "real-require": "^1.0.0"
++      },
++      "engines": {
++        "node": ">=20"
++      }
++    },
++    "node_modules/thread-stream/node_modules/real-require": {
++      "version": "1.0.0",
++      "resolved": "https://registry.npmjs.org/real-require/-/real-require-1.0.0.tgz",
++      "integrity": "sha512-P4nbQYQfePJxRSmY+v/KINxVucm4NF3p3s7pJveMTtom52FR4YGltUQLB8idDXwDDWW+eYrWDFbuzUnjoWHF7g==",
++      "license": "MIT"
++    },
++    "node_modules/toad-cache": {
++      "version": "3.7.4",
++      "resolved": "https://registry.npmjs.org/toad-cache/-/toad-cache-3.7.4.tgz",
++      "integrity": "sha512-m1TdR/rvT7kgGJZhspNtXdsdYk0fddFpJJFlG5s+UkPFo6lkLoZ3YLOaovPYjq1R75NP5JfeTlSHaOsE09peCg==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=20"
++      }
++    },
++    "node_modules/tsx": {
++      "version": "4.23.15",
++      "resolved": "https://registry.npmjs.org/tsx/-/tsx-4.23.15.tgz",
++      "integrity": "sha512-Yiex1Ovn8z2xPpOWckIiysV1SSyRMY9BkLF++q0yKiDxCqRhosKfMg3janKkiLBwZ5c/YryloKwGZcrEmtwxKw==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "esbuild": "~0.28.0"
++      },
++      "bin": {
++        "tsx": "dist/cli.mjs"
++      },
++      "engines": {
++        "node": ">=18.0.0"
++      },
++      "optionalDependencies": {
++        "fsevents": "~2.3.3"
++      }
++    },
++    "node_modules/typescript": {
++      "version": "7.0.2",
++      "resolved": "https://registry.npmjs.org/typescript/-/typescript-7.0.2.tgz",
++      "integrity": "sha512-8FYau96o3NKOhbjKi/qNvG/W5jhzxkbdm5sj9AbZ/5T5sWqn3hJgLfGx27sRKZWTvyzCP8dLRBTf5tBTSRVUNA==",
++      "dev": true,
++      "license": "Apache-2.0",
++      "bin": {
++        "tsc": "bin/tsc"
++      },
++      "engines": {
++        "node": ">=16.20.0"
++      },
++      "optionalDependencies": {
++        "@typescript/typescript-aix-ppc64": "7.0.2",
++        "@typescript/typescript-darwin-arm64": "7.0.2",
++        "@typescript/typescript-darwin-x64": "7.0.2",
++        "@typescript/typescript-freebsd-arm64": "7.0.2",
++        "@typescript/typescript-freebsd-x64": "7.0.2",
++        "@typescript/typescript-linux-arm": "7.0.2",
++        "@typescript/typescript-linux-arm64": "7.0.2",
++        "@typescript/typescript-linux-loong64": "7.0.2",
++        "@typescript/typescript-linux-mips64el": "7.0.2",
++        "@typescript/typescript-linux-ppc64": "7.0.2",
++        "@typescript/typescript-linux-riscv64": "7.0.2",
++        "@typescript/typescript-linux-s390x": "7.0.2",
++        "@typescript/typescript-linux-x64": "7.0.2",
++        "@typescript/typescript-netbsd-arm64": "7.0.2",
++        "@typescript/typescript-netbsd-x64": "7.0.2",
++        "@typescript/typescript-openbsd-arm64": "7.0.2",
++        "@typescript/typescript-openbsd-x64": "7.0.2",
++        "@typescript/typescript-sunos-x64": "7.0.2",
++        "@typescript/typescript-win32-arm64": "7.0.2",
++        "@typescript/typescript-win32-x64": "7.0.2"
++      }
++    },
++    "node_modules/undici-types": {
++      "version": "8.9.0",
++      "resolved": "https://registry.npmjs.org/undici-types/-/undici-types-8.9.0.tgz",
++      "integrity": "sha512-KTDyRTYX8sWmKXAikPHHSyc63CRPETMctyjKFupcC6OBLXT3xsN0e9aF7m+mIXutFWpUXuedtowG7iLOzp0kQg==",
++      "dev": true,
++      "license": "MIT"
++    },
++    "node_modules/xtend": {
++      "version": "4.0.2",
++      "resolved": "https://registry.npmjs.org/xtend/-/xtend-4.0.2.tgz",
++      "integrity": "sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=0.4"
++      }
++    }
++  }
++}
+diff --git a/package.json b/package.json
+new file mode 100644
+index 0000000..056805b
+--- /dev/null
++++ b/package.json
+@@ -0,0 +1,28 @@
++{
++  "name": "nova-community-agent",
++  "version": "0.1.0",
++  "private": true,
++  "type": "module",
++  "description": "Independent NOVA Community Agent — foundation",
++  "engines": {
++    "node": ">=22"
++  },
++  "scripts": {
++    "test": "tsx --test --test-concurrency=1 tests/*.test.ts",
++    "typecheck": "tsc --noEmit",
++    "start": "tsx scripts/server.ts",
++    "bootstrap": "tsx scripts/bootstrap.ts",
++    "worker": "tsx scripts/worker.ts"
++  },
++  "dependencies": {
++    "fastify": "5.12.5",
++    "pg": "8.23.0"
++  },
++  "devDependencies": {
++    "@types/node": "26.6.2",
++    "@types/pg": "8.23.1",
++    "embedded-postgres": "17.10.0-beta.17",
++    "tsx": "4.23.15",
++    "typescript": "7.0.2"
++  }
++}
+diff --git a/scripts/bootstrap.ts b/scripts/bootstrap.ts
+new file mode 100644
+index 0000000..5cad8ba
+--- /dev/null
++++ b/scripts/bootstrap.ts
+@@ -0,0 +1,16 @@
++import { open, unlink } from 'node:fs/promises';
++import { bootstrap, migrate } from '../src/app.ts';
++import { localPool } from './config.ts';
++
++async function main() {
++  const path = process.argv[2]; if (!path) throw new Error('Output path required');
++  // Exclusive create refuses symlinks/existing files; credentials never appear in logs/stdout.
++  const file = await open(path, 'wx', 0o600); let ok = false;
++  try {
++    const pool = localPool();
++    try { await migrate(pool); const identity = await bootstrap(pool); await file.writeFile(JSON.stringify(identity)); await file.sync(); ok = true; }
++    finally { await pool.end(); }
++  } finally { await file.close(); if (!ok) await unlink(path); }
++  console.log('Local session created in restricted output file (24h expiry).');
++}
++main().catch(() => { console.error('Bootstrap failed; check local configuration and output path.'); process.exitCode = 1; });
+diff --git a/scripts/config.ts b/scripts/config.ts
+new file mode 100644
+index 0000000..d4f83af
+--- /dev/null
++++ b/scripts/config.ts
+@@ -0,0 +1,6 @@
++import pg from 'pg';
++export function localPool() {
++  if (process.env.PGHOST !== '127.0.0.1' || !process.env.PGPASSWORD || !process.env.PGUSER || !process.env.PGDATABASE) throw new Error('Local database configuration required');
++  return new pg.Pool({ host: '127.0.0.1', port: Number(process.env.PGPORT ?? 5432), user: process.env.PGUSER,
++    password: process.env.PGPASSWORD, database: process.env.PGDATABASE, max: 10, connectionTimeoutMillis: 5000 });
++}
+diff --git a/scripts/server.ts b/scripts/server.ts
+new file mode 100644
+index 0000000..767e457
+--- /dev/null
++++ b/scripts/server.ts
+@@ -0,0 +1,11 @@
++import { buildApp, migrate } from '../src/app.ts';
++import { localPool } from './config.ts';
++
++async function main() {
++  const pool = localPool(); const app = buildApp(pool); let closing = false;
++  const close = async () => { if (closing) return; closing = true; await app.close(); await pool.end(); };
++  process.once('SIGINT', () => { void close(); }); process.once('SIGTERM', () => { void close(); });
++  try { await migrate(pool); const url = await app.listen({ host: '127.0.0.1', port: Number(process.env.PORT ?? 3000) }); console.log('READY ' + url); }
++  catch { await close(); throw new Error('Startup failed'); }
++}
++main().catch(() => { console.error('Server failed; check local configuration.'); process.exitCode = 1; });
+diff --git a/scripts/worker.ts b/scripts/worker.ts
+new file mode 100644
+index 0000000..cec7ec4
+--- /dev/null
++++ b/scripts/worker.ts
+@@ -0,0 +1,17 @@
++import { migrate } from '../src/app.ts';
++import { drain, type SyntheticAdapter } from '../src/worker.ts';
++import { localPool } from './config.ts';
++const synthetic: SyntheticAdapter = {
++  kind: 'synthetic',
++  async send({ idempotencyKey, signal }) {
++    if (signal.aborted) throw new Error('Cancelled');
++    // Deliberately no network implementation: this is a declared local simulation.
++    return { outcome: 'succeeded', reference: 'synthetic-' + idempotencyKey };
++  },
++};
++async function main() {
++  const pool = localPool();
++  try { await migrate(pool); await drain(pool, synthetic); console.log('Synthetic worker batch complete; no external delivery.'); }
++  finally { await pool.end(); }
++}
++main().catch(() => { console.error('Worker failed; durable leases will recover on a later batch.'); process.exitCode = 1; });
+diff --git a/src/actions.ts b/src/actions.ts
+new file mode 100644
+index 0000000..667efc6
+--- /dev/null
++++ b/src/actions.ts
+@@ -0,0 +1,59 @@
++import { randomUUID } from 'node:crypto';
++import type { FastifyInstance, FastifyRequest } from 'fastify';
++import type { Pool, PoolClient } from 'pg';
++import { canonical, closed, event, fail, hash, identity, uuid } from './app.ts';
++export type Mutation = (run: (c: PoolClient, owner: string, body: any, r: FastifyRequest) => Promise<any>, status?: number) => any;
++export async function audit(c: PoolClient, owner: string, action: string, resource: string) {
++  await c.query('INSERT INTO audit_events(id,owner_id,action,resource_id) VALUES($1,$2,$3,$4)', [randomUUID(), owner, action, resource]);
++}
++export async function validIntent(c: PoolClient, owner: string, id: string, bindingHash?: string) {
++  const i = (await c.query('SELECT i.*,a.current_revision, i.expires_at>clock_timestamp() AS fresh FROM action_intents i JOIN artifacts a ON a.id=i.artifact_id AND a.owner_id=i.owner_id WHERE i.owner_id=$1 AND i.id=$2', [owner, id])).rows[0];
++  if (!i) fail(404, 'not_found');
++  if (!i.fresh || i.revision !== i.current_revision || (bindingHash !== undefined && i.binding_hash !== bindingHash)) fail(409, 'intent_invalid');
++  return i;
++}
++export function actionRoutes(app: FastifyInstance, pool: Pool, mutate: Mutation) {
++  const digest = { type: 'string', pattern: '^[a-f0-9]{64}$' };
++  app.post('/intents', { schema: { body: closed({ artifactId: uuid, revision: { type: 'integer', minimum: 1 },
++    operation: { const: 'simulate.send', type: 'string' }, account: { const: 'synthetic-account', type: 'string' },
++    recipient: { type: 'string', pattern: '^[A-Za-z0-9._+-]{1,64}@example\\.invalid$' }, expiresInSeconds: { type: 'integer', minimum: 1, maximum: 900 } }) } }, mutate(async (c, owner, body) => {
++    const row = (await c.query('SELECT r.content,a.current_revision FROM artifact_revisions r JOIN artifacts a ON a.id=r.artifact_id WHERE r.owner_id=$1 AND r.artifact_id=$2 AND r.revision=$3', [owner, body.artifactId, body.revision])).rows[0];
++    if (!row) fail(404, 'not_found');
++    if (row.current_revision !== body.revision) fail(409, 'revision_conflict');
++    const id = randomUUID();
++    const expiresAt = (await c.query("SELECT clock_timestamp()+$1*interval '1 second' AS expiry", [body.expiresInSeconds])).rows[0].expiry.toISOString();
++    const frozen = { id, owner, operation: body.operation, account: body.account, recipient: body.recipient, artifactId: body.artifactId, revision: body.revision, payload: row.content, expiresAt };
++    const bindingHash = hash(canonical(frozen));
++    await c.query('INSERT INTO action_intents(id,owner_id,artifact_id,revision,operation,account,recipient,payload,binding_hash,expires_at) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)', [id, owner, body.artifactId, body.revision, body.operation, body.account, body.recipient, row.content, bindingHash, expiresAt]);
++    await event(c, owner, 'intent.created', id); await audit(c, owner, 'approval.required', id);
++    const { owner: _owner, ...safe } = frozen;
++    return { ...safe, bindingHash, consequence: 'Synthetic adapter only; no external delivery', policy: 'require_approval' };
++  }));
++  app.post('/intents/:id/approve', { schema: { params: closed({ id: uuid }), body: closed({ bindingHash: digest }) } }, mutate(async (c, owner, body, r) => {
++    const i = await validIntent(c, owner, (r.params as any).id, body.bindingHash);
++    if ((await c.query('SELECT 1 FROM approvals WHERE intent_id=$1', [i.id])).rowCount) fail(409, 'approval_exists');
++    const id = randomUUID();
++    await c.query('INSERT INTO approvals(id,owner_id,intent_id,binding_hash,expires_at) VALUES($1,$2,$3,$4,$5)', [id, owner, i.id, i.binding_hash, i.expires_at]);
++    await event(c, owner, 'approval.granted', id); await audit(c, owner, 'approval.granted', id);
++    return { id, intentId: i.id, status: 'approved', bindingHash: i.binding_hash };
++  }));
++  app.post('/intents/:id/execute', { schema: { params: closed({ id: uuid }), body: closed({ approvalId: uuid, bindingHash: digest }) } }, mutate(async (c, owner, body, r) => {
++    const i = await validIntent(c, owner, (r.params as any).id, body.bindingHash);
++    const consumed = await c.query("UPDATE approvals SET status='consumed',consumed_at=clock_timestamp() WHERE owner_id=$1 AND id=$2 AND intent_id=$3 AND binding_hash=$4 AND status='approved' AND expires_at>clock_timestamp() RETURNING id", [owner, body.approvalId, i.id, i.binding_hash]);
++    if (!consumed.rowCount) fail(409, 'approval_invalid');
++    const id = randomUUID();
++    await c.query("INSERT INTO receipts(id,owner_id,intent_id,approval_id,status,session_hash) VALUES($1,$2,$3,$4,'queued',$5)", [id, owner, i.id, body.approvalId, hash(r.headers.authorization!.slice(7))]);
++    await event(c, owner, 'action.execute', id); await audit(c, owner, 'approval.consumed', body.approvalId);
++    return { id, intentId: i.id, status: 'queued' };
++  }));
++  app.post('/approvals/:id/revoke', { schema: { params: closed({ id: uuid }), body: closed({}) } }, mutate(async (c, owner, _body, r) => {
++    const id = (r.params as any).id;
++    if (!(await c.query("UPDATE approvals SET status='revoked' WHERE owner_id=$1 AND id=$2 RETURNING id", [owner, id])).rowCount) fail(404, 'not_found');
++    await event(c, owner, 'approval.revoked', id); await audit(c, owner, 'approval.revoked', id);
++    return { id, status: 'revoked' };
++  }));
++  app.get('/receipts/:id', { schema: { params: closed({ id: uuid }) } }, async r => {
++    const row = (await pool.query('SELECT id,intent_id AS "intentId",status,reference FROM receipts WHERE owner_id=$1 AND id=$2', [identity(r), (r.params as any).id])).rows[0];
++    return row ?? fail(404, 'not_found');
++  });
++}
+diff --git a/src/app.ts b/src/app.ts
+new file mode 100644
+index 0000000..d36070a
+--- /dev/null
++++ b/src/app.ts
+@@ -0,0 +1,137 @@
++import { privacyRoutes } from './privacy.ts';
++import { actionRoutes } from './actions.ts';
++import Fastify, { type FastifyRequest } from 'fastify';
++import { randomBytes, randomUUID, createHash } from 'node:crypto';
++import { readdir, readFile } from 'node:fs/promises';
++import type { Pool, PoolClient } from 'pg';
++
++export const hash = (s: string) => createHash('sha256').update(s).digest('hex');
++export const canonical = (value: any): string => value === null || typeof value !== 'object' ? JSON.stringify(value) :
++  Array.isArray(value) ? '[' + value.map(canonical).join(',') + ']' : '{' + Object.keys(value).sort().map(k => JSON.stringify(k) + ':' + canonical(value[k])).join(',') + '}';
++export class SafeError extends Error { constructor(public status: number, public code: string) { super(code); } }
++export const fail = (status: number, code: string): never => { throw new SafeError(status, code); };
++export async function transaction<T>(pool: Pool, run: (c: PoolClient) => Promise<T>): Promise<T> {
++  const c = await pool.connect();
++  try { await c.query('BEGIN'); const value = await run(c); await c.query('COMMIT'); return value; }
++  catch (e) { await c.query('ROLLBACK'); throw e; } finally { c.release(); }
++}
++export async function migrate(pool: Pool) {
++  await transaction(pool, async c => {
++    await c.query('SELECT pg_advisory_xact_lock(913002)');
++    await c.query('CREATE TABLE IF NOT EXISTS schema_migrations (name text PRIMARY KEY)');
++    const directory = new URL('../migrations/', import.meta.url);
++    for (const name of (await readdir(directory)).filter(n => n.endsWith('.sql')).sort()) {
++      if ((await c.query('SELECT 1 FROM schema_migrations WHERE name=$1', [name])).rowCount) continue;
++      await c.query(await readFile(new URL(name, directory), 'utf8'));
++      await c.query('INSERT INTO schema_migrations VALUES($1)', [name]);
++    }
++  });
++}
++export async function bootstrap(pool: Pool) {
++  const userId = randomUUID(), token = randomBytes(32).toString('base64url');
++  await transaction(pool, async c => {
++    await c.query('INSERT INTO users(id) VALUES($1)', [userId]);
++    await c.query("INSERT INTO sessions(token_hash,owner_id,expires_at) VALUES($1,$2,now()+interval '24 hours')", [hash(token), userId]);
++  });
++  return { userId, token };
++}
++export async function active(c: PoolClient, owner: string) {
++  const user = await c.query("SELECT id FROM users WHERE id=$1 AND status='active' FOR UPDATE", [owner]);
++  if (!user.rowCount) fail(401, 'unauthorized');
++}
++export async function event(c: PoolClient, owner: string, kind: string, resource: string) {
++  await c.query('INSERT INTO outbox(id,owner_id,kind,resource_id) VALUES($1,$2,$3,$4)', [randomUUID(), owner, kind, resource]);
++}
++const text = { type: 'string', minLength: 1, maxLength: 300 };
++export const uuid = { type: 'string', format: 'uuid' };
++export const closed = (properties: object, required = Object.keys(properties)) => ({ type: 'object', additionalProperties: false, properties, required });
++export const identity = (r: FastifyRequest) => (r as any).owner as string;
++export function buildApp(pool: Pool) {
++  const app = Fastify({ logger: false, bodyLimit: 65536, ajv: { customOptions: { removeAdditional: false, coerceTypes: false } } });
++  app.decorateRequest('owner', '');
++  app.addHook('onRoute', route => { route.schema = { ...route.schema, querystring: closed({}) }; });
++  app.addHook('onRequest', async r => {
++    const auth = r.headers.authorization;
++    if (!auth || !/^Bearer [A-Za-z0-9_-]{43}$/.test(auth)) fail(401, 'unauthorized');
++    const result = await pool.query("SELECT s.owner_id FROM sessions s JOIN users u ON u.id=s.owner_id WHERE s.token_hash=$1 AND s.expires_at>now() AND u.status='active'", [hash(auth!.slice(7))]);
++    if (!result.rowCount) fail(401, 'unauthorized');
++    (r as any).owner = result.rows[0].owner_id;
++  });
++  app.setErrorHandler((error: any, _r, reply) => {
++    const status = error instanceof SafeError ? error.status : error.validation || error.statusCode === 400 ? 400 : error.statusCode === 413 ? 413 : 500;
++    reply.status(status).send({ error: error instanceof SafeError ? error.code : status === 400 ? 'invalid_request' : status === 413 ? 'request_too_large' : 'internal_error' });
++  });
++  app.setNotFoundHandler((_r, reply) => reply.status(404).send({ error: 'not_found' }));
++  const mutate = (run: (c: PoolClient, owner: string, body: any, r: FastifyRequest) => Promise<any>, status = 201) => async (r: FastifyRequest, reply: any) => {
++    const key = r.headers['idempotency-key'];
++    if (typeof key !== 'string' || !/^[A-Za-z0-9_-]{1,100}$/.test(key)) fail(400, 'idempotency_key_required');
++    const owner = identity(r), fingerprint = hash(canonical({ method: r.method, url: r.url, body: r.body ?? null }));
++    const result = await transaction(pool, async c => {
++      await active(c, owner);
++      // Recheck the session under the same owner lock as all mutations/purge.
++      if (!(await c.query('SELECT 1 FROM sessions WHERE token_hash=$1 AND expires_at>now()', [hash(r.headers.authorization!.slice(7))])).rowCount) fail(401, 'unauthorized');
++      const old = (await c.query('SELECT * FROM idempotency WHERE owner_id=$1 AND key=$2', [owner, key])).rows[0];
++      if (old) { if (old.fingerprint !== fingerprint) fail(409, 'idempotency_conflict'); return { status: old.status, body: old.response }; }
++      const body = await run(c, owner, r.body, r);
++      await c.query('INSERT INTO idempotency(owner_id,key,fingerprint,response,status) VALUES($1,$2,$3,$4,$5)', [owner, key, fingerprint, body, status]);
++      return { status, body };
++    });
++    reply.status(result.status).send(result.body);
++  };
++  app.post('/conversations', { schema: { body: closed({ title: text }) } }, mutate(async (c, owner, body) => {
++    const id = randomUUID();
++    await c.query('INSERT INTO conversations(id,owner_id,title) VALUES($1,$2,$3)', [id, owner, body.title]);
++    await event(c, owner, 'conversation.created', id);
++    return { id, title: body.title };
++  }));
++  app.post('/tasks', { schema: { body: closed({ conversationId: uuid, goal: text }) } }, mutate(async (c, owner, body) => {
++    if (!(await c.query('SELECT 1 FROM conversations WHERE owner_id=$1 AND id=$2', [owner, body.conversationId])).rowCount) fail(404, 'not_found');
++    const id = randomUUID();
++    await c.query('INSERT INTO tasks(id,owner_id,conversation_id,goal) VALUES($1,$2,$3,$4)', [id, owner, body.conversationId, body.goal]);
++    await event(c, owner, 'task.created', id);
++    return { id, conversationId: body.conversationId, goal: body.goal, status: 'created', version: 1 };
++  }));
++  app.post('/tasks/:id/transition', { schema: { params: closed({ id: uuid }), body: closed({ baseVersion: { type: 'integer', minimum: 1 }, status: { type: 'string', enum: ['active','paused','completed','cancelled'] } }) } }, mutate(async (c, owner, body, r) => {
++    const id = (r.params as any).id;
++    const row = (await c.query('SELECT status,version FROM tasks WHERE owner_id=$1 AND id=$2 FOR UPDATE', [owner, id])).rows[0];
++    if (!row) fail(404, 'not_found');
++    const transitions: Record<string,string[]> = { created: ['active','cancelled'], active: ['paused','completed','cancelled'], paused: ['active','cancelled'] };
++    if (row.version !== body.baseVersion || !transitions[row.status]?.includes(body.status)) fail(409, 'task_conflict');
++    await c.query('UPDATE tasks SET status=$3,version=version+1 WHERE owner_id=$1 AND id=$2', [owner, id, body.status]);
++    await event(c, owner, 'task.' + body.status, id);
++    return { id, status: body.status, version: row.version + 1 };
++  }));
++  app.get('/tasks/:id', { schema: { params: closed({ id: uuid }) } }, async r => {
++    const row = (await pool.query('SELECT id,conversation_id AS "conversationId",goal,status,version FROM tasks WHERE owner_id=$1 AND id=$2', [identity(r), (r.params as any).id])).rows[0];
++    return row ?? fail(404, 'not_found');
++  });
++  const content = closed({ text: { type: 'string', maxLength: 20000 }, language: { type: 'string', enum: ['it', 'bn', 'en'] } });
++  app.post('/artifacts', { schema: { body: closed({ taskId: uuid, title: text, content }) } }, mutate(async (c, owner, body) => {
++    if (!(await c.query('SELECT 1 FROM tasks WHERE owner_id=$1 AND id=$2', [owner, body.taskId])).rowCount) fail(404, 'not_found');
++    const id = randomUUID(), digest = hash(canonical(body.content));
++    await c.query('INSERT INTO artifacts(id,owner_id,task_id,title,current_revision) VALUES($1,$2,$3,$4,1)', [id, owner, body.taskId, body.title]);
++    await c.query('INSERT INTO artifact_revisions(owner_id,artifact_id,revision,content,hash) VALUES($1,$2,1,$3,$4)', [owner, id, body.content, digest]);
++    await event(c, owner, 'artifact.created', id);
++    return { id, revision: 1, content: body.content, hash: digest };
++  }));
++  app.post('/artifacts/:id/revisions', { schema: { params: closed({ id: uuid }), body: closed({ baseRevision: { type: 'integer', minimum: 1 }, content }) } }, mutate(async (c, owner, body, r) => {
++    const id = (r.params as any).id;
++    const artifact = (await c.query('SELECT current_revision FROM artifacts WHERE owner_id=$1 AND id=$2 FOR UPDATE', [owner, id])).rows[0];
++    if (!artifact) fail(404, 'not_found');
++    if (artifact.current_revision !== body.baseRevision) fail(409, 'revision_conflict');
++    const revision = artifact.current_revision + 1, digest = hash(canonical(body.content));
++    await c.query('INSERT INTO artifact_revisions(owner_id,artifact_id,revision,content,hash) VALUES($1,$2,$3,$4,$5)', [owner, id, revision, body.content, digest]);
++    await c.query('UPDATE artifacts SET current_revision=$3 WHERE owner_id=$1 AND id=$2', [owner, id, revision]);
++    await event(c, owner, 'artifact.revised', id);
++    return { id, revision, content: body.content, hash: digest };
++  }));
++  for (const suffix of ['', '/export']) app.get('/artifacts/:id/revisions/:revision' + suffix, { schema: { params: closed({ id: uuid, revision: { type: 'string', pattern: '^[1-9][0-9]{0,8}$' } }) } }, async r => {
++    const p = r.params as any;
++    const row = (await pool.query('SELECT artifact_id AS id,revision,content,hash FROM artifact_revisions WHERE owner_id=$1 AND artifact_id=$2 AND revision=$3', [identity(r), p.id, Number(p.revision)])).rows[0];
++    if (!row) fail(404, 'not_found');
++    return suffix ? { ...row, renderer: 'canonical-json-v1' } : row;
++  });
++  privacyRoutes(app, pool);
++  actionRoutes(app, pool, mutate);
++  return app;
++}
+diff --git a/src/privacy.ts b/src/privacy.ts
+new file mode 100644
+index 0000000..c06052a
+--- /dev/null
++++ b/src/privacy.ts
+@@ -0,0 +1,32 @@
++import type { Pool } from 'pg';
++import type { FastifyInstance } from 'fastify';
++import { active, closed, identity, transaction } from './app.ts';
++
++export function privacyRoutes(app: FastifyInstance, pool: Pool) {
++  app.get('/me/export', async r => transaction(pool, async c => {
++    const owner = identity(r); await active(c, owner);
++    const snapshot: Record<string, unknown> = { version: 'owner-export-v1' };
++    const projections: Record<string, [string,string]> = {
++      conversations: ['conversations','id,title,created_at'],
++      tasks: ['tasks','id,conversation_id,goal,status,version,created_at'],
++      artifacts: ['artifacts','id,task_id,title,current_revision,created_at'],
++      revisions: ['artifact_revisions','artifact_id,revision,content,hash,created_at'],
++      intents: ['action_intents','id,artifact_id,revision,operation,account,recipient,payload,binding_hash,expires_at'],
++      approvals: ['approvals','id,intent_id,binding_hash,status,expires_at,consumed_at'],
++      receipts: ['receipts','id,intent_id,status,reference,started_at,finished_at'],
++      events: ['outbox','id,kind,resource_id,state,created_at'],
++      audit: ['audit_events','id,action,resource_id,created_at'],
++    };
++    for (const [key, [table, fields]] of Object.entries(projections))
++      snapshot[key] = (await c.query(`SELECT ${fields} FROM ${table} WHERE owner_id=$1 ORDER BY created_at`, [owner])).rows;
++    return snapshot;
++  }));
++  app.delete('/me', { schema: { body: closed({ confirm: { type: 'string', const: 'purge' } }) } }, async r => transaction(pool, async c => {
++    const owner = identity(r); await active(c, owner);
++    await c.query("UPDATE users SET status='purged',purged_at=clock_timestamp() WHERE id=$1", [owner]);
++    // A durable opaque user tombstone survives; all content and capabilities are removed.
++    for (const table of ['sessions','idempotency','outbox','audit_events','conversations'])
++      await c.query(`DELETE FROM ${table} WHERE owner_id=$1`, [owner]);
++    return { status: 'purged' };
++  }));
++}
+diff --git a/src/worker.ts b/src/worker.ts
+new file mode 100644
+index 0000000..7324435
+--- /dev/null
++++ b/src/worker.ts
+@@ -0,0 +1,85 @@
++import { randomUUID } from 'node:crypto';
++import type { Pool, PoolClient } from 'pg';
++import { transaction } from './app.ts';
++import { audit } from './actions.ts';
++
++export interface SyntheticAdapter {
++  kind: 'synthetic';
++  send(input: { idempotencyKey: string; account: string; recipient: string; payload: unknown; signal: AbortSignal }): Promise<{ outcome: 'succeeded'; reference: string }>;
++}
++export interface Lease { id: string; owner_id: string; kind: string; resource_id: string; lease_token: string; }
++export async function claim(pool: Pool, leaseMs = 30000): Promise<Lease | null> {
++  const candidates = await pool.query("SELECT id,owner_id FROM outbox WHERE state='pending' OR (state='leased' AND lease_until<clock_timestamp()) ORDER BY created_at,id LIMIT 32");
++  for (const candidate of candidates.rows) {
++    const found = await transaction(pool, async c => {
++      if (!(await c.query("SELECT id FROM users WHERE id=$1 AND status='active' FOR UPDATE SKIP LOCKED", [candidate.owner_id])).rowCount) return null;
++      const result = await c.query("UPDATE outbox SET state='leased',lease_token=$2,lease_until=clock_timestamp()+$3*interval '1 millisecond',attempts=attempts+1 WHERE id=$1 AND (state='pending' OR (state='leased' AND lease_until<clock_timestamp())) RETURNING id,owner_id,kind,resource_id,lease_token", [candidate.id, randomUUID(), leaseMs]);
++      return result.rows[0] ?? null;
++    });
++    if (found) return found;
++  }
++  return null;
++}
++async function fence(c: PoolClient, lease: Lease) {
++  if (!(await c.query("SELECT 1 FROM users WHERE id=$1 AND status='active' FOR UPDATE", [lease.owner_id])).rowCount) return false;
++  return !!(await c.query("SELECT 1 FROM outbox WHERE id=$1 AND owner_id=$2 AND state='leased' AND lease_token=$3 AND lease_until>clock_timestamp() FOR UPDATE", [lease.id, lease.owner_id, lease.lease_token])).rowCount;
++}
++async function done(c: PoolClient, lease: Lease) {
++  await c.query("UPDATE outbox SET state='done',lease_until=NULL,lease_token=NULL WHERE id=$1 AND lease_token=$2", [lease.id, lease.lease_token]);
++}
++async function policy(c: PoolClient, lease: Lease) {
++  return (await c.query(`SELECT r.id,r.status,i.account,i.recipient,i.payload,
++    (i.expires_at>clock_timestamp() AND p.expires_at>clock_timestamp() AND p.status='consumed'
++     AND p.binding_hash=i.binding_hash AND a.current_revision=i.revision
++     AND s.expires_at>clock_timestamp() AND t.status IN ('created','active')) AS allowed
++    FROM receipts r JOIN action_intents i ON i.id=r.intent_id
++    JOIN approvals p ON p.id=r.approval_id AND p.intent_id=i.id
++    JOIN artifacts a ON a.id=i.artifact_id JOIN tasks t ON t.id=a.task_id AND t.owner_id=r.owner_id
++    LEFT JOIN sessions s ON s.token_hash=r.session_hash AND s.owner_id=r.owner_id
++    WHERE r.id=$1 AND r.owner_id=$2 FOR UPDATE OF r`, [lease.resource_id, lease.owner_id])).rows[0];
++}
++export async function processLease(pool: Pool, lease: Lease, adapter: SyntheticAdapter, timeoutMs = 5000) {
++  if (adapter.kind !== 'synthetic') throw new Error('Only synthetic adapter permitted');
++  const ready = await transaction(pool, async c => {
++    if (!await fence(c, lease)) return false;
++    if (lease.kind !== 'action.execute') { await done(c, lease); return false; }
++    const receipt = await policy(c, lease);
++    if (!receipt) { await done(c, lease); return false; }
++    if (receipt.status === 'executing') {
++      await c.query("UPDATE receipts SET status='outcome_unknown',finished_at=clock_timestamp() WHERE id=$1", [receipt.id]);
++      await audit(c, lease.owner_id, 'action.outcome_unknown', receipt.id); await done(c, lease); return false;
++    }
++    if (receipt.status !== 'queued') { await done(c, lease); return false; }
++    if (!receipt.allowed) {
++      await c.query("UPDATE receipts SET status='cancelled',finished_at=clock_timestamp() WHERE id=$1", [receipt.id]);
++      await audit(c, lease.owner_id, 'action.cancelled', receipt.id); await done(c, lease); return false;
++    }
++    await c.query("UPDATE receipts SET status='executing',started_at=clock_timestamp() WHERE id=$1", [receipt.id]);
++    return true;
++  });
++  if (!ready) return;
++  // The durable executing marker precedes I/O. Owner lock serializes purge, revision changes,
++  // revocation and competing claims while an already-authorized call is in flight.
++  await transaction(pool, async c => {
++    if (!await fence(c, lease)) return;
++    const receipt = await policy(c, lease);
++    if (!receipt || receipt.status !== 'executing') return;
++    if (!receipt.allowed) {
++      await c.query("UPDATE receipts SET status='cancelled',finished_at=clock_timestamp() WHERE id=$1", [receipt.id]); await done(c, lease); return;
++    }
++    const controller = new AbortController(); let timer: ReturnType<typeof setTimeout> | undefined;
++    let status = 'outcome_unknown', reference: string | null = null;
++    try {
++      const response = await Promise.race([adapter.send({ idempotencyKey: receipt.id, account: receipt.account, recipient: receipt.recipient, payload: receipt.payload, signal: controller.signal }),
++        new Promise<never>((_resolve, reject) => { timer = setTimeout(() => { controller.abort(); reject(new Error('timeout')); }, timeoutMs); })]);
++      if (response.outcome === 'succeeded' && /^synthetic-[A-Za-z0-9_-]{1,100}$/.test(response.reference)) { status = 'succeeded'; reference = response.reference; }
++    } catch { /* Ambiguous outcome must never auto-retry. Raw provider errors are not persisted. */ }
++    finally { if (timer) clearTimeout(timer); }
++    await c.query('UPDATE receipts SET status=$2,reference=$3,finished_at=clock_timestamp() WHERE id=$1', [receipt.id, status, reference]);
++    await audit(c, lease.owner_id, 'action.' + status, receipt.id); await done(c, lease);
++  });
++}
++export async function drain(pool: Pool, adapter: SyntheticAdapter) {
++  for (let count = 0; count < 1000; count++) { const lease = await claim(pool); if (!lease) return; await processLease(pool, lease, adapter); }
++  throw new Error('Worker batch limit reached');
++}
+diff --git a/tests/actions.test.ts b/tests/actions.test.ts
+new file mode 100644
+index 0000000..fde275e
+--- /dev/null
++++ b/tests/actions.test.ts
+@@ -0,0 +1,50 @@
++import test from 'node:test';
++import assert from 'node:assert/strict';
++import { randomUUID } from 'node:crypto';
++import { database, foundation, request } from './helpers.ts';
++
++test('Approval binds exact revision/account/recipient; concurrent consumption yields one durable synthetic effect', async () => {
++  const db = await database(); let app: any;
++  try {
++    const api = (await foundation())!; await api.migrate(db.pool);
++    const a = await api.bootstrap(db.pool), b = await api.bootstrap(db.pool);
++    app = api.buildApp(db.pool); let base = await app.listen({ host: '127.0.0.1', port: 0 });
++    const post = (path: string, body: unknown, token = a.token, key = randomUUID()) => request(base, path, token, body, 'POST', key);
++    const c = (await post('/conversations', { title: 'Synthetic' })).body;
++    const t = (await post('/tasks', { conversationId: c.id, goal: 'Synthetic action' })).body;
++    const artifact = (await post('/artifacts', { taskId: t.id, title: 'Draft', content: { text: 'Private synthetic payload', language: 'bn' } })).body;
++    const body = { artifactId: artifact.id, revision: 1, operation: 'simulate.send', account: 'synthetic-account', recipient: 'fixture@example.invalid', expiresInSeconds: 300 };
++    const intentResponse = await post('/intents', body);
++    assert.equal(intentResponse.status, 201);
++    const intent = intentResponse.body;
++    assert.equal(intent.payload.text, 'Private synthetic payload');
++    assert.equal((await post('/intents', { ...body, account: 'real-account' })).status, 400);
++    assert.equal((await post(`/intents/${intent.id}/approve`, { bindingHash: '0'.repeat(64) })).status, 409);
++    assert.equal((await post(`/intents/${intent.id}/approve`, { bindingHash: intent.bindingHash }, b.token)).status, 404);
++    const approval = (await post(`/intents/${intent.id}/approve`, { bindingHash: intent.bindingHash })).body;
++    const different = (await post('/intents', { ...body, recipient: 'other@example.invalid' })).body;
++    assert.notEqual(different.bindingHash, intent.bindingHash);
++    assert.equal((await post(`/intents/${different.id}/execute`, { approvalId: approval.id, bindingHash: different.bindingHash })).status, 409);
++    const executeBody = { approvalId: approval.id, bindingHash: intent.bindingHash };
++    const results = await Promise.all([post(`/intents/${intent.id}/execute`, executeBody), post(`/intents/${intent.id}/execute`, executeBody)]);
++    assert.deepEqual(results.map(r => r.status).sort(), [201, 409]);
++    const receipt = results.find(r => r.status === 201)!.body;
++    assert.equal(receipt.status, 'queued');
++    await app.close(); await db.restart();
++    app = api.buildApp(db.pool); base = await app.listen({ host: '127.0.0.1', port: 0 });
++    const worker = await import('../src/worker.ts');
++    let calls = 0;
++    const adapter = { kind: 'synthetic' as const, async send(input: any) { calls++; assert.equal(input.recipient, body.recipient); return { outcome: 'succeeded' as const, reference: 'synthetic-confirmed' }; } };
++    await Promise.all([worker.drain(db.pool, adapter), worker.drain(db.pool, adapter)]);
++    assert.equal(calls, 1);
++    const done = await request(base, `/receipts/${receipt.id}`, a.token);
++    assert.equal(done.body.status, 'succeeded'); assert.equal(done.body.reference, 'synthetic-confirmed');
++    assert.equal((await request(base, `/receipts/${receipt.id}`, b.token)).status, 404);
++    await worker.drain(db.pool, adapter); assert.equal(calls, 1);
++    assert.equal((await db.pool.query('SELECT count(*)::int n FROM receipts')).rows[0].n, 1);
++    const stale = (await post('/intents', body)).body;
++    const staleApproval = (await post(`/intents/${stale.id}/approve`, { bindingHash: stale.bindingHash })).body;
++    await post(`/artifacts/${artifact.id}/revisions`, { baseRevision: 1, content: { text: 'Changed', language: 'bn' } });
++    assert.equal((await post(`/intents/${stale.id}/execute`, { approvalId: staleApproval.id, bindingHash: stale.bindingHash })).status, 409);
++  } finally { await app?.close(); await db.close(); }
++});
+diff --git a/tests/artifacts.test.ts b/tests/artifacts.test.ts
+new file mode 100644
+index 0000000..e2b2e9b
+--- /dev/null
++++ b/tests/artifacts.test.ts
+@@ -0,0 +1,31 @@
++import test from 'node:test';
++import assert from 'node:assert/strict';
++import { randomUUID } from 'node:crypto';
++import { database, foundation, request } from './helpers.ts';
++
++test('Artifact append-only revisions, concurrent conflict and owner-scoped revision export', async () => {
++  const db = await database(); let app: any;
++  try {
++    const api = (await foundation())!; await api.migrate(db.pool);
++    const a = await api.bootstrap(db.pool), b = await api.bootstrap(db.pool);
++    app = api.buildApp(db.pool); const base = await app.listen({ host: '127.0.0.1', port: 0 });
++    const post = (path: string, body: unknown) => request(base, path, a.token, body, 'POST', randomUUID());
++    const conv = (await post('/conversations', { title: 'Synthetic' })).body;
++    const task = (await post('/tasks', { conversationId: conv.id, goal: 'Draft' })).body;
++    const made = await post('/artifacts', { taskId: task.id, title: 'Synthetic draft', content: { text: 'First', language: 'it' } });
++    assert.equal(made.status, 201);
++    const artifact = made.body;
++    const updates = await Promise.all(['Second', 'Concurrent'].map(text => post(`/artifacts/${artifact.id}/revisions`, { baseRevision: 1, content: { text, language: 'it' } })));
++    assert.deepEqual(updates.map(r => r.status).sort(), [201, 409]);
++    const first = await request(base, `/artifacts/${artifact.id}/revisions/1`, a.token);
++    assert.equal(first.body.content.text, 'First');
++    const exported = await request(base, `/artifacts/${artifact.id}/revisions/1/export`, a.token);
++    assert.equal(exported.status, 200); assert.equal(exported.body.content.text, 'First');
++    assert.equal(exported.body.hash, first.body.hash); assert.equal(exported.body.renderer, 'canonical-json-v1');
++    for (const suffix of ['', '/export']) assert.equal((await request(base, `/artifacts/${artifact.id}/revisions/1${suffix}`, b.token)).status, 404);
++    await assert.rejects(db.pool.query("UPDATE artifact_revisions SET content='{}' WHERE artifact_id=$1", [artifact.id]), /immutable/);
++    await assert.rejects(db.pool.query('DELETE FROM artifact_revisions WHERE artifact_id=$1', [artifact.id]), /immutable/);
++    assert.equal((await db.pool.query('SELECT count(*)::int n FROM artifact_revisions WHERE artifact_id=$1', [artifact.id])).rows[0].n, 2);
++    assert.equal((await db.pool.query("SELECT count(*)::int n FROM outbox WHERE kind LIKE 'artifact.%'")).rows[0].n, 2);
++  } finally { await app?.close(); await db.close(); }
++});
+diff --git a/tests/cli.test.ts b/tests/cli.test.ts
+new file mode 100644
+index 0000000..7c6b5ed
+--- /dev/null
++++ b/tests/cli.test.ts
+@@ -0,0 +1,49 @@
++import test from 'node:test';
++import assert from 'node:assert/strict';
++import { spawn } from 'node:child_process';
++import { mkdtemp, readFile, rm, stat } from 'node:fs/promises';
++import { tmpdir } from 'node:os';
++import { join } from 'node:path';
++import { once } from 'node:events';
++import { database, request } from './helpers.ts';
++
++function run(script: string, env: NodeJS.ProcessEnv, args: string[] = []) {
++  const child = spawn(process.execPath, ['--import', 'tsx', script, ...args], { cwd: new URL('..', import.meta.url), env, stdio: ['ignore','pipe','pipe'] });
++  let output = ''; child.stdout.on('data', x => { output += x; }); child.stderr.on('data', x => { output += x; });
++  return { child, output: () => output, exit: once(child, 'exit') };
++}
++test('Local bootstrap CLI writes private credential file; real server subprocess restarts and serves persisted tasks', async () => {
++  const db = await database(); const dir = await mkdtemp(join(tmpdir(), 'nova-cli-')); let server: ReturnType<typeof run> | undefined;
++  try {
++    const env = { ...process.env, PGHOST: db.config.host, PGPORT: String(db.config.port), PGUSER: db.config.user, PGPASSWORD: db.config.password, PGDATABASE: db.config.database, PORT: '0' };
++    const file = join(dir, 'session.json');
++    const bootstrap = run('scripts/bootstrap.ts', env, [file]);
++    assert.equal((await bootstrap.exit)[0], 0, 'local bootstrap CLI must succeed');
++    const credentials = JSON.parse(await readFile(file, 'utf8'));
++    assert.equal((await stat(file)).mode & 0o777, 0o600);
++    assert.ok(!bootstrap.output().includes(credentials.token));
++    const launch = async () => {
++      server = run('scripts/server.ts', env);
++      const base = await new Promise<string>((resolve, reject) => {
++        const timer = setTimeout(() => reject(new Error('server readiness timeout')), 10000);
++        server!.child.stdout.on('data', x => { const match = String(x).match(/READY (http:\/\/127\.0\.0\.1:\d+)/); if (match) { clearTimeout(timer); resolve(match[1]); } });
++        server!.child.on('exit', () => { clearTimeout(timer); reject(new Error('server exited before readiness')); });
++      });
++      return base;
++    };
++    let base = await launch();
++    const c = await request(base, '/conversations', credentials.token, { title: 'CLI socket' }, 'POST', 'cli-conv');
++    assert.equal(c.status, 201);
++    const t = await request(base, '/tasks', credentials.token, { conversationId: c.body.id, goal: 'Survive process restart' }, 'POST', 'cli-task');
++    const workerRun = run('scripts/worker.ts', env);
++    assert.equal((await workerRun.exit)[0], 0, 'bounded synthetic worker CLI must succeed');
++    assert.equal((await db.pool.query("SELECT count(*)::int n FROM outbox WHERE state<>'done'")).rows[0].n, 0);
++    server!.child.kill('SIGTERM'); assert.equal((await server!.exit)[0], 0);
++    base = await launch();
++    assert.deepEqual((await request(base, '/tasks/' + t.body.id, credentials.token)).body, t.body);
++    server!.child.kill('SIGTERM'); assert.equal((await server!.exit)[0], 0);
++  } finally {
++    if (server && server.child.exitCode === null) { server.child.kill('SIGTERM'); await server.exit; }
++    await db.close(); await rm(dir, { recursive: true, force: true });
++  }
++});
+diff --git a/tests/foundation.test.ts b/tests/foundation.test.ts
+new file mode 100644
+index 0000000..bc83500
+--- /dev/null
++++ b/tests/foundation.test.ts
+@@ -0,0 +1,33 @@
++import test from 'node:test';
++import assert from 'node:assert/strict';
++import { database, foundation, request } from './helpers.ts';
++
++ test('HTTP authenticated task persists through application and PostgreSQL restart', async () => {
++  const db = await database();
++  let app: any;
++  try {
++    const api = await foundation();
++    assert.ok(api, 'foundation API must exist');
++    await api.migrate(db.pool);
++    const a = await api.bootstrap(db.pool);
++    const b = await api.bootstrap(db.pool);
++    app = api.buildApp(db.pool);
++    let base = await app.listen({ host: '127.0.0.1', port: 0 });
++    assert.equal((await request(base, '/conversations', undefined, { unexpected: true })).status, 401);
++    assert.equal((await request(base, '/conversations', a.token, { title: 'a', owner_id: b.userId })).status, 400);
++    const c = await request(base, '/conversations', a.token, { title: 'Synthetic conversation' }, 'POST', 'conversation-1');
++    assert.equal(c.status, 201);
++    const t = await request(base, '/tasks', a.token, { conversationId: c.body.id, goal: 'Synthetic goal' }, 'POST', 'task-1');
++    assert.equal(t.status, 201);
++    assert.deepEqual((await request(base, '/tasks', a.token, { conversationId: c.body.id, goal: 'Synthetic goal' }, 'POST', 'task-1')).body, t.body);
++    assert.equal((await request(base, '/tasks', a.token, { conversationId: c.body.id, goal: 'changed' }, 'POST', 'task-1')).status, 409);
++    assert.equal((await request(base, '/tasks/' + t.body.id, b.token)).status, 404);
++    const hashes = await db.pool.query('SELECT token_hash FROM sessions');
++    assert.ok(hashes.rows.every(r => r.token_hash !== a.token && /^[a-f0-9]{64}$/.test(r.token_hash)));
++    assert.equal((await db.pool.query('SELECT count(*)::int n FROM outbox')).rows[0].n, 2);
++    await app.close(); await db.restart();
++    app = api.buildApp(db.pool); base = await app.listen({ host: '127.0.0.1', port: 0 });
++    assert.deepEqual((await request(base, '/tasks/' + t.body.id, a.token)).body, t.body);
++    assert.equal((await request(base, '/bootstrap', undefined, {})).status, 401);
++  } finally { await app?.close(); await db.close(); }
++ });
+diff --git a/tests/helpers.ts b/tests/helpers.ts
+new file mode 100644
+index 0000000..33cde2c
+--- /dev/null
++++ b/tests/helpers.ts
+@@ -0,0 +1,42 @@
++import EmbeddedPostgres from 'embedded-postgres';
++import { randomBytes } from 'node:crypto';
++import { mkdtemp, chmod, rm } from 'node:fs/promises';
++import { tmpdir } from 'node:os';
++import { join } from 'node:path';
++import net from 'node:net';
++import pg from 'pg';
++
++export async function database() {
++  const dir = await mkdtemp(join(tmpdir(), 'nova-j0-'));
++  await chmod(dir, 0o700);
++  const server = net.createServer();
++  await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve));
++  const port = (server.address() as net.AddressInfo).port;
++  await new Promise<void>(resolve => server.close(() => resolve()));
++  const password = randomBytes(32).toString('hex');
++  const embedded = new EmbeddedPostgres({ databaseDir: join(dir, 'db'), user: 'nova_test', password,
++    port, persistent: true, authMethod: 'scram-sha-256',
++    postgresFlags: ['-h', '127.0.0.1', '-k', dir], onLog: () => {}, onError: () => {} });
++  const config = { host: '127.0.0.1', port, user: 'nova_test', password, database: 'postgres' };
++  try { await embedded.initialise(); await embedded.start(); }
++  catch (error) { await embedded.stop().catch(() => {}); await rm(dir, { recursive: true, force: true }); throw error; }
++  let pool = new pg.Pool(config);
++  return {
++    get pool() { return pool; },
++    config,
++    async restart() { await pool.end(); await embedded.stop(); await embedded.start(); pool = new pg.Pool(config); },
++    async close() { await pool.end(); await embedded.stop(); await rm(dir, { recursive: true, force: true }); },
++  };
++}
++
++export async function foundation() {
++  try { return await import('../src/app.ts'); }
++  catch (error: any) { if (error.code === 'ERR_MODULE_NOT_FOUND') return null; throw error; }
++}
++
++export async function request(base: string, path: string, token?: string, body?: unknown, method?: string, key?: string) {
++  const response = await fetch(base + path, { method: method ?? (body === undefined ? 'GET' : 'POST'),
++    headers: { ...(token ? { authorization: `Bearer ${token}` } : {}), ...(body === undefined ? {} : { 'content-type': 'application/json' }), ...(key ? { 'idempotency-key': key } : {}) },
++    body: body === undefined ? undefined : JSON.stringify(body) });
++  return { status: response.status, body: await response.json() as any };
++}
+diff --git a/tests/lifecycle.test.ts b/tests/lifecycle.test.ts
+new file mode 100644
+index 0000000..b5ab3a2
+--- /dev/null
++++ b/tests/lifecycle.test.ts
+@@ -0,0 +1,25 @@
++import test from 'node:test';
++import assert from 'node:assert/strict';
++import { randomUUID } from 'node:crypto';
++import { database, foundation, request } from './helpers.ts';
++
++test('Task lifecycle optimistic locking rejects stale/illegal transitions and resumes persisted checkpoint', async () => {
++  const db = await database(); let app: any;
++  try {
++    const api = (await foundation())!; await api.migrate(db.pool); const a = await api.bootstrap(db.pool), b = await api.bootstrap(db.pool);
++    app = api.buildApp(db.pool); let base = await app.listen({ host: '127.0.0.1', port: 0 });
++    const post = (path: string, body: unknown, token = a.token) => request(base, path, token, body, 'POST', randomUUID());
++    const c = (await post('/conversations', { title: 'Lifecycle' })).body;
++    const t = (await post('/tasks', { conversationId: c.id, goal: 'Resume checkpoint' })).body;
++    assert.equal((await post(`/tasks/${t.id}/transition`, { baseVersion: 1, status: 'active' })).status, 201);
++    assert.equal((await post(`/tasks/${t.id}/transition`, { baseVersion: 2, status: 'paused' }, b.token)).status, 404);
++    const changes = await Promise.all(['paused','completed'].map(status => post(`/tasks/${t.id}/transition`, { baseVersion: 2, status })));
++    assert.deepEqual(changes.map(r => r.status).sort(), [201,409]);
++    const winner = changes.find(r => r.status === 201)!.body;
++    await app.close(); await db.restart(); app = api.buildApp(db.pool); base = await app.listen({ host: '127.0.0.1', port: 0 });
++    const state = (await request(base, `/tasks/${t.id}`, a.token)).body;
++    assert.equal(state.version, 3); assert.equal(state.status, winner.status);
++    const next = await post(`/tasks/${t.id}/transition`, { baseVersion: 3, status: 'active' });
++    assert.equal(next.status, winner.status === 'paused' ? 201 : 409);
++  } finally { await app?.close(); await db.close(); }
++});
+diff --git a/tests/privacy.test.ts b/tests/privacy.test.ts
+new file mode 100644
+index 0000000..401c62f
+--- /dev/null
++++ b/tests/privacy.test.ts
+@@ -0,0 +1,40 @@
++import test from 'node:test';
++import assert from 'node:assert/strict';
++import { randomUUID } from 'node:crypto';
++import { database, foundation, request } from './helpers.ts';
++
++test('Owner export and purge revoke all sessions and prevent stale worker/direct database resurrection', async () => {
++  const db = await database(); let app: any;
++  try {
++    const api = (await foundation())!; await api.migrate(db.pool);
++    const a = await api.bootstrap(db.pool), b = await api.bootstrap(db.pool);
++    app = api.buildApp(db.pool); const base = await app.listen({ host: '127.0.0.1', port: 0 });
++    const post = (path: string, body: unknown, token = a.token) => request(base, path, token, body, 'POST', randomUUID());
++    const c = (await post('/conversations', { title: 'Synthetic private' })).body;
++    const t = (await post('/tasks', { conversationId: c.id, goal: 'Private goal' })).body;
++    const ar = (await post('/artifacts', { taskId: t.id, title: 'Private', content: { text: 'Private synthetic', language: 'it' } })).body;
++    const i = (await post('/intents', { artifactId: ar.id, revision: 1, operation: 'simulate.send', account: 'synthetic-account', recipient: 'fixture@example.invalid', expiresInSeconds: 300 })).body;
++    const p = (await post(`/intents/${i.id}/approve`, { bindingHash: i.bindingHash })).body;
++    await post(`/intents/${i.id}/execute`, { approvalId: p.id, bindingHash: i.bindingHash });
++    const snapshot = await request(base, '/me/export', a.token);
++    assert.equal(snapshot.status, 200);
++    assert.equal(snapshot.body.tasks.length, 1); assert.equal(snapshot.body.revisions[0].content.text, 'Private synthetic');
++    assert.ok(!JSON.stringify(snapshot.body).includes('token_hash')); assert.ok(!JSON.stringify(snapshot.body).includes('session_hash'));
++    assert.equal((await request(base, '/me/export', b.token)).body.tasks.length, 0);
++    const worker = await import('../src/worker.ts'); const lease = await worker.claim(db.pool);
++    const deletion = await request(base, '/me', a.token, { confirm: 'purge' }, 'DELETE');
++    assert.equal(deletion.status, 200); assert.equal(deletion.body.status, 'purged');
++    assert.equal((await request(base, '/me/export', a.token)).status, 401);
++    assert.equal((await post('/conversations', { title: 'resurrection' })).status, 401);
++    let calls = 0; const adapter = { kind: 'synthetic' as const, async send() { calls++; return { outcome: 'succeeded' as const, reference: 'synthetic-result' }; } };
++    await worker.processLease(db.pool, lease!, adapter); await worker.drain(db.pool, adapter); assert.equal(calls, 0);
++    for (const table of ['sessions','conversations','tasks','artifacts','artifact_revisions','action_intents','approvals','receipts','outbox','idempotency','audit_events'])
++      assert.equal((await db.pool.query(`SELECT count(*)::int n FROM ${table} WHERE owner_id=$1`, [a.userId])).rows[0].n, 0, table);
++    await assert.rejects(db.pool.query('INSERT INTO conversations(id,owner_id,title) VALUES($1,$2,$3)', [randomUUID(), a.userId, 'late write']), /owner inactive/);
++    await assert.rejects(db.pool.query("UPDATE users SET status='active' WHERE id=$1", [a.userId]), /tombstone/);
++    await assert.rejects(db.pool.query('DELETE FROM users WHERE id=$1', [a.userId]), /tombstone/);
++    assert.equal((await request(base, '/me/export', b.token)).status, 200);
++    await app.close(); await db.restart(); app = api.buildApp(db.pool);
++    assert.equal((await app.inject({ method: 'GET', url: '/me/export', headers: { authorization: `Bearer ${a.token}` } })).statusCode, 401);
++  } finally { await app?.close(); await db.close(); }
++});
+diff --git a/tests/recovery.test.ts b/tests/recovery.test.ts
+new file mode 100644
+index 0000000..3c3ba59
+--- /dev/null
++++ b/tests/recovery.test.ts
+@@ -0,0 +1,127 @@
++import test from 'node:test';
++import assert from 'node:assert/strict';
++import { randomUUID } from 'node:crypto';
++import { database, foundation, request } from './helpers.ts';
++import { claim, processLease, drain, type SyntheticAdapter } from '../src/worker.ts';
++
++async function fixture() {
++  const db = await database(); const api = (await foundation())!; await api.migrate(db.pool);
++  const a = await api.bootstrap(db.pool); const app = api.buildApp(db.pool);
++  const base = await app.listen({ host: '127.0.0.1', port: 0 });
++  const post = (path: string, body: unknown, key = randomUUID()) => request(base, path, a.token, body, 'POST', key);
++  const c = (await post('/conversations', { title: 'Fixture' })).body;
++  const t = (await post('/tasks', { conversationId: c.id, goal: 'Failure recovery' })).body;
++  const ar = (await post('/artifacts', { taskId: t.id, title: 'Draft', content: { text: 'Synthetic', language: 'en' } })).body;
++  const intent = async (expiry = 300) => (await post('/intents', { artifactId: ar.id, revision: 1, operation: 'simulate.send', account: 'synthetic-account', recipient: 'fixture@example.invalid', expiresInSeconds: expiry })).body;
++  const queued = async () => { const i = await intent(); const p = (await post(`/intents/${i.id}/approve`, { bindingHash: i.bindingHash })).body;
++    const key = randomUUID(), body = { approvalId: p.id, bindingHash: i.bindingHash };
++    const r = (await post(`/intents/${i.id}/execute`, body, key)).body;
++    assert.deepEqual((await post(`/intents/${i.id}/execute`, body, key)).body, r);
++    return { i, p, r }; };
++  return { db, api, a, app, base, post, intent, queued, taskId: t.id, artifactId: ar.id, async close() { await app.close(); await db.close(); } };
++}
++const success: SyntheticAdapter = { kind: 'synthetic', async send() { return { outcome: 'succeeded', reference: 'synthetic-ok' }; } };
++
++test('Revoked and expired approval cannot authorize queued dispatch', async () => {
++  const f = await fixture(); try {
++    const { i, p, r } = await f.queued();
++    const revoked = await f.post(`/approvals/${p.id}/revoke`, {});
++    assert.equal(revoked.status, 201);
++    assert.equal((await f.post(`/approvals/${p.id}/revoke`, { owner: 'injected' })).status, 400);
++    let calls = 0;
++    await drain(f.db.pool, { kind: 'synthetic', async send(input) { calls++; return success.send(input); } });
++    assert.equal(calls, 0);
++    assert.equal((await request(f.base, `/receipts/${r.id}`, f.a.token)).body.status, 'cancelled');
++    assert.equal((await f.post(`/intents/${i.id}/execute`, { approvalId: p.id, bindingHash: i.bindingHash })).status, 409);
++    const expired = await f.intent(1);
++    await f.db.pool.query('SELECT pg_sleep(1.05)');
++    assert.equal((await f.post(`/intents/${expired.id}/approve`, { bindingHash: expired.bindingHash })).status, 409);
++  } finally { await f.close(); }
++});
++
++test('Ambiguous adapter exception and malformed receipt never retry or expose provider secrets', async () => {
++  const f = await fixture(); try {
++    let calls = 0; const queued = await f.queued();
++    const ambiguous: SyntheticAdapter = { kind: 'synthetic', async send() { calls++; throw new Error('SECRET_PROVIDER_TOKEN'); } };
++    await drain(f.db.pool, ambiguous); await drain(f.db.pool, ambiguous);
++    assert.equal(calls, 1);
++    const response = await request(f.base, `/receipts/${queued.r.id}`, f.a.token);
++    assert.equal(response.body.status, 'outcome_unknown'); assert.ok(!JSON.stringify(response).includes('SECRET'));
++    const malformed = await f.queued();
++    await drain(f.db.pool, { kind: 'synthetic', async send() { return { outcome: 'succeeded', reference: 'SECRET_PROVIDER_TOKEN' }; } });
++    assert.equal((await request(f.base, `/receipts/${malformed.r.id}`, f.a.token)).body.status, 'outcome_unknown');
++    assert.ok(!JSON.stringify((await f.db.pool.query('SELECT * FROM receipts')).rows).includes('SECRET'));
++  } finally { await f.close(); }
++});
++
++test('Expired lease fences old worker; crash executing marker recovers unknown without repeating effect', async () => {
++  const f = await fixture(); try {
++    const q = await f.queued();
++    await f.db.pool.query("UPDATE outbox SET state='done' WHERE kind<>'action.execute'");
++    const old = await claim(f.db.pool, 1); assert.ok(old);
++    await f.db.pool.query('SELECT pg_sleep(0.02)');
++    const fresh = await claim(f.db.pool); assert.ok(fresh); assert.notEqual(old.lease_token, fresh.lease_token);
++    let calls = 0; const adapter: SyntheticAdapter = { kind: 'synthetic', async send(input) { calls++; return success.send(input); } };
++    await processLease(f.db.pool, old, adapter); assert.equal(calls, 0);
++    // Fault injection at the durable crash boundary: I/O may have happened, no receipt committed.
++    await f.db.pool.query("UPDATE receipts SET status='executing',started_at=now() WHERE id=$1", [q.r.id]);
++    await f.db.pool.query("UPDATE outbox SET lease_until=now()-interval '1 second' WHERE id=$1", [fresh.id]);
++    await f.app.close(); await f.db.restart();
++    await drain(f.db.pool, adapter); assert.equal(calls, 0);
++    assert.equal((await f.db.pool.query('SELECT status FROM receipts WHERE id=$1', [q.r.id])).rows[0].status, 'outcome_unknown');
++  } finally { await f.close(); }
++});
++
++test('Cancelled task invalidates queued policy before dispatch', async () => {
++ const f = await fixture(); try {
++  const q = await f.queued();
++  assert.equal((await f.post(`/tasks/${f.taskId}/transition`, { baseVersion: 1, status: 'cancelled' })).status,201);
++  let calls = 0;
++  await drain(f.db.pool, { kind:'synthetic', async send(input) { calls++; return success.send(input); } });
++  assert.equal(calls,0);
++  assert.equal((await request(f.base, `/receipts/${q.r.id}`, f.a.token)).body.status,'cancelled');
++ } finally { await f.close(); }
++});
++
++test('Timeout after synthetic dispatch becomes unknown and a late return cannot overwrite it', async () => {
++ const f = await fixture(); try {
++  const q = await f.queued(); await f.db.pool.query("UPDATE outbox SET state='done' WHERE kind<>'action.execute'");
++  const lease = await claim(f.db.pool); assert.ok(lease);
++  let finish!: () => void; let calls = 0;
++  const delayed = new Promise<void>(resolve => { finish=resolve; });
++  await processLease(f.db.pool, lease, { kind:'synthetic', async send() { calls++; await delayed; return { outcome:'succeeded',reference:'synthetic-late' }; } }, 10);
++  finish(); await drain(f.db.pool, success);
++  assert.equal(calls,1);
++  assert.equal((await request(f.base, `/receipts/${q.r.id}`, f.a.token)).body.status,'outcome_unknown');
++ } finally { await f.close(); }
++});
++
++test('Worker revalidates queued revision, session expiry and intent expiry before any call', async () => {
++ for (const reason of ['revision','session','expiry']) {
++  const f = await fixture(); try {
++   const q = await f.queued();
++   if (reason==='revision') await f.post(`/artifacts/${f.artifactId}/revisions`, { baseRevision:1, content:{ text:'Changed after queue',language:'en' } });
++   if (reason==='session') await f.db.pool.query("UPDATE sessions SET expires_at=now()-interval '1 second'");
++   if (reason==='expiry') await f.db.pool.query("UPDATE approvals SET expires_at=now()-interval '1 second'");
++   let calls=0; await drain(f.db.pool,{ kind:'synthetic',async send(input) { calls++; return success.send(input); } });
++   assert.equal(calls,0,reason);
++   assert.equal((await f.db.pool.query('SELECT status FROM receipts WHERE id=$1',[q.r.id])).rows[0].status,'cancelled');
++  } finally { await f.close(); }
++ }
++});
++
++test('Purge during in-flight synthetic call waits and late completion cannot recreate records', async () => {
++  const f = await fixture(); try {
++    await f.queued();
++    let started!: () => void, release!: () => void;
++    const began = new Promise<void>(r => { started = r; }); const blocked = new Promise<void>(r => { release = r; });
++    const work = drain(f.db.pool, { kind: 'synthetic', async send() { started(); await blocked; return { outcome: 'succeeded', reference: 'synthetic-ok' }; } });
++    await began;
++    const purge = request(f.base, '/me', f.a.token, { confirm: 'purge' }, 'DELETE');
++    release(); await work;
++    assert.equal((await purge).status, 200);
++    assert.equal((await f.db.pool.query('SELECT count(*)::int n FROM receipts')).rows[0].n, 0);
++    await drain(f.db.pool, success);
++    assert.equal((await f.db.pool.query('SELECT count(*)::int n FROM outbox')).rows[0].n, 0);
++  } finally { await f.close(); }
++});
+diff --git a/tests/security.test.ts b/tests/security.test.ts
+new file mode 100644
+index 0000000..9c4e30d
+--- /dev/null
++++ b/tests/security.test.ts
+@@ -0,0 +1,37 @@
++import test from 'node:test';
++import assert from 'node:assert/strict';
++import { randomUUID } from 'node:crypto';
++import { database, foundation, request } from './helpers.ts';
++
++test('Closed query and body schemas, redacted parser/DB errors, expired sessions and cross-owner foreign keys', async () => {
++ const db = await database(); let app: any;
++ try {
++  const api = (await foundation())!; await api.migrate(db.pool); const a = await api.bootstrap(db.pool), b = await api.bootstrap(db.pool);
++  app = api.buildApp(db.pool); const base = await app.listen({ host: '127.0.0.1', port: 0 });
++  const post = (path: string, body: unknown, token=a.token) => request(base,path,token,body,'POST',randomUUID());
++  const c = (await post('/conversations', { title: 'Synthetic' })).body;
++  const t = (await post('/tasks', { conversationId: c.id, goal: 'Test isolation' })).body;
++  assert.equal((await request(base, `/tasks/${t.id}?owner=${b.userId}`, a.token)).status, 400);
++  assert.equal((await post('/tasks', { conversationId: c.id, goal: 'Cross owner' }, b.token)).status, 404);
++  assert.equal((await post('/artifacts', { taskId: t.id, title: 'Cross owner', content: { text: 'x', language: 'it' } }, b.token)).status, 404);
++  assert.equal((await post('/artifacts', { taskId: t.id, title: 'Unknown key', content: { text: 'x', language: 'it', system: 'bypass' } })).status, 400);
++  const broken = await fetch(base + '/conversations', { method: 'POST', headers: { authorization: `Bearer ${a.token}`, 'content-type':'application/json' }, body: '{"SECRET_INPUT":' });
++  assert.equal(broken.status, 400); assert.deepEqual(await broken.json(), { error: 'invalid_request' });
++  const noAuth = await fetch(base + '/tasks', { method:'POST', headers:{ 'content-type':'application/json' }, body:'not-json' }); assert.equal(noAuth.status,401);
++  await db.pool.query(`CREATE FUNCTION injected_failure() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'SECRET_DB_DETAIL'; END $$;
++    CREATE TRIGGER injected_failure BEFORE INSERT ON conversations FOR EACH ROW EXECUTE FUNCTION injected_failure()`);
++  const before = (await db.pool.query('SELECT count(*)::int n FROM outbox')).rows[0].n;
++  assert.deepEqual(await post('/conversations', { title: 'Failure' }), { status:500, body:{ error:'internal_error' } });
++  assert.equal((await db.pool.query('SELECT count(*)::int n FROM outbox')).rows[0].n, before);
++  await db.pool.query('DROP TRIGGER injected_failure ON conversations');
++  await db.pool.query('CREATE TRIGGER injected_outbox BEFORE INSERT ON outbox FOR EACH ROW EXECUTE FUNCTION injected_failure()');
++  const taskCount = (await db.pool.query('SELECT count(*)::int n FROM tasks')).rows[0].n;
++  assert.equal((await post('/tasks', { conversationId: c.id, goal: 'Must roll back when outbox fails' })).status,500);
++  assert.equal((await db.pool.query('SELECT count(*)::int n FROM tasks')).rows[0].n, taskCount);
++  assert.equal((await db.pool.query('SHOW listen_addresses')).rows[0].listen_addresses,'127.0.0.1');
++  const hba = (await db.pool.query('SELECT auth_method FROM pg_hba_file_rules WHERE error IS NULL')).rows;
++  assert.ok(hba.length > 0 && hba.every(r => r.auth_method === 'scram-sha-256'));
++  await db.pool.query("UPDATE sessions SET expires_at=now()-interval '1 second' WHERE owner_id=$1", [a.userId]);
++  assert.equal((await request(base, `/tasks/${t.id}`, a.token)).status,401);
++ } finally { await app?.close(); await db.close(); }
++});
+diff --git a/tsconfig.json b/tsconfig.json
+new file mode 100644
+index 0000000..8e641da
+--- /dev/null
++++ b/tsconfig.json
+@@ -0,0 +1,8 @@
++{
++  "compilerOptions": {
++    "target": "ES2023", "module": "NodeNext", "moduleResolution": "NodeNext",
++    "strict": true, "noEmit": true, "allowImportingTsExtensions": true,
++    "esModuleInterop": true, "skipLibCheck": true
++  },
++  "include": ["src/**/*.ts", "tests/**/*.ts", "scripts/**/*.ts"]
++}

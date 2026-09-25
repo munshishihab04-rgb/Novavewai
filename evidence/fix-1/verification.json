@@ -1,0 +1,54 @@
+{
+  "logs": {
+    "red-auth-expiry.log": {
+      "tests": 1,
+      "pass": 0,
+      "fail": 1
+    },
+    "red-privacy-reauth.log": {
+      "tests": 4,
+      "pass": 0,
+      "fail": 4
+    },
+    "red-permanent-regressions.log": {
+      "tests": 12,
+      "pass": 2,
+      "fail": 10
+    },
+    "green-full-suite.log": {
+      "tests": 26,
+      "pass": 26,
+      "fail": 0
+    },
+    "green-adversarial.log": {
+      "tests": 10,
+      "pass": 10,
+      "fail": 0
+    },
+    "green-auth-expiry.log": {
+      "tests": 1,
+      "pass": 1,
+      "fail": 0
+    },
+    "green-privacy-reauth.log": {
+      "tests": 4,
+      "pass": 4,
+      "fail": 0
+    }
+  },
+  "original_suite_tests": 14,
+  "baseline_src_sha256": {
+    "actions.ts": "6339e41ac789d583f2695f23b442a70f5a0fcc1ef97d399b396f7d228a43b10c",
+    "app.ts": "47087ff9f6d7d5f89bf9c535e5665d1805a80236f4343312e350d4da07a68bb4",
+    "privacy.ts": "5eb81480bdfcb3f9493a626ab3cd10211f7840c472eace22aaf1d235bb926928",
+    "worker.ts": "a0e5a665b1b24df0850396b8ec68886c079a6f9b3121b7682ec35cba6fc2f967"
+  },
+  "review_unchanged": true,
+  "index_unchanged": true,
+  "original_tracked_files_modified": [
+    "src/app.ts",
+    "src/privacy.ts"
+  ],
+  "typecheck_exit": 0,
+  "diff_check_exit": 0
+}

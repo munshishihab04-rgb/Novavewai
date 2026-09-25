@@ -1,0 +1,16 @@
+
+> nova-community-agent@0.1.0 test
+> tsx --test --test-concurrency=1 tests/*.test.ts
+
+✔ Approval binds exact revision/account/recipient; concurrent consumption yields one durable synthetic effect (1783.137158ms)
+✔ Artifact append-only revisions, concurrent conflict and owner-scoped revision export (1847.324425ms)
+✔ HTTP authenticated task persists through application and PostgreSQL restart (1889.214632ms)
+✔ Owner export and purge revoke all sessions and prevent stale worker/direct database resurrection (1965.814072ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 8142.611962

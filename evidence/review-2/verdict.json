@@ -1,0 +1,92 @@
+{
+  "passed": true,
+  "security_concerns": [],
+  "logic_errors": [],
+  "suggestions": [
+    {
+      "id": "R1-WORKER-BATCH-CLARITY",
+      "blocking": false,
+      "description": "Unchanged non-blocking review-1 follow-up: a successful bounded worker batch does not prove the entire queue is empty when SKIP LOCKED or the candidate limit hides busy work. Track with future worker evolution, not another review loop for this unchanged foundation slice."
+    },
+    {
+      "id": "R2-HISTORICAL-LOG-WHITESPACE",
+      "blocking": false,
+      "description": "git diff --check passes for the fix. git diff --cached --check exits 2 solely for whitespace in pre-existing foundation evidence logs. These are historical captured outputs, not implementation defects; preserved unchanged.",
+      "evidence": "evidence/review-2/static-checks.json"
+    }
+  ],
+  "summary": "PASS: independent re-review closes R1-AUTH-EXPIRY and R1-PRIVACY-REAUTH for the exact local foundation working-tree slice. Shared authenticatedOwner locks the active owner, then checks the original owner plus original token against PostgreSQL clock_timestamp() before mutation cache access, protected callbacks, privacy export reads or purge writes. The unchanged original adversarial suite passes 10/10; permanent auth regressions pass 12/12 independently and within the 26/26 main suite; typecheck passes. No fix-induced regression or unresolved blocker found in this bounded review. No further review loop is needed for this unchanged bounded slice. This is not acceptance of full J0, MVP, production readiness or the full product; remaining work stays separately tracked in docs/DELIVERY.md and docs/acceptance-matrix.json.",
+  "resolved_findings": [
+    {
+      "id": "R1-AUTH-EXPIRY",
+      "status": "resolved",
+      "locations": ["src/app.ts:38-40", "src/app.ts:49-55", "src/app.ts:73-85"],
+      "verification": "active() obtains the owner FOR UPDATE lock before the session SELECT. The SELECT binds both owner_id and token_hash and compares expires_at to clock_timestamp(), not transaction-start now(). mutate calls it before reading idempotency, returning cached responses or executing any protected mutation. Failure throws the existing redacted 401 and rolls back. The ingress now() query is an independent autocommit statement, not the owner-lock-wait transaction; it is not relied on as the final recheck.",
+      "observed": "Original expiry mutation now returns 401 with owner active and zero late writes. Permanent expiry/revoke/rebind tests cover both fresh mutation and cached replay, asserting exact unauthorized response and unchanged owner/content/idempotency/outbox state despite another live session for the same owner."
+    },
+    {
+      "id": "R1-PRIVACY-REAUTH",
+      "status": "resolved",
+      "locations": ["src/privacy.ts:3-7", "src/privacy.ts:20-29", "src/app.ts:49-55"],
+      "verification": "Both owner-wide privacy transactions call shared authenticatedOwner before the first export projection query or purge UPDATE/DELETE. Export projections, owner scoping, purge tombstone, cascades and rollback semantics remain unchanged. Original expiry and revocation cases now reject with 401 instead of exporting or purging; permanent tests additionally reject a token rebound to a different owner.",
+      "observed": "All original privacy expiry/revocation cases return 401 and leave the owner active. Permanent privacy cases assert no private response and unchanged persisted protected state. Existing valid-session export/purge and stale-worker non-resurrection controls still pass."
+    }
+  ],
+  "review_scope": {
+    "repository": "/home/azureuser/nova-community-agent",
+    "accepted": "Local authenticated HTTP/PostgreSQL foundation with synthetic side effects only; exact unstaged app.ts/privacy.ts fix and permanent auth regression suite against the existing staged foundation.",
+    "inspection": [
+      "Full unstaged diff for src/app.ts and src/privacy.ts; complete files including read routes and shared mutation wrapper.",
+      "Complete src/actions.ts route wiring: all action POST callbacks use the same mutate wrapper; worker.ts locking/policy integration and relevant migration ownership/tombstone constraints inspected for regressions.",
+      "Original review-1 verdict and unchanged adversarial.test.ts; full permanent tests/auth-revalidation.test.ts and PostgreSQL/HTTP harness; API and delivery boundaries."
+    ],
+    "boundary": "The shared post-owner-lock check covers all mutate POST routes and GET /me/export plus DELETE /me. Ordinary task/artifact/receipt reads retain their pre-existing ingress authentication and owner-scoped queries; this verdict does not claim that every GET was converted to an owner-lock transaction. Session deletion/rebinding cases are controlled local-operator fault injections, not claims of a public session-management endpoint or defense against a database superuser.",
+    "excluded": "Full J0/MVP, consumer onboarding, UI/model/voice/provider integration, real sends, object storage/file lifecycle, retention/backups, production deployment and public release readiness.",
+    "remaining_work_tracking": ["docs/DELIVERY.md:41-56", "docs/acceptance-matrix.json", "docs/API.md:101-103"],
+    "further_review_loop_for_unchanged_slice_required": false
+  },
+  "verification": {
+    "environment": "Node v26.8.2, npm 11.19.1. Actual embedded PostgreSQL processes and real loopback HTTP listeners through tests/helpers.ts, not mocked SQL or Fastify inject alone. Harness provisions private temporary directories, random credentials and SCRAM; main security test verifies listen_addresses=127.0.0.1 and all valid HBA rules use scram-sha-256. No external provider/network sends.",
+    "commands": [
+      {
+        "command": "node --import tsx --test --test-concurrency=1 evidence/review-1/adversarial.test.ts",
+        "passed": 10,
+        "failed": 0,
+        "skipped": 0,
+        "exit_code": 0,
+        "log": "evidence/review-2/adversarial.log"
+      },
+      {
+        "command": "node --import tsx --test --test-concurrency=1 tests/auth-revalidation.test.ts",
+        "passed": 12,
+        "failed": 0,
+        "skipped": 0,
+        "exit_code": 0,
+        "log": "evidence/review-2/auth-revalidation.log"
+      },
+      {
+        "command": "npm test",
+        "passed": 26,
+        "failed": 0,
+        "skipped": 0,
+        "exit_code": 0,
+        "log": "evidence/review-2/main-tests.log",
+        "note": "Includes the same 12 permanent auth regressions; not 26 additional unique tests."
+      },
+      {
+        "command": "npm run typecheck",
+        "exit_code": 0,
+        "log": "evidence/review-2/typecheck.log"
+      }
+    ],
+    "regression_controls": "Valid canonical replay/conflict and cross-owner controls; revision/approval/cancellation serialization behind actual in-flight worker lock; real PostgreSQL connection termination after synthetic I/O with outcome_unknown and no resend; timeout plus purge with no late resurrection; persistence/restart, privacy, schema/error redaction and CLI smoke all pass.",
+    "execution_record": "evidence/review-2/execution.json"
+  },
+  "preservation": {
+    "original_review_unchanged": true,
+    "implementation_and_tests_unchanged_by_reviewer": true,
+    "commit_created": false,
+    "writes_limited_to": "evidence/review-2/ (apart from disposable test-harness runtime resources)",
+    "evidence": ["evidence/review-2/input-sha256.json", "evidence/review-2/preservation.json"]
+  }
+}

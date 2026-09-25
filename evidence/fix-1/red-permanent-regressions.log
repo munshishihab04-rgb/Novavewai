@@ -1,0 +1,204 @@
+✖ AUTH-RECHECK expiry mutation: reject stale authentication after owner-lock wait (3454.920095ms)
+✖ AUTH-RECHECK expiry replay: reject stale authentication after owner-lock wait (3561.055165ms)
+✖ AUTH-RECHECK expiry export: reject stale authentication after owner-lock wait (3697.049682ms)
+✖ AUTH-RECHECK expiry purge: reject stale authentication after owner-lock wait (3633.729881ms)
+✔ AUTH-RECHECK revoke mutation: reject stale authentication after owner-lock wait (1522.058423ms)
+✔ AUTH-RECHECK revoke replay: reject stale authentication after owner-lock wait (1557.632768ms)
+✖ AUTH-RECHECK revoke export: reject stale authentication after owner-lock wait (1520.847196ms)
+✖ AUTH-RECHECK revoke purge: reject stale authentication after owner-lock wait (1438.954587ms)
+✖ AUTH-RECHECK rebind mutation: reject stale authentication after owner-lock wait (1456.522ms)
+✖ AUTH-RECHECK rebind replay: reject stale authentication after owner-lock wait (1502.398524ms)
+✖ AUTH-RECHECK rebind export: reject stale authentication after owner-lock wait (1526.320365ms)
+✖ AUTH-RECHECK rebind purge: reject stale authentication after owner-lock wait (1444.136967ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 2
+ℹ fail 10
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 26649.539788
+
+✖ failing tests:
+
+test at tests/auth-revalidation.test.ts:1:2155
+✖ AUTH-RECHECK expiry mutation: reject stale authentication after owner-lock wait (3454.920095ms)
+  AssertionError [ERR_ASSERTION]: Recheck must bind current expiry, original token and original owner before any I/O or cached replay
+  
+  201 !== 401
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/auth-revalidation.test.ts:69:16)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 201,
+    expected: 401,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/auth-revalidation.test.ts:1:2155
+✖ AUTH-RECHECK expiry replay: reject stale authentication after owner-lock wait (3561.055165ms)
+  AssertionError [ERR_ASSERTION]: Recheck must bind current expiry, original token and original owner before any I/O or cached replay
+  
+  201 !== 401
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/auth-revalidation.test.ts:69:16)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 201,
+    expected: 401,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/auth-revalidation.test.ts:1:2155
+✖ AUTH-RECHECK expiry export: reject stale authentication after owner-lock wait (3697.049682ms)
+  AssertionError [ERR_ASSERTION]: Recheck must bind current expiry, original token and original owner before any I/O or cached replay
+  
+  200 !== 401
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/auth-revalidation.test.ts:69:16)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 200,
+    expected: 401,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/auth-revalidation.test.ts:1:2155
+✖ AUTH-RECHECK expiry purge: reject stale authentication after owner-lock wait (3633.729881ms)
+  AssertionError [ERR_ASSERTION]: Recheck must bind current expiry, original token and original owner before any I/O or cached replay
+  
+  200 !== 401
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/auth-revalidation.test.ts:69:16)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 200,
+    expected: 401,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/auth-revalidation.test.ts:1:2155
+✖ AUTH-RECHECK revoke export: reject stale authentication after owner-lock wait (1520.847196ms)
+  AssertionError [ERR_ASSERTION]: Recheck must bind current expiry, original token and original owner before any I/O or cached replay
+  
+  200 !== 401
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/auth-revalidation.test.ts:69:16)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 200,
+    expected: 401,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/auth-revalidation.test.ts:1:2155
+✖ AUTH-RECHECK revoke purge: reject stale authentication after owner-lock wait (1438.954587ms)
+  AssertionError [ERR_ASSERTION]: Recheck must bind current expiry, original token and original owner before any I/O or cached replay
+  
+  200 !== 401
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/auth-revalidation.test.ts:69:16)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 200,
+    expected: 401,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/auth-revalidation.test.ts:1:2155
+✖ AUTH-RECHECK rebind mutation: reject stale authentication after owner-lock wait (1456.522ms)
+  AssertionError [ERR_ASSERTION]: Recheck must bind current expiry, original token and original owner before any I/O or cached replay
+  
+  201 !== 401
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/auth-revalidation.test.ts:69:16)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 201,
+    expected: 401,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/auth-revalidation.test.ts:1:2155
+✖ AUTH-RECHECK rebind replay: reject stale authentication after owner-lock wait (1502.398524ms)
+  AssertionError [ERR_ASSERTION]: Recheck must bind current expiry, original token and original owner before any I/O or cached replay
+  
+  201 !== 401
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/auth-revalidation.test.ts:69:16)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 201,
+    expected: 401,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/auth-revalidation.test.ts:1:2155
+✖ AUTH-RECHECK rebind export: reject stale authentication after owner-lock wait (1526.320365ms)
+  AssertionError [ERR_ASSERTION]: Recheck must bind current expiry, original token and original owner before any I/O or cached replay
+  
+  200 !== 401
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/auth-revalidation.test.ts:69:16)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 200,
+    expected: 401,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/auth-revalidation.test.ts:1:2155
+✖ AUTH-RECHECK rebind purge: reject stale authentication after owner-lock wait (1444.136967ms)
+  AssertionError [ERR_ASSERTION]: Recheck must bind current expiry, original token and original owner before any I/O or cached replay
+  
+  200 !== 401
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/auth-revalidation.test.ts:69:16)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 200,
+    expected: 401,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+EXIT_CODE=1

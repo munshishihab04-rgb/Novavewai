@@ -1,0 +1,38 @@
+
+> nova-community-agent@0.1.0 test
+> tsx --test --test-concurrency=1 tests/*.test.ts
+
+✔ Approval binds exact revision/account/recipient; concurrent consumption yields one durable synthetic effect (2044.976462ms)
+✔ Artifact append-only revisions, concurrent conflict and owner-scoped revision export (1808.163064ms)
+✔ AUTH-RECHECK expiry mutation: reject stale authentication after owner-lock wait (3431.28345ms)
+✔ AUTH-RECHECK expiry replay: reject stale authentication after owner-lock wait (3593.494888ms)
+✔ AUTH-RECHECK expiry export: reject stale authentication after owner-lock wait (3615.450417ms)
+✔ AUTH-RECHECK expiry purge: reject stale authentication after owner-lock wait (3669.40337ms)
+✔ AUTH-RECHECK revoke mutation: reject stale authentication after owner-lock wait (1424.614935ms)
+✔ AUTH-RECHECK revoke replay: reject stale authentication after owner-lock wait (1486.006079ms)
+✔ AUTH-RECHECK revoke export: reject stale authentication after owner-lock wait (1391.597019ms)
+✔ AUTH-RECHECK revoke purge: reject stale authentication after owner-lock wait (1488.864087ms)
+✔ AUTH-RECHECK rebind mutation: reject stale authentication after owner-lock wait (1473.027919ms)
+✔ AUTH-RECHECK rebind replay: reject stale authentication after owner-lock wait (1545.434571ms)
+✔ AUTH-RECHECK rebind export: reject stale authentication after owner-lock wait (1455.101786ms)
+✔ AUTH-RECHECK rebind purge: reject stale authentication after owner-lock wait (1074.800195ms)
+✔ Local bootstrap CLI writes private credential file; real server subprocess restarts and serves persisted tasks (2914.895799ms)
+✔ HTTP authenticated task persists through application and PostgreSQL restart (1838.047407ms)
+✔ Task lifecycle optimistic locking rejects stale/illegal transitions and resumes persisted checkpoint (1833.483788ms)
+✔ Owner export and purge revoke all sessions and prevent stale worker/direct database resurrection (1887.35358ms)
+✔ Revoked and expired approval cannot authorize queued dispatch (2698.568866ms)
+✔ Ambiguous adapter exception and malformed receipt never retry or expose provider secrets (1550.617288ms)
+✔ Expired lease fences old worker; crash executing marker recovers unknown without repeating effect (1568.145343ms)
+✔ Cancelled task invalidates queued policy before dispatch (1425.468654ms)
+✔ Timeout after synthetic dispatch becomes unknown and a late return cannot overwrite it (1409.887845ms)
+✔ Worker revalidates queued revision, session expiry and intent expiry before any call (4314.34176ms)
+✔ Purge during in-flight synthetic call waits and late completion cannot recreate records (1420.815719ms)
+✔ Closed query and body schemas, redacted parser/DB errors, expired sessions and cross-owner foreign keys (1790.356017ms)
+ℹ tests 26
+ℹ suites 0
+ℹ pass 26
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 55834.065098

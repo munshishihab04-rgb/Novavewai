@@ -1,0 +1,116 @@
+{"case":"AUTH-EXPIRY-mutation","observedHttpStatus":201,"ownerStatus":"active","lateWrites":1}
+✖ AUTH-EXPIRY mutation: session must still be fresh after owner-lock wait (3403.836453ms)
+{"case":"AUTH-EXPIRY-export","observedHttpStatus":200,"ownerStatus":"active","lateWrites":0,"exportedTasks":1}
+✖ AUTH-EXPIRY export: session must still be fresh after owner-lock wait (3587.829864ms)
+{"case":"AUTH-EXPIRY-purge","observedHttpStatus":200,"ownerStatus":"purged","lateWrites":0}
+✖ AUTH-EXPIRY purge: session must still be fresh after owner-lock wait (3587.28061ms)
+{"case":"AUTH-REVOKE-mutation","observedHttpStatus":401,"ownerStatus":"active"}
+✔ AUTH-REVOKE mutation: revoked session cannot survive owner-lock wait (1395.58015ms)
+{"case":"AUTH-REVOKE-export","observedHttpStatus":200,"ownerStatus":"active","exportedTasks":1}
+✖ AUTH-REVOKE export: revoked session cannot survive owner-lock wait (1457.181022ms)
+{"case":"AUTH-REVOKE-purge","observedHttpStatus":200,"ownerStatus":"purged"}
+✖ AUTH-REVOKE purge: revoked session cannot survive owner-lock wait (1385.528361ms)
+✔ CONTROL: owner-scoped idempotency canonical replay, conflict and cross-owner execution/revocation (1362.47544ms)
+✔ CONTROL: actual DB connection termination after synthetic I/O recovers unknown without resend (1420.59748ms)
+✔ CONTROL: revocation, cancellation and revision wait behind real in-flight owner lock (4343.915641ms)
+✔ CONTROL: purge after timed-out uncooperative adapter blocks late persistence and replay (1389.221185ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 5
+ℹ fail 5
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 23673.412649
+
+✖ failing tests:
+
+test at evidence/review-1/adversarial.test.ts:1:1978
+✖ AUTH-EXPIRY mutation: session must still be fresh after owner-lock wait (3403.836453ms)
+  AssertionError [ERR_ASSERTION]: Expired authentication must not authorize an operation after lock acquisition
+  
+  201 !== 401
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/evidence/review-1/adversarial.test.ts:48:14)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 201,
+    expected: 401,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at evidence/review-1/adversarial.test.ts:1:1978
+✖ AUTH-EXPIRY export: session must still be fresh after owner-lock wait (3587.829864ms)
+  AssertionError [ERR_ASSERTION]: Expired authentication must not authorize an operation after lock acquisition
+  
+  200 !== 401
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/evidence/review-1/adversarial.test.ts:48:14)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 200,
+    expected: 401,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at evidence/review-1/adversarial.test.ts:1:1978
+✖ AUTH-EXPIRY purge: session must still be fresh after owner-lock wait (3587.28061ms)
+  AssertionError [ERR_ASSERTION]: Expired authentication must not authorize an operation after lock acquisition
+  
+  200 !== 401
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/evidence/review-1/adversarial.test.ts:48:14)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 200,
+    expected: 401,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at evidence/review-1/adversarial.test.ts:1:3556
+✖ AUTH-REVOKE export: revoked session cannot survive owner-lock wait (1457.181022ms)
+  AssertionError [ERR_ASSERTION]: Revocation committed before protected operation must prevent access
+  
+  200 !== 401
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/evidence/review-1/adversarial.test.ts:66:14)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 200,
+    expected: 401,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at evidence/review-1/adversarial.test.ts:1:3556
+✖ AUTH-REVOKE purge: revoked session cannot survive owner-lock wait (1385.528361ms)
+  AssertionError [ERR_ASSERTION]: Revocation committed before protected operation must prevent access
+  
+  200 !== 401
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/evidence/review-1/adversarial.test.ts:66:14)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 200,
+    expected: 401,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

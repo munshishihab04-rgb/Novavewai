@@ -1,0 +1,30 @@
+
+> nova-community-agent@0.1.0 test
+> tsx --test --test-concurrency=1 tests/*.test.ts
+
+✖ HTTP authenticated task persists through application and PostgreSQL restart (967.171174ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1203.445279
+
+✖ failing tests:
+
+test at tests/foundation.test.ts:5:2
+✖ HTTP authenticated task persists through application and PostgreSQL restart (967.171174ms)
+  AssertionError [ERR_ASSERTION]: foundation API must exist
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/foundation.test.ts:10:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

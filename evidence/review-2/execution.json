@@ -1,0 +1,47 @@
+[
+  {
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "evidence/review-1/adversarial.test.ts"
+    ],
+    "log": "evidence/review-2/adversarial.log",
+    "exit_code": 0,
+    "started_at": "2026-09-25T09:11:08.394422+00:00"
+  },
+  {
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "tests/auth-revalidation.test.ts"
+    ],
+    "log": "evidence/review-2/auth-revalidation.log",
+    "exit_code": 0,
+    "started_at": "2026-09-25T09:11:32.130746+00:00"
+  },
+  {
+    "command": [
+      "npm",
+      "test"
+    ],
+    "log": "evidence/review-2/main-tests.log",
+    "exit_code": 0,
+    "started_at": "2026-09-25T09:11:58.352910+00:00"
+  },
+  {
+    "command": [
+      "npm",
+      "run",
+      "typecheck"
+    ],
+    "log": "evidence/review-2/typecheck.log",
+    "exit_code": 0,
+    "started_at": "2026-09-25T09:12:54.396047+00:00"
+  }
+]

@@ -1,0 +1,46 @@
+[
+  {
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "exit_code": 0,
+    "output": ""
+  },
+  {
+    "command": [
+      "git",
+      "diff",
+      "--cached",
+      "--check"
+    ],
+    "exit_code": 2,
+    "output": "evidence/foundation/03-red-artifact.log:21: trailing whitespace.\n+  \nevidence/foundation/03-red-artifact.log:23: trailing whitespace.\n+  \nevidence/foundation/05-red-action.log:22: trailing whitespace.\n+  \nevidence/foundation/05-red-action.log:24: trailing whitespace.\n+  \nevidence/foundation/07-red-privacy.log:23: trailing whitespace.\n+  \nevidence/foundation/07-red-privacy.log:25: trailing whitespace.\n+  \nevidence/foundation/09-red-recovery.log:27: trailing whitespace.\n+  \nevidence/foundation/09-red-recovery.log:29: trailing whitespace.\n+  \nevidence/foundation/11-red-lifecycle.log:28: trailing whitespace.\n+  \nevidence/foundation/11-red-lifecycle.log:30: trailing whitespace.\n+  \nevidence/foundation/13-red-cli.log:16: trailing whitespace.\n+  \nevidence/foundation/13-red-cli.log:18: trailing whitespace.\n+  \nevidence/foundation/15-red-security.log:16: trailing whitespace.\n+  \nevidence/foundation/15-red-security.log:18: trailing whitespace.\n+  \nevidence/foundation/17-red-cancel-policy.log:32: trailing whitespace.\n+  \nevidence/foundation/17-red-cancel-policy.log:34: trailing whitespace.\n+  \nevidence/foundation/19-red-worker-cli.log:16: trailing whitespace.\n+  \nevidence/foundation/19-red-worker-cli.log:18: trailing whitespace.\n+  \nevidence/foundation/typecheck.log:4: new blank line at EOF.\n"
+  },
+  {
+    "command": [
+      "node",
+      "--version"
+    ],
+    "exit_code": 0,
+    "output": "v26.8.2\n"
+  },
+  {
+    "command": [
+      "npm",
+      "--version"
+    ],
+    "exit_code": 0,
+    "output": "11.19.1\n"
+  },
+  {
+    "command": [
+      "git",
+      "status",
+      "--short"
+    ],
+    "exit_code": 0,
+    "output": "A  .gitignore\nA  docs/API.md\nA  docs/DELIVERY.md\nA  docs/acceptance-matrix.json\nA  evidence/foundation/01-red-task.log\nA  evidence/foundation/02-green-task.log\nA  evidence/foundation/03-red-artifact.log\nA  evidence/foundation/04-green-artifact.log\nA  evidence/foundation/05-red-action.log\nA  evidence/foundation/06-green-action.log\nA  evidence/foundation/07-red-privacy.log\nA  evidence/foundation/08-green-privacy.log\nA  evidence/foundation/09-red-recovery.log\nA  evidence/foundation/10-green-recovery.log\nA  evidence/foundation/11-red-lifecycle.log\nA  evidence/foundation/12-green-lifecycle.log\nA  evidence/foundation/13-red-cli.log\nA  evidence/foundation/14-green-cli.log\nA  evidence/foundation/15-red-security.log\nA  evidence/foundation/16-green-security.log\nA  evidence/foundation/17-red-cancel-policy.log\nA  evidence/foundation/18-green-cancel-policy.log\nA  evidence/foundation/19-red-worker-cli.log\nA  evidence/foundation/20-final-tests.log\nA  evidence/foundation/cleanup.json\nA  evidence/foundation/npm-audit.json\nA  evidence/foundation/report.md\nA  evidence/foundation/typecheck.log\nA  migrations/001_core.sql\nA  migrations/002_artifacts.sql\nA  migrations/003_actions.sql\nA  migrations/004_privacy.sql\nA  migrations/005_task_states.sql\nA  package-lock.json\nA  package.json\nA  scripts/bootstrap.ts\nA  scripts/config.ts\nA  scripts/server.ts\nA  scripts/worker.ts\nA  src/actions.ts\nAM src/app.ts\nAM src/privacy.ts\nA  src/worker.ts\nA  tests/actions.test.ts\nA  tests/artifacts.test.ts\nA  tests/cli.test.ts\nA  tests/foundation.test.ts\nA  tests/helpers.ts\nA  tests/lifecycle.test.ts\nA  tests/privacy.test.ts\nA  tests/recovery.test.ts\nA  tests/security.test.ts\nA  tsconfig.json\n?? evidence/fix-1/\n?? evidence/foundation/parent-verification.md\n?? evidence/review-1/\n?? evidence/review-2/\n?? tests/auth-revalidation.test.ts\n"
+  }
+]

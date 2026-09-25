@@ -1,0 +1,45 @@
+
+> nova-community-agent@0.1.0 test
+> tsx --test --test-concurrency=1 tests/*.test.ts
+
+✔ Approval binds exact revision/account/recipient; concurrent consumption yields one durable synthetic effect (1691.053023ms)
+✔ Artifact append-only revisions, concurrent conflict and owner-scoped revision export (1816.535858ms)
+✔ Local bootstrap CLI writes private credential file; real server subprocess restarts and serves persisted tasks (2721.022919ms)
+✔ HTTP authenticated task persists through application and PostgreSQL restart (2011.058058ms)
+✔ Task lifecycle optimistic locking rejects stale/illegal transitions and resumes persisted checkpoint (1900.005729ms)
+✔ Owner export and purge revoke all sessions and prevent stale worker/direct database resurrection (1525.113071ms)
+✔ Revoked and expired approval cannot authorize queued dispatch (2885.986446ms)
+✔ Ambiguous adapter exception and malformed receipt never retry or expose provider secrets (1611.991624ms)
+✔ Expired lease fences old worker; crash executing marker recovers unknown without repeating effect (1613.029185ms)
+✖ Cancelled task invalidates queued policy before dispatch (1449.25628ms)
+✔ Timeout after synthetic dispatch becomes unknown and a late return cannot overwrite it (1491.103879ms)
+✔ Purge during in-flight synthetic call waits and late completion cannot recreate records (1458.834845ms)
+✔ Closed query and body schemas, redacted parser/DB errors, expired sessions and cross-owner foreign keys (1892.178108ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 12
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 25599.191607
+
+✖ failing tests:
+
+test at tests/recovery.test.ts:75:1
+✖ Cancelled task invalidates queued policy before dispatch (1449.25628ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/recovery.test.ts:81:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

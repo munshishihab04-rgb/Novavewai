@@ -1,0 +1,22 @@
+
+> nova-community-agent@0.1.0 test
+> tsx --test --test-concurrency=1 tests/*.test.ts
+
+✔ Approval binds exact revision/account/recipient; concurrent consumption yields one durable synthetic effect (1603.31731ms)
+✔ Artifact append-only revisions, concurrent conflict and owner-scoped revision export (1817.808456ms)
+✔ Local bootstrap CLI writes private credential file; real server subprocess restarts and serves persisted tasks (2845.036868ms)
+✔ HTTP authenticated task persists through application and PostgreSQL restart (2009.663237ms)
+✔ Task lifecycle optimistic locking rejects stale/illegal transitions and resumes persisted checkpoint (2048.425978ms)
+✔ Owner export and purge revoke all sessions and prevent stale worker/direct database resurrection (1992.378502ms)
+✔ Revoked and expired approval cannot authorize queued dispatch (2543.072352ms)
+✔ Ambiguous adapter exception and malformed receipt never retry or expose provider secrets (1548.887089ms)
+✔ Expired lease fences old worker; crash executing marker recovers unknown without repeating effect (1583.369758ms)
+✔ Purge during in-flight synthetic call waits and late completion cannot recreate records (1532.129387ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 20888.515956

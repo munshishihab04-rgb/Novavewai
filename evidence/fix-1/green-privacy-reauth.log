@@ -1,0 +1,18 @@
+{"case":"AUTH-EXPIRY-export","observedHttpStatus":401,"ownerStatus":"active","lateWrites":0}
+✔ AUTH-EXPIRY export: session must still be fresh after owner-lock wait (3814.938378ms)
+{"case":"AUTH-EXPIRY-purge","observedHttpStatus":401,"ownerStatus":"active","lateWrites":0}
+✔ AUTH-EXPIRY purge: session must still be fresh after owner-lock wait (3175.174302ms)
+{"case":"AUTH-REVOKE-export","observedHttpStatus":401,"ownerStatus":"active"}
+✔ AUTH-REVOKE export: revoked session cannot survive owner-lock wait (1499.042047ms)
+{"case":"AUTH-REVOKE-purge","observedHttpStatus":401,"ownerStatus":"active"}
+✔ AUTH-REVOKE purge: revoked session cannot survive owner-lock wait (1432.24193ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 10184.151976
+
+EXIT_CODE=0

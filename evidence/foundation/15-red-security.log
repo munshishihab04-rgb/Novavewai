@@ -1,0 +1,29 @@
+✖ Closed query and body schemas, redacted parser/DB errors, expired sessions and cross-owner foreign keys (1394.097162ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1629.051236
+
+✖ failing tests:
+
+test at tests/security.test.ts:6:1
+✖ Closed query and body schemas, redacted parser/DB errors, expired sessions and cross-owner foreign keys (1394.097162ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  200 !== 400
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/security.test.ts:14:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 200,
+    expected: 400,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

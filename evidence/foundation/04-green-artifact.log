@@ -1,0 +1,14 @@
+
+> nova-community-agent@0.1.0 test
+> tsx --test --test-concurrency=1 tests/*.test.ts
+
+✔ Artifact append-only revisions, concurrent conflict and owner-scoped revision export (1415.616661ms)
+✔ HTTP authenticated task persists through application and PostgreSQL restart (1831.933088ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3594.892059

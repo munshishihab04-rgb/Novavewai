@@ -1,0 +1,32 @@
+{"case":"AUTH-EXPIRY-mutation","observedHttpStatus":201,"ownerStatus":"active","lateWrites":1}
+✖ AUTH-EXPIRY mutation: session must still be fresh after owner-lock wait (3517.636498ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3800.265387
+
+✖ failing tests:
+
+test at evidence/review-1/adversarial.test.ts:1:1978
+✖ AUTH-EXPIRY mutation: session must still be fresh after owner-lock wait (3517.636498ms)
+  AssertionError [ERR_ASSERTION]: Expired authentication must not authorize an operation after lock acquisition
+  
+  201 !== 401
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/evidence/review-1/adversarial.test.ts:48:14)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 201,
+    expected: 401,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+EXIT_CODE=1

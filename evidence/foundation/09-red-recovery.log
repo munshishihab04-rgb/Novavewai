@@ -1,0 +1,40 @@
+
+> nova-community-agent@0.1.0 test
+> tsx --test --test-concurrency=1 tests/*.test.ts
+
+✔ Approval binds exact revision/account/recipient; concurrent consumption yields one durable synthetic effect (1675.007144ms)
+✔ Artifact append-only revisions, concurrent conflict and owner-scoped revision export (1756.554592ms)
+✔ HTTP authenticated task persists through application and PostgreSQL restart (1999.412008ms)
+✔ Owner export and purge revoke all sessions and prevent stale worker/direct database resurrection (1996.854014ms)
+✖ Revoked and expired approval cannot authorize queued dispatch (1418.201941ms)
+✔ Ambiguous adapter exception and malformed receipt never retry or expose provider secrets (1532.194238ms)
+✔ Expired lease fences old worker; crash executing marker recovers unknown without repeating effect (1595.014769ms)
+✔ Purge during in-flight synthetic call waits and late completion cannot recreate records (1570.468455ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 7
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 14563.477224
+
+✖ failing tests:
+
+test at tests/recovery.test.ts:25:1
+✖ Revoked and expired approval cannot authorize queued dispatch (1418.201941ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  404 !== 201
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/recovery.test.ts:29:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 404,
+    expected: 201,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

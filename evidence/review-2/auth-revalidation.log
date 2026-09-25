@@ -1,0 +1,20 @@
+✔ AUTH-RECHECK expiry mutation: reject stale authentication after owner-lock wait (3882.570565ms)
+✔ AUTH-RECHECK expiry replay: reject stale authentication after owner-lock wait (3600.388161ms)
+✔ AUTH-RECHECK expiry export: reject stale authentication after owner-lock wait (3581.464861ms)
+✔ AUTH-RECHECK expiry purge: reject stale authentication after owner-lock wait (3583.033161ms)
+✔ AUTH-RECHECK revoke mutation: reject stale authentication after owner-lock wait (1452.745888ms)
+✔ AUTH-RECHECK revoke replay: reject stale authentication after owner-lock wait (1443.024597ms)
+✔ AUTH-RECHECK revoke export: reject stale authentication after owner-lock wait (1505.659575ms)
+✔ AUTH-RECHECK revoke purge: reject stale authentication after owner-lock wait (1427.620092ms)
+✔ AUTH-RECHECK rebind mutation: reject stale authentication after owner-lock wait (1439.268663ms)
+✔ AUTH-RECHECK rebind replay: reject stale authentication after owner-lock wait (1452.34631ms)
+✔ AUTH-RECHECK rebind export: reject stale authentication after owner-lock wait (1058.685472ms)
+✔ AUTH-RECHECK rebind purge: reject stale authentication after owner-lock wait (1498.954312ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 26184.838456

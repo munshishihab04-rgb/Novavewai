@@ -1,0 +1,36 @@
+
+> nova-community-agent@0.1.0 test
+> tsx --test --test-concurrency=1 tests/*.test.ts
+
+✔ Approval binds exact revision/account/recipient; concurrent consumption yields one durable synthetic effect (1598.348937ms)
+✔ Artifact append-only revisions, concurrent conflict and owner-scoped revision export (1817.22555ms)
+✔ HTTP authenticated task persists through application and PostgreSQL restart (1884.589206ms)
+✖ Owner export and purge revoke all sessions and prevent stale worker/direct database resurrection (1807.941233ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 3
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 7853.148002
+
+✖ failing tests:
+
+test at tests/privacy.test.ts:6:1
+✖ Owner export and purge revoke all sessions and prevent stale worker/direct database resurrection (1807.941233ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  404 !== 200
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/privacy.test.ts:20:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 404,
+    expected: 200,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
