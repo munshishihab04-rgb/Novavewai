@@ -1,0 +1,16 @@
+16b0373d49090c49ef25fdbc10f0f0b89d280459b4a11e6c3f38d0fbd8f88c15  REPORT.md
+331f35b9a6964183980682f82b9540bd41eb912370c43ff2c63f4ae6640a36d5  test-full.log
+4e383a5cd4638859f59bb257cecbf4e203e911e5a65e3fc320e9a3991d2029cc  typecheck.log
+12fc1e77c6c8ed1f841f4ea650c5c5a42c0ded33a542c632ebfdedf51f55c20f  language-live-smoke.json
+188b4334e5a5ea167942e6a27ea896ca79c35b381f711b3b9c6f45474b03798c  home-bn-phone.png
+025d17951920e3198c504a7483d5764010924712cb94ec3a268d6ab7435fcc3c  login-phone.png
+4d964ea8005421dbb2afdcaf5c46c2443909605a4fc6919cbb6de9c04fad4353  welcome-bn-phone.png
+da011b58f596ea3c538c9f95ac87b80ff977c8c6161d5ed00cbf154ad6938cd9  welcome-phone.png
+1378eb8e3609356a899e5ee89c895d1fb786bcbed34875d2234db28198103243  nova-0.1.0-1.apk
+8e12bc9badf34d5f0d5d1455af6ca8584ede5135c037c3615062c964a6bb71be  ../../src/web.ts
+00ceac4ba215cedca781b3bf764317d2b98c63dc0cf4b9c7bb1641d13898211e  ../../scripts/trial.ts
+2b07c0ef49b248e5958fcb3a06ff5ce34af246eb81fce008794df36acb3b5ef0  ../../tests/base-path.test.ts
+ca0f768e9a5b756ea8a8037b23af5cab954ae8bc9c12fd1d446ce9901453f7e1  ../../tests/pwa-manifest.test.ts
+7c19e788ddd28fb242d6795d527ce94dce0814c8a5874b16c32b19d12880be4b  ../../android/app/build.gradle
+848aeab3b116c54806be30a0f64d5fa4dd5cc0e9c7a964ffb53bc42a69e89256  ../../android/app/src/main/AndroidManifest.xml
+922f9c5bca9465cee89146c3fba05b94e319b534d663eee91569263d960cc98f  ../../docs/DEPLOYMENT.md
