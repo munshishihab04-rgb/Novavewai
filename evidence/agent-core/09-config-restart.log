@@ -1,0 +1,10 @@
+✔ NEW project provider env is opt-in, complete, HTTPS-only and ignores unrelated credentials (82.927812ms)
+✔ SIGKILL during real provider await survives PG and API restart as unknown; explicit new turn recovers (2751.004618ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3450.275556

@@ -1,0 +1,12 @@
+{
+  "checked_at": "2026-09-25T11:02:09.413036+00:00",
+  "endpoint": "https://sadesheikh-2809-resource.openai.azure.com/openai/v1/chat/completions",
+  "requested_model": "gpt-5.4-mini",
+  "rbac_changed": false,
+  "secrets_written": false,
+  "managed_identity_available": true,
+  "inference_http_status": 401,
+  "error_code": "PermissionDenied",
+  "error_message": "Principal does not have access to API/Operation.",
+  "actual_model_inference_verified": false
+}

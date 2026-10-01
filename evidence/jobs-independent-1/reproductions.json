@@ -1,0 +1,92 @@
+[
+  {
+    "id": "P1",
+    "case": "3 unverified vacancies bypass available verifier",
+    "verifier_calls": 0,
+    "stages": [
+      {
+        "stage": "search",
+        "status": "completed"
+      }
+    ]
+  },
+  {
+    "id": "P2",
+    "case": "identity verifier drops unselected candidates",
+    "input": 8,
+    "output": 6
+  },
+  {
+    "id": "P3",
+    "case": "output cap applied before strict filtering loses direct employer at index 12",
+    "returned": 0,
+    "excluded": 12
+  },
+  {
+    "id": "P4",
+    "case": "typed provider output has no runtime URL/evidence verification",
+    "returned": {
+      "opportunity_kind": "VACANCY",
+      "title": "REVIEW FIXTURE 1",
+      "city": "Milano",
+      "source_url": "javascript:alert(1)",
+      "source_type": "UNKNOWN",
+      "publisher_type": "DIRECT_EMPLOYER",
+      "verification_status": "VERIFIED",
+      "discovered_at": "2026-09-26T00:00:00Z",
+      "last_verified_at": null,
+      "status": "UNKNOWN",
+      "evidence": []
+    }
+  },
+  {
+    "id": "I2",
+    "case": "lavapiatti senza agenzie",
+    "unknown_jobs": 0,
+    "excludedUnknown": 1
+  },
+  {
+    "id": "I2",
+    "case": "lavapiatti senza intermediari",
+    "unknown_jobs": 1,
+    "excludedUnknown": 0
+  },
+  {
+    "id": "I2",
+    "case": "lavapiatti solo datori diretti",
+    "unknown_jobs": 1,
+    "excludedUnknown": 0
+  },
+  {
+    "id": "I2",
+    "case": "dishwasher direct employers only",
+    "unknown_jobs": 1,
+    "excludedUnknown": 0
+  },
+  {
+    "id": "I1",
+    "case": "Ora cerco cameriere a Milano Prima cercavo cameriere Bologna",
+    "grounded": {
+      "occupation": "cameriere",
+      "supplied": ""
+    }
+  },
+  {
+    "id": "I1",
+    "case": "Cerco cameriere a Parma Ho visitato Bologna",
+    "grounded": {
+      "occupation": "cameriere",
+      "city": "Bologna",
+      "supplied": ""
+    }
+  },
+  {
+    "id": "I1",
+    "case": "Cerco cameriere, non a Milano",
+    "grounded": {
+      "occupation": "cameriere",
+      "city": "Milano",
+      "supplied": ""
+    }
+  }
+]

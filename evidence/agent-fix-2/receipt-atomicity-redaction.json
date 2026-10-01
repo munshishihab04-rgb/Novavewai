@@ -1,0 +1,41 @@
+{
+  "run": {
+    "id": "fec94c28-9bba-4e20-8c18-1311a73cbd86",
+    "status": "outcome_unknown",
+    "error_code": "agent_internal_error",
+    "model_calls": 1,
+    "tool_calls": 0
+  },
+  "replay": {
+    "status": 201,
+    "body": {
+      "id": "fec94c28-9bba-4e20-8c18-1311a73cbd86",
+      "status": "queued",
+      "taskId": "7a342217-676e-4a5f-ba17-a54cb3314d49",
+      "conversationId": "d4d858b9-9e42-414d-9f34-896066bf299e"
+    }
+  },
+  "persisted": {
+    "runs": [
+      {
+        "id": "fec94c28-9bba-4e20-8c18-1311a73cbd86",
+        "status": "outcome_unknown",
+        "error_code": "agent_internal_error",
+        "model_calls": 1,
+        "tool_calls": 0
+      }
+    ],
+    "messages": [
+      {
+        "sequence": 1,
+        "role": "user",
+        "text": "atomic receipt"
+      }
+    ],
+    "artifacts": [],
+    "receipts": [],
+    "providerCalls": 1
+  },
+  "artifactEvents": [],
+  "exportContainsInternal": false
+}

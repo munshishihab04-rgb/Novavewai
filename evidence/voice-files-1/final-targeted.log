@@ -1,0 +1,14 @@
+✔ native generated file tool commits revision and owner-scoped exact code download (2066.756806ms)
+✔ staged native voice UI binds conversation, stops late connection and provides authenticated file downloads (1212.768013ms)
+✔ failed canonical tool never speaks success and exposes voice run failure (1604.015686ms)
+✔ cancelled voice inference is promptly aborted, not merely hidden until provider timeout (1747.019726ms)
+✔ provider-observed committed voice input uses native tools, persists once, and continues in text (1800.64609ms)
+✔ stop during native inference fences late voice tool completion (1673.488543ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 12062.350944

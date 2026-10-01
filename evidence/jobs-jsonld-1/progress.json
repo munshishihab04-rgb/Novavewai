@@ -1,0 +1,3 @@
+{"task":"jobs-jsonld-1 + subito on-demand (phase 2)","updated_at":"2026-09-30T22:05:00Z","done":true,"blocker":null,
+"phases":{"robots_gate":"done","jsonld_extraction":"done","dispatcher_wiring":"done","renderer_both_files":"done","subito_playwright_flagged":"done","tests":"210/210 pass, typecheck exit 0","live_probe_jsonld":"3 JSONLD_VERIFIED (1 EXPIRED), 1 REDIRECTED (gigroup)","live_probe_subito":"20 cards observed, 12 LISTING_OBSERVED (9 CITY, 3 PROVINCE_OR_REGION), no block","deploy":"not done (out of scope)","commit":"not done (out of scope)"},
+"flag":"NOVA_JOBS_SUBITO_AUTOMATED_ACCESS=owner-accepted (server-side; NOT set in service env)"}

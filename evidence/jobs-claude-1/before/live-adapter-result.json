@@ -1,0 +1,25 @@
+{
+  "opportunities": [],
+  "unavailable": [
+    {
+      "url": "https://www.adecco.com/it-it/cerca-lavoro/camerierea-bologna-bologna/cfddefa7-8135-4e3c-b969-8a8f66602c82",
+      "title": "Cameriere/a | Bologna, Bologna - adecco.com",
+      "status": "UNAVAILABLE",
+      "observedAt": "2026-09-30T17:24:06.978Z"
+    },
+    {
+      "url": "https://www.lavoropiu.it/offerta/cameriere-a-colazioni-hotel-107229",
+      "title": "Lavoro: - | Lavoropiù",
+      "status": "MISMATCH",
+      "observedAt": "2026-09-30T17:24:07.371Z"
+    }
+  ],
+  "fetchedAt": "2026-09-30T17:24:08.282Z",
+  "testedScope": {
+    "leads": 4,
+    "allowedOrigins": [
+      "www.adecco.com",
+      "www.lavoropiu.it"
+    ]
+  }
+}

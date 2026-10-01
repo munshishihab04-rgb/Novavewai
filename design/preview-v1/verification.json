@@ -1,0 +1,24 @@
+{
+  "screens": [
+    {
+      "screen": "desktop",
+      "horizontal_overflow": false
+    },
+    {
+      "screen": "mobile-chat",
+      "horizontal_overflow": false
+    },
+    {
+      "screen": "mobile-result",
+      "horizontal_overflow": false
+    },
+    {
+      "screen": "mobile-home",
+      "horizontal_overflow": false
+    }
+  ],
+  "console_errors": [],
+  "mobile_flow": "home \u2192 chat \u2192 result \u2192 chat verified",
+  "microphone": "not requested; explicit prototype notice",
+  "backend": "not connected"
+}

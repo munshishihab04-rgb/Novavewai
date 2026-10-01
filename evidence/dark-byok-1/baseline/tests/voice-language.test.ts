@@ -1,0 +1,8 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {database} from './helpers.ts';import {buildApp,migrate,bootstrap} from '../src/app.ts';import {capabilityRoutes} from '../src/capabilities.ts';
+test('voice defaults to adaptive language and UI preference does not lock later turns',async()=>{
+ const db=await database();await migrate(db.pool);const user=await bootstrap(db.pool);const app=buildApp(db.pool);capabilityRoutes(app,db.pool);await app.ready();const original=globalThis.fetch;let session:any;
+ globalThis.fetch=(async(url:any,options:any)=>{if(String(url).includes('169.254.169.254'))return Response.json({access_token:'test-only',expires_on:String(Date.now()/1000+3600)});if(String(url).endsWith('/client_secrets')){session=JSON.parse(options.body).session;return Response.json({value:'ephemeral-test'})}return new Response('synthetic-sdp-answer')}) as typeof fetch;
+ try{for(const language of ['auto','it','bn','en']){
+ const response=await app.inject({method:'POST',url:'/voice/connect',headers:{authorization:`Bearer ${user.token}`},payload:{sdp:'synthetic-sdp-offer',language}});assert.equal(response.statusCode,200,response.body);assert.match(session.instructions,/latest user speech/i);assert.match(session.instructions,/switch/i);assert.match(session.instructions,/not a language lock/i);assert.doesNotMatch(session.instructions,/Converse naturally in (it|bn|en)\./);assert.equal(session.audio.input.transcription?.language,undefined);assert.match(session.instructions,/cannot save drafts/i);
+ }}finally{globalThis.fetch=original;await app.close();await db.close()}
+});

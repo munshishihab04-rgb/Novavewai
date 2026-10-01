@@ -1,0 +1,7 @@
+{
+  "public_welcome": true,
+  "real_message": true,
+  "cta_actionable": true,
+  "invite_not_consumed": true,
+  "browser_errors": []
+}

@@ -1,0 +1,555 @@
+[
+  {
+    "label": "permanent-regressions",
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "tests/agent-review-regressions.test.ts",
+      "tests/agent-runtime.test.ts"
+    ],
+    "cwd": "/home/azureuser/nova-community-agent",
+    "exit_code": 0,
+    "seconds": 36.217,
+    "counts": {
+      "tests": 19,
+      "pass": 19,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "log": "permanent-regressions.log",
+    "log_sha256": "c6aa3060e930337f8e2b27eb42b7d1b5216ecd36e17101e3132db2f8d128ecfd"
+  },
+  {
+    "label": "unchanged-original-probes",
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "evidence/agent-review-2/adversarial.test.ts",
+      "evidence/agent-review-2/lease-loss.test.ts"
+    ],
+    "cwd": "/home/azureuser/nova-community-agent",
+    "exit_code": 0,
+    "seconds": 21.0,
+    "counts": {
+      "tests": 9,
+      "pass": 9,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "log": "unchanged-original-probes.log",
+    "log_sha256": "4b02e59112339c3d6f97032eaba3dbe2edab4e6dc765e998b31a9f0e69713b3f"
+  },
+  {
+    "label": "full-suite",
+    "command": [
+      "npm",
+      "test"
+    ],
+    "cwd": "/home/azureuser/nova-community-agent",
+    "exit_code": 0,
+    "seconds": 251.838,
+    "counts": {
+      "tests": 105,
+      "pass": 105,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "log": "full-suite.log",
+    "log_sha256": "e2863abf8aa6e09c73b80e0a11bea039d82f59add5e05c0bffdbecb973f236be"
+  },
+  {
+    "label": "typecheck",
+    "command": [
+      "npm",
+      "run",
+      "typecheck"
+    ],
+    "cwd": "/home/azureuser/nova-community-agent",
+    "exit_code": 0,
+    "seconds": 1.218,
+    "counts": {},
+    "log": "typecheck.log",
+    "log_sha256": "7d6a5a1901d117873633e2de4661d1a5453e59775fac6ace1d2d23bf201e77b3"
+  },
+  {
+    "label": "diff-check",
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "cwd": "/home/azureuser/nova-community-agent",
+    "exit_code": 0,
+    "seconds": 0.004,
+    "counts": {},
+    "log": "diff-check.log",
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "supplemental",
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "evidence/agent-review-2/supplemental.test.ts"
+    ],
+    "exit_code": 1,
+    "seconds": 10.519,
+    "counts": {
+      "tests": 4,
+      "pass": 3,
+      "fail": 1,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "log": "supplemental.log",
+    "log_sha256": "cc441203da1eac5ccd032d6f33988fa7ce4752ac4c5d3c946c5b7159233ea4b3",
+    "cwd": "/home/azureuser/nova-community-agent"
+  },
+  {
+    "label": "baseline-original-probes",
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "evidence/agent-review-2/baseline-probes/adversarial.test.ts",
+      "evidence/agent-review-2/baseline-probes/lease-loss.test.ts"
+    ],
+    "exit_code": 1,
+    "seconds": 23.833,
+    "counts": {
+      "tests": 9,
+      "pass": 5,
+      "fail": 4,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "log": "baseline-original-probes.log",
+    "log_sha256": "667693c38008b69cdc57dfd78680e8b9ce6a5fbc307f710f0dc1455fe243946b",
+    "cwd": "/home/azureuser/nova-community-agent"
+  },
+  {
+    "label": "baseline-final-write-probes",
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=session final validation",
+      "evidence/agent-review-2/baseline-probes/agent-runtime.test.ts"
+    ],
+    "exit_code": 1,
+    "seconds": 9.06,
+    "counts": {
+      "tests": 2,
+      "pass": 0,
+      "fail": 2,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "log": "baseline-final-write-probes.log",
+    "log_sha256": "4f2026e067c71628737adf687c679def1bd02a367b7c265a47abff2d1c38c12f",
+    "cwd": "/home/azureuser/nova-community-agent"
+  },
+  {
+    "label": "file-put-isolated",
+    "exit_code": 0,
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=lease loss during actual file put",
+      "evidence/agent-review-2/supplemental.test.ts"
+    ],
+    "counts": {
+      "tests": 1,
+      "pass": 1,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "log": "file-put-isolated.log",
+    "log_sha256": "bbb1fe9c3fb63496d21f931b3c436211950a185d08e5c46f57c4f26203be5479",
+    "cwd": "/home/azureuser/nova-community-agent"
+  },
+  {
+    "label": "supplemental-rerun",
+    "exit_code": 0,
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "evidence/agent-review-2/supplemental.test.ts"
+    ],
+    "counts": {
+      "tests": 4,
+      "pass": 4,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "log": "supplemental-rerun.log",
+    "log_sha256": "fe4a24ed63e86f094d5e4e3df72ce254f2780e6adedac74026bb3f5bd4f9891c",
+    "cwd": "/home/azureuser/nova-community-agent"
+  },
+  {
+    "label": "delayed-lease-error",
+    "exit_code": 1,
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "evidence/agent-review-2/delayed-lease-error.test.ts"
+    ],
+    "counts": {
+      "tests": 1,
+      "pass": 0,
+      "fail": 1,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "log": "delayed-lease-error.log",
+    "log_sha256": "783dfcff18cc4683ce2d9cb76ff15434eed7dd68baae651e38d47314f4508879",
+    "cwd": "/home/azureuser/nova-community-agent"
+  },
+  {
+    "label": "delayed-lease-no-listener",
+    "exit_code": 1,
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "evidence/agent-review-2/delayed-lease-no-listener.test.ts"
+    ],
+    "counts": {
+      "tests": 1,
+      "pass": 0,
+      "fail": 1,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "log": "delayed-lease-no-listener.log",
+    "log_sha256": "d56a6c6919862af758730755d0f07cd2672c5f96a9f02b4d300d963d4e8a690c",
+    "cwd": "/home/azureuser/nova-community-agent"
+  },
+  {
+    "label": "file-put-repeat-1",
+    "exit_code": 0,
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=lease loss during actual file put",
+      "evidence/agent-review-2/supplemental.test.ts"
+    ],
+    "counts": {
+      "tests": 1,
+      "pass": 1,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "log": "file-put-repeat-1.log",
+    "log_sha256": "aba23f220614312eff80f29370fdb11a165fa03703e220bbc8b22055cf4d2d3e",
+    "cwd": "/home/azureuser/nova-community-agent"
+  },
+  {
+    "label": "file-put-repeat-2",
+    "exit_code": 0,
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=lease loss during actual file put",
+      "evidence/agent-review-2/supplemental.test.ts"
+    ],
+    "counts": {
+      "tests": 1,
+      "pass": 1,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "log": "file-put-repeat-2.log",
+    "log_sha256": "e70d88fb060f151bfc125bce09868813abd64bb3661367177ce8b574621b313a",
+    "cwd": "/home/azureuser/nova-community-agent"
+  },
+  {
+    "label": "file-put-repeat-3",
+    "exit_code": 0,
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=lease loss during actual file put",
+      "evidence/agent-review-2/supplemental.test.ts"
+    ],
+    "counts": {
+      "tests": 1,
+      "pass": 1,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "log": "file-put-repeat-3.log",
+    "log_sha256": "6339bb31a140e4a5ffe54fe9773623783e4b46a9bcbd327f4916e7b2f30b8f84",
+    "cwd": "/home/azureuser/nova-community-agent"
+  },
+  {
+    "label": "file-put-repeat-4",
+    "exit_code": 0,
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=lease loss during actual file put",
+      "evidence/agent-review-2/supplemental.test.ts"
+    ],
+    "counts": {
+      "tests": 1,
+      "pass": 1,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "log": "file-put-repeat-4.log",
+    "log_sha256": "45f367d9666eab6956a96a2695c958701619987053202ea923301b68d89abf53",
+    "cwd": "/home/azureuser/nova-community-agent"
+  },
+  {
+    "label": "file-put-repeat-5",
+    "exit_code": 0,
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=lease loss during actual file put",
+      "evidence/agent-review-2/supplemental.test.ts"
+    ],
+    "counts": {
+      "tests": 1,
+      "pass": 1,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "log": "file-put-repeat-5.log",
+    "log_sha256": "7c319509252c2f58d53050b4c55e737cf68cd44384afc2f02010d4b98cdb98b5",
+    "cwd": "/home/azureuser/nova-community-agent"
+  },
+  {
+    "label": "file-put-repeat-6",
+    "exit_code": 0,
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=lease loss during actual file put",
+      "evidence/agent-review-2/supplemental.test.ts"
+    ],
+    "counts": {
+      "tests": 1,
+      "pass": 1,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "log": "file-put-repeat-6.log",
+    "log_sha256": "4fe6ecb88c7bb14ed9c0775e418ed53be5e13774a8382b77e533b18eaac0a2e5",
+    "cwd": "/home/azureuser/nova-community-agent"
+  },
+  {
+    "label": "file-put-repeat-7",
+    "exit_code": 0,
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=lease loss during actual file put",
+      "evidence/agent-review-2/supplemental.test.ts"
+    ],
+    "counts": {
+      "tests": 1,
+      "pass": 1,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "log": "file-put-repeat-7.log",
+    "log_sha256": "99a2df7fa57d6c98915cfaef4d642acf3b9bcbaaf980a1685eecba2440f4cc74",
+    "cwd": "/home/azureuser/nova-community-agent"
+  },
+  {
+    "label": "file-put-repeat-8",
+    "exit_code": 0,
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=lease loss during actual file put",
+      "evidence/agent-review-2/supplemental.test.ts"
+    ],
+    "counts": {
+      "tests": 1,
+      "pass": 1,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "log": "file-put-repeat-8.log",
+    "log_sha256": "eacff65fda6c481d7a66f76cd842ea2bdb017c3b3c46476eafe73224b693a6bb",
+    "cwd": "/home/azureuser/nova-community-agent"
+  },
+  {
+    "label": "supplemental-repeat-1",
+    "exit_code": 0,
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "evidence/agent-review-2/supplemental.test.ts"
+    ],
+    "counts": {
+      "tests": 4,
+      "pass": 4,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "log": "supplemental-repeat-1.log",
+    "log_sha256": "ffac5d119dd7dfe95df5341dab04000a720a0bd7284fd41c966d1bbc704943ce",
+    "cwd": "/home/azureuser/nova-community-agent"
+  },
+  {
+    "label": "supplemental-repeat-2",
+    "exit_code": 0,
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "evidence/agent-review-2/supplemental.test.ts"
+    ],
+    "counts": {
+      "tests": 4,
+      "pass": 4,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "log": "supplemental-repeat-2.log",
+    "log_sha256": "827b826a3dd4ee166f520d423ca28e4617ad6b5b8bd9c65998cf949caf93fbd9",
+    "cwd": "/home/azureuser/nova-community-agent"
+  },
+  {
+    "label": "supplemental-repeat-3",
+    "exit_code": 0,
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "evidence/agent-review-2/supplemental.test.ts"
+    ],
+    "counts": {
+      "tests": 4,
+      "pass": 4,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "log": "supplemental-repeat-3.log",
+    "log_sha256": "e30b7f91cd4833e523474006684eab7ce98a205b297d9fd162ac3ea033568ca6",
+    "cwd": "/home/azureuser/nova-community-agent"
+  },
+  {
+    "label": "supplemental-repeat-4",
+    "exit_code": 0,
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "evidence/agent-review-2/supplemental.test.ts"
+    ],
+    "counts": {
+      "tests": 4,
+      "pass": 4,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "log": "supplemental-repeat-4.log",
+    "log_sha256": "1a0d8b79b024c4d69a1c2bd5c4a27b91736314ea1e8e52ee72e57dfffce11837",
+    "cwd": "/home/azureuser/nova-community-agent"
+  }
+]

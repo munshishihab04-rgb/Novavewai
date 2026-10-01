@@ -1,0 +1,12 @@
+{
+  "restart_readback": true,
+  "late_preview_preserves_editor": true,
+  "download_revision_2": true,
+  "mobile_widths": [
+    320,
+    390,
+    844
+  ],
+  "anonymous_api": 401,
+  "download_sha256": "af1fc29e8d7491ba4d5079f46f228478301da4ab891a6ab6c8d7037de548bef8"
+}

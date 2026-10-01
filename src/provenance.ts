@@ -1,3 +1,4 @@
+import {extractionText} from './file-inspection.ts';
 import type { FastifyInstance } from 'fastify';
 import type { Pool } from 'pg';
 import { randomUUID } from 'node:crypto';
@@ -7,19 +8,21 @@ import type { Mutate } from './context.ts';
 export function provenanceRoutes(app: FastifyInstance, pool: Pool, mutate: Mutate, store?: LocalFiles) {
   app.post('/sources', { schema: { body: { ...closed({ conversationId: uuid, messageId: uuid, fileId: uuid }, ['conversationId']), oneOf: [{ required: ['messageId'] }, { required: ['fileId'] }] } } }, mutate(async (c, owner, body, r) => {
     if (body.fileId) {
-      const file = (await c.query("SELECT id,size,hash FROM files WHERE owner_id=$1 AND conversation_id=$2 AND id=$3 AND state='ready'", [owner, body.conversationId, body.fileId])).rows[0];
+      const file = (await c.query("SELECT id,size,hash,extraction FROM files WHERE owner_id=$1 AND conversation_id=$2 AND id=$3 AND state='ready'", [owner, body.conversationId, body.fileId])).rows[0];
       if (!file) fail(404, 'not_found');
       if (!store) fail(503, 'file_storage_unavailable');
       let bytes: Buffer;
       try { bytes = await store!.get(owner, file.id, file.size, file.hash); } catch { return fail(409, 'file_integrity_failure'); }
       await authenticatedOwner(c, r);
-      const id = randomUUID(), snapshot = bytes.toString('utf8');
-      await c.query('INSERT INTO sources(id,owner_id,conversation_id,file_id,snapshot,hash) VALUES($1,$2,$3,$4,$5,$6)', [id, owner, body.conversationId, file.id, snapshot, file.hash]);
+      const snapshot=extractionText(file,bytes);if(snapshot===undefined)fail(422,'file_extraction_unsupported');
+      const id = randomUUID();
+      await c.query('INSERT INTO sources(id,owner_id,conversation_id,file_id,snapshot,hash) VALUES($1,$2,$3,$4,$5,$6)', [id, owner, body.conversationId, file.id, snapshot, hash(snapshot)]);
       await event(c, owner, 'source.created', id);
-      return { id, conversationId: body.conversationId, fileId: file.id, snapshot, hash: file.hash, trust: 'user_supplied' };
+      return { id, conversationId: body.conversationId, fileId: file.id, snapshot, hash: hash(snapshot), trust: 'user_supplied' };
     }
-    const message = (await c.query('SELECT text FROM messages WHERE owner_id=$1 AND conversation_id=$2 AND id=$3', [owner, body.conversationId, body.messageId])).rows[0];
+    const message = (await c.query('SELECT text,role FROM messages WHERE owner_id=$1 AND conversation_id=$2 AND id=$3', [owner, body.conversationId, body.messageId])).rows[0];
     if (!message) fail(404, 'not_found');
+    if (message.role !== 'user') fail(409, 'generated_source_not_allowed');
     const id = randomUUID(), digest = hash(message.text);
     await c.query('INSERT INTO sources(id,owner_id,conversation_id,message_id,snapshot,hash) VALUES($1,$2,$3,$4,$5,$6)', [id, owner, body.conversationId, body.messageId, message.text, digest]);
     await event(c, owner, 'source.created', id);

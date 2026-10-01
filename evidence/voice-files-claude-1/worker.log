@@ -1,0 +1,40 @@
+Revisione completata. Sintesi:
+
+VERDETTO
+- Backend voce/file (perimetro testato): PASS.
+- Accettazione utente end-to-end: NON SUPERATA.
+- Parlato reale / provider Azure: PENDENTE (nessuna chiamata esterna eseguita).
+
+REVISIONE STATICA (hash congelati, nessun drift durante i test)
+- Voce → agente: solo `input_audio_buffer.committed` del provider autorizza un item (voice.ts:24-26); replay bloccato da UNIQUE(voice_session_id, provider_item_id) + ON CONFLICT (voice.ts:31); il submit vocale passa per la stessa `turn()`/`dispatch()` del testo (agent.ts:244-250), messaggio con channel=voice/provenance=provider_transcribed_audio.
+- Ricevute tool, artifact e checkpoint nella stessa transazione (agent.ts:174-192); la lettura vocale avviene solo dopo run completato leggendo il testo assistant persistito (voice.ts:38-41).
+- Download generati: owner-scoped, revalidazione nome, octet-stream + attachment + nosniff + CSP sandbox + no-store (generated-files.ts:39-44); ZIP in memoria, nomi whitelist senza `/ \ .. " CR LF`.
+- Upload: stato `unsupported` trasparente con reason, `executed:false`, `..` rifiutato, content download con hash verificato.
+- Nessuna shell host: tool non in elenco → tool_denied.
+
+TEST ESEGUITI
+- Harness indipendente (nuovo): 5/5 ok — PDF/TXT/ZIP(JS/PHP/Liquid)/HTML reali con ZIP verificato da Python zipfile; 15 payload create_file malformati rifiutati; upload flessibile (extracted/unsupported, owner isolation, replay idempotency-key); sessioni vocali (isolamento owner, transcript non committato ignorato, replay item_id → 1 run, scadenza DB → nessuna persistenza, riavvio → runtime_interrupted); errore transport.
+- Test esistenti mirati: 15/15 ok (voice-native, generated-files, flexible-uploads, file-formats, idempotency-files).
+
+DIFETTI NON RISOLTI
+- D1 (bloccante): public/features.js:25 usa ancora `/voice/connect` (sessione separata, non persistente); zero riferimenti a `/voice/sessions`, `/files/upload`, `/download` in public/*.js; tests/voice-files-ui.test.ts carica `staging/voice-files/public/native.js` che non esiste.
+- D2 (bloccante): scripts/server.ts:5 non passa `voice:` a buildApp → `POST /voice/sessions` risponde 503 in produzione.
+- D3 (maggiore): route legacy autonoma `/voice/connect` (capabilities.ts:10-15) ancora presente.
+- D4 (minore): polling `speak()` limitato a 60 s (voice.ts:38).
+
+ARTEFATTI
+/home/azureuser/nova-community-agent/evidence/voice-files-claude-1/REPORT.md
+/home/azureuser/nova-community-agent/evidence/voice-files-claude-1/verdict.json
+/home/azureuser/nova-community-agent/evidence/voice-files-claude-1/harness.test.ts
+/home/azureuser/nova-community-agent/evidence/voice-files-claude-1/harness.tap
+/home/azureuser/nova-community-agent/evidence/voice-files-claude-1/existing-targeted.tap
+/home/azureuser/nova-community-agent/evidence/voice-files-claude-1/hashes-before-tests.txt
+/home/azureuser/nova-community-agent/evidence/voice-files-claude-1/hashes-final.txt
+
+Comandi esatti (da /home/azureuser/nova-community-agent):
+node_modules/.bin/tsx --test --test-concurrency=1 --test-reporter=tap evidence/voice-files-claude-1/harness.test.ts
+node_modules/.bin/tsx --test --test-concurrency=1 --test-reporter=tap tests/voice-native.test.ts tests/generated-files.test.ts tests/flexible-uploads.test.ts tests/file-formats.test.ts tests/idempotency-files.test.ts
+
+Nessun deploy dichiarato, nessuna modifica a src/public/package, nessun commit.
+
+session_id: 20260926_120320_4b6a28

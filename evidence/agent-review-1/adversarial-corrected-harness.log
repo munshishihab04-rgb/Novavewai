@@ -1,0 +1,81 @@
+✖ corrected behavior: rejected second runtime must not delete first runtime pending upload/reservation (1630.298621ms)
+✖ corrected behavior: assistant-generated content must not become a user_supplied source (1297.112717ms)
+✔ pending upload namespace blocks turn without losing reservation or invoking model (1224.327182ms)
+✔ cancelled generation cannot write after a new run completes; original replay cannot redispatch (1408.832571ms)
+✔ a different live session cannot authorize output of the revoked initiating session (1227.541128ms)
+✔ entire provider batch is allowlist/schema validated before first mutation (1386.804785ms)
+✖ corrected behavior: expiry during canonical writer lock wait must roll back mutation and receipt (2481.01395ms)
+✔ receipt insertion failure atomically rolls back canonical revision and outbox; no replay inference (1307.608243ms)
+✖ corrected behavior: singleton connection loss is handled and durably fences in-flight run (1833.210793ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 5
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 15753.106182
+
+✖ failing tests:
+
+test at evidence/agent-review-1/adversarial.test.ts:1:3231
+✖ corrected behavior: rejected second runtime must not delete first runtime pending upload/reservation (1630.298621ms)
+  AssertionError [ERR_ASSERTION]: runtime refused singleton lease must not recover another live runtime upload
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/evidence/agent-review-1/adversarial.test.ts:50:12)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at evidence/agent-review-1/adversarial.test.ts:1:4910
+✖ corrected behavior: assistant-generated content must not become a user_supplied source (1297.112717ms)
+  AssertionError [ERR_ASSERTION]: generated assistant text must be rejected or labelled generated, not user_supplied
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/evidence/agent-review-1/adversarial.test.ts:63:12)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at evidence/agent-review-1/adversarial.test.ts:1:9974
+✖ corrected behavior: expiry during canonical writer lock wait must roll back mutation and receipt (2481.01395ms)
+  AssertionError [ERR_ASSERTION]: expired initiating session must not commit blocked artifact update
+  
+  2 !== 1
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/evidence/agent-review-1/adversarial.test.ts:126:39)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 2,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at evidence/agent-review-1/lease-loss.test.ts:1:482
+✖ corrected behavior: singleton connection loss is handled and durably fences in-flight run (1833.210793ms)
+  AssertionError [ERR_ASSERTION]: dedicated lease client must handle error event and fence runtime intentionally, not crash uncaught
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/evidence/agent-review-1/lease-loss.test.ts:25:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

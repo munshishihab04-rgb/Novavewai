@@ -1,0 +1,13 @@
+{
+ "feature":"cv-v1","date":"2026-10-01T01:12:16Z","status":"implemented-locally, not deployed",
+ "tests":{"total":231,"pass":231,"fail":0,"typecheck":"ok","log":"test-full.log"},
+ "steps":[
+  {"id":1,"name":"schema src/cv-schema.ts","state":"done","tests":"tests/cv-schema.test.ts"},
+  {"id":2,"name":"storage on existing artifacts/revisions (no migration 018 needed)","state":"done","tests":"tests/cv-agent.test.ts"},
+  {"id":3,"name":"agent tools cv_upsert/cv_export + dispatcher + prompt + identity","state":"done","tests":"tests/cv-agent.test.ts, tests/identity.test.ts"},
+  {"id":4,"name":"python worker render-cv, 3 layouts","state":"done","tests":"tests/cv-render.test.ts"},
+  {"id":5,"name":"UI cv card + preview/download + dashboard cv topic","state":"done","tests":"tests/cv-ui.test.ts"},
+  {"id":6,"name":"live-ish controlled-provider scenario, samples, PNG (pypdfium2; pdftoppm absent)","state":"done","artifacts":"scenario.json, samples/"}
+ ],
+ "not_implemented":["photo (by design)","DOCX export","import from existing PDF CV","CV-jobs matching","Studio structured editor","activities table / persisted workflow state","operations/outbox/SSE contract","content translation variants","per-field confirmation UI","real-provider run","trial deployment"]
+}

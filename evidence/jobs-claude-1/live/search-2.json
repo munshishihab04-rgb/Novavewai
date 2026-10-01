@@ -1,0 +1,17 @@
+{
+ "query": "hotel o ristorante a Bologna città: pagina 'lavora con noi' ufficiale con posizione aperta cameriere di sala pubblicata settembre 2026 (URL della singola posizione sul sito del datore di lavoro, non agenzie né aggregatori)",
+ "startedAt": "2026-09-30T17:35:44.530Z",
+ "text": "Ho trovato una posizione **ufficiale** che corrisponde molto bene alla tua richiesta, ma con una precisazione: dalla pagina career del datore risulta una **posizione “Cameriere di sala | full-time o part-time” a Bologna** pubblicata nel 2026, però il risultato che ho trovato direttamente indicizzato mostra **data di pubblicazione 26/03/2026**, non settembre 2026. Quindi **non posso confermare in modo affidabile una pubblicazione a settembre 2026** per una posizione ufficiale sul sito del datore. ([job.hnh.it](https://job.hnh.it/default-cards?PagerAnnunci=2&RunDefaultAction=true&StartupViewID=TableView&ctl114=2))\n\n**URL della singola posizione ufficiale trovata:**\n- `https://job.hnh.it/jobs/Cameriere-di-sala-full-time-o-part-time-Sala-Italia-Bologna-558045909.htm` ([job.hnh.it](https://job.hnh.it/jobs/Cameriere-di-sala-full-time-o-part-time-Sala-Italia-Bologna-558045909.htm))\n\nSe vuoi, posso continuare a cercare **solo posizioni pubblicate a settembre 2026** su siti ufficiali di hotel/ristoranti a Bologna città, restringendo ulteriormente la ricerca.",
+ "sources": [
+  {
+   "title": "HNH Hospitality Spa | Lavora con noi",
+   "url": "https://job.hnh.it/default-cards?PagerAnnunci=2&RunDefaultAction=true&StartupViewID=TableView&ctl114=2"
+  },
+  {
+   "title": "Cameriere di sala | full-time o part-time a Bologna | HNH Hospitality ...",
+   "url": "https://job.hnh.it/jobs/Cameriere-di-sala-full-time-o-part-time-Sala-Italia-Bologna-558045909.htm"
+  }
+ ],
+ "checkedAt": "2026-09-30T17:35:51.405Z",
+ "kind": "web_search"
+}

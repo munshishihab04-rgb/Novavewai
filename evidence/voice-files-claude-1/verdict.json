@@ -1,0 +1,78 @@
+{
+  "reviewer": "agent-2-independent-voice-files",
+  "date": "2026-09-26",
+  "repo": "/home/azureuser/nova-community-agent",
+  "verdict": {
+    "backend_tested_scope": "passed",
+    "user_acceptance_end_to_end": "not_passed",
+    "real_speech_provider": "pending"
+  },
+  "tested_scope": [
+    "src/voice.ts native session lifecycle: owner isolation, single active session, uncommitted transcript rejection, provider item replay idempotency, DB-side expiry revocation, transport error, restart marker runtime_interrupted",
+    "voice input -> canonical turn()/dispatch() path with channel=voice provenance=provider_transcribed_audio, same create_file tool, receipt after commit, spoken response only from persisted assistant text",
+    "create_file generation and /artifacts/:id/revisions/:n/download for pdf, txt, zip(js/php/liquid/txt), html: real bytes, owner-scoped 404, anonymous 401, attachment/nosniff/no-store/CSP sandbox, ZIP verified by python zipfile",
+    "validateGeneratedFile/validateTools rejection of traversal, absolute, backslash, header-injection names, wrong extension/format, duplicate/empty/oversized zip entries, and denial of shell-like tool names",
+    "/files/upload flexible transport: extracted vs unsupported (zip/binary/non-utf8) transparency, executed:false, exact bytes back, owner isolation, .. rejection, idempotency-key replay"
+  ],
+  "executed_commands": [
+    "cd /home/azureuser/nova-community-agent && node_modules/.bin/tsx --test --test-concurrency=1 --test-reporter=tap evidence/voice-files-claude-1/harness.test.ts  # 5/5 ok",
+    "cd /home/azureuser/nova-community-agent && node_modules/.bin/tsx --test --test-concurrency=1 --test-reporter=tap tests/voice-native.test.ts tests/generated-files.test.ts tests/flexible-uploads.test.ts tests/file-formats.test.ts tests/idempotency-files.test.ts  # 15/15 ok"
+  ],
+  "source_hashes_sha256": {
+    "src/voice.ts": "42c12fdd5aa773fedef68577106d7f986f1a3b35ca2259cdedf420c0f6c83ab2",
+    "src/voice-provider.ts": "33b3c469a9c82aa01152b7ace7eabaeb1d23e5c46c54a0390a22566621cec201",
+    "src/voice-policy.ts": "a48a2767691687ae9124b53ea91514ae8115c0b3ee0cecf736c6eedaa2e87d2b",
+    "src/capabilities.ts": "e8bb2f8924e9563637774025de86e2519063c109ef16e5fa7195d35e7b950168",
+    "src/generated-files.ts": "fce288519bd88ef147609ca3361d3ae42e1667c2f01fed71c31c43663d31b4ca",
+    "src/files.ts": "a6af11f5170579488dfd762f639742950009a8042a11b11319b12329d774725a",
+    "src/agent-tools.ts": "ad038ce3ec162732a282f28b7355971ee420342bf1e1d25ae3d69bcb212403f6",
+    "src/file-inspection.ts": "691dd1defd0b685addc0b2c8f37c5bcc289fed33544f45c0cd9af7f746338a62",
+    "src/app.ts": "5ff9079b4feca92b73574a669d0df6a217aaa454a69debfc9066446a53747e8d",
+    "src/agent.ts": "27eb960689f56a78f613431b04b9128bf78e244fd262b7f229c060a7d3ba5408",
+    "public/app.js": "51d09b739c8d59e2d50ce0f585ca2c5df57d781c2708b7650ef678db9e46b2de",
+    "public/features.js": "f68faf6cb3470c228247c7c58dc5a58b91024ed2e00753c3688a1d522b687d8d"
+  },
+  "drift_during_review": false,
+  "unresolved_issues": [
+    {
+      "id": "D1",
+      "severity": "blocking",
+      "title": "Frontend still uses legacy /voice/connect; native voice/file UI absent",
+      "evidence": "public/features.js:25 api('/voice/connect'); features.js:15 'Sessione separata · non salva o modifica i documenti'; grep /voice/sessions|/files/upload|/download in public/*.js = 0; tests/voice-files-ui.test.ts loads staging/voice-files/public/native.js which does not exist"
+    },
+    {
+      "id": "D2",
+      "severity": "blocking",
+      "title": "Native VoiceProvider not wired into production server",
+      "evidence": "scripts/server.ts:5 buildApp(pool,{fileRoot,agent}) without voice; scripts/config.ts has no voice reference; AzureSpeechProvider only used by scripts/voice-native-audio-probe.ts; POST /voice/sessions -> 503 voice_unavailable (src/voice.ts:44)"
+    },
+    {
+      "id": "D3",
+      "severity": "major",
+      "title": "Legacy autonomous voice route coexists",
+      "evidence": "src/capabilities.ts:10-15 /voice/connect with create_response:true and non-persisting instructions (src/voice-policy.ts:11); mounted only in scripts/trial.ts:24"
+    },
+    {
+      "id": "D4",
+      "severity": "minor",
+      "title": "speak() polling capped at 60s; long runs end without spoken response or client signal",
+      "evidence": "src/voice.ts:38 for(n<600) with 100ms sleep"
+    }
+  ],
+  "pending_checks": [
+    "Real Azure realtime speech: committed/transcription event ordering, VAD, playback, interruption",
+    "Native frontend: /voice/sessions binding, authenticated generated-file download, multi-format upload with visible unsupported state (staging/voice-files/public/native.js missing)",
+    "Server wiring of voice provider and removal/disabling of /voice/connect",
+    "tests/voice-files-ui.test.ts not executed (missing staging asset, Playwright)"
+  ],
+  "artifacts": [
+    "/home/azureuser/nova-community-agent/evidence/voice-files-claude-1/REPORT.md",
+    "/home/azureuser/nova-community-agent/evidence/voice-files-claude-1/verdict.json",
+    "/home/azureuser/nova-community-agent/evidence/voice-files-claude-1/harness.test.ts",
+    "/home/azureuser/nova-community-agent/evidence/voice-files-claude-1/harness.tap",
+    "/home/azureuser/nova-community-agent/evidence/voice-files-claude-1/existing-targeted.tap",
+    "/home/azureuser/nova-community-agent/evidence/voice-files-claude-1/hashes-before-tests.txt",
+    "/home/azureuser/nova-community-agent/evidence/voice-files-claude-1/hashes-final.txt"
+  ],
+  "deployment_claimed": false
+}

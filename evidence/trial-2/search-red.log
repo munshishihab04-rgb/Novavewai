@@ -1,0 +1,27 @@
+✖ web_search tool accepts a bounded query and denies injected options (1.179549ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 345.750938
+
+✖ failing tests:
+
+test at tests/search-tool.test.ts:1:117
+✖ web_search tool accepts a bounded query and denies injected options (1.179549ms)
+  Error: tool_denied
+      at agentError (/home/azureuser/nova-community-agent/src/agent-provider.ts:6:60)
+      at <anonymous> (/home/azureuser/nova-community-agent/src/agent-tools.ts:20:65)
+      at Array.map (<anonymous>)
+      at validateTools (/home/azureuser/nova-community-agent/src/agent-tools.ts:19:16)
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/search-tool.test.ts:2:94)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    status: 409,
+    code: 'tool_denied'
+  }

@@ -1,0 +1,42 @@
+[
+  {
+    "id": "I1",
+    "case": "explicit correction Bologna to Milano",
+    "receipt": {
+      "status": "needs_city",
+      "question": "In quale città vuoi cercare lavoro?",
+      "occupation": "cameriere"
+    },
+    "sourceCalls": 0
+  },
+  {
+    "id": "I1",
+    "case": "new unsupported city silently replaced by old supported city",
+    "sourceCall": {
+      "tool": "jobs_search",
+      "input": {
+        "query": "cameriere",
+        "city": "Bologna"
+      }
+    }
+  },
+  {
+    "id": "I2",
+    "case": "native dispatch drops direct employers only constraint when model omits it",
+    "sourceCall": {
+      "tool": "jobs_search",
+      "input": {
+        "query": "dishwasher",
+        "city": "Milano"
+      }
+    }
+  },
+  {
+    "id": "I3",
+    "case": "generic web_search has no server jobs-city/policy guard; model supplies missing city",
+    "sourceCall": {
+      "tool": "web_search",
+      "input": "lavapiatti Milano"
+    }
+  }
+]

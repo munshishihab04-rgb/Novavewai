@@ -1,0 +1,33 @@
+--- evidence/jobs-repair-2/before/agent.ts	2026-09-30 17:15:19.101466044 +0000
++++ src/agent.ts	2026-09-30 17:16:53.483143350 +0000
+@@ -2,7 +2,7 @@
+ import {voiceRoutes} from './voice.ts';
+ import type {VoiceProvider} from './voice-provider.ts';
+ import {createGeneratedFile} from './generated-files.ts';
+-import { JobsService, jobIntent, webJobCandidates, type JobsInput, type JobsResult } from './jobs.ts';
++import { JobsService, jobIntent, webJobCandidates, requiresDirectEmployer, type JobsInput, type JobsResult } from './jobs.ts';
+ import { searchSubito } from './jobs-subito.ts';
+ import { resolve } from 'node:path';
+ import type {ProviderRegistry} from './provider-registry.ts';
+@@ -152,17 +152,18 @@
+           if(call.name==='jobs_search'){
+             const userText=await runtime.transaction(async c=>{const {run}=await fence(c,id,owner);await finalSession(c,run);return (await c.query("SELECT text FROM messages WHERE owner_id=$1 AND conversation_id=$2 AND role='user' ORDER BY sequence DESC LIMIT 20",[owner,run.conversation_id])).rows.map(row=>row.text).join(' ')});
+             const suppliedCity=jobIntent({query:userText,city:''}).city;
++            const noAgencies=requiresDirectEmployer(userText);
+             // Do not let a model-invented city trigger external I/O. Keep strict
+             // preferences grounded in the authenticated conversation as well.
+             if(suppliedCity){
+               const jobKey=`${id}|${jobIntent({query:call.args.query,city:suppliedCity}).occupation??call.args.query}|${suppliedCity}`;
+               if(attemptedJobSearches.has(jobKey))searchResult={status:'unavailable',occupation:jobIntent({query:call.args.query,city:suppliedCity}).occupation,city:suppliedCity,code:'jobs_retry_suppressed',retryable:false};
+               else {attemptedJobSearches.add(jobKey);
+-              searchResult=await boundedJobs({query:call.args.query+(/senza agenzie|niente agenzie|no agenc|solo aziende/i.test(userText)?' senza agenzie':''),city:suppliedCity},abort.signal);
++              searchResult=await boundedJobs({query:call.args.query+(noAgencies?' senza agenzie':''),city:suppliedCity},abort.signal);
+               const unavailable=searchResult as JobsResult;
+               // One bounded candidate-discovery call replaces blind retries. Search citations
+-              // remain UNVERIFIED leads and are never represented as working vacancies.
+-              if(unavailable.status==='unavailable'&&options?.search){const occupation=unavailable.occupation??jobIntent({query:call.args.query,city:suppliedCity}).occupation;if(occupation){try{const web=await options.search(`${occupation} ${suppliedCity} offerte lavoro`,AbortSignal.any([abort.signal,AbortSignal.timeout(60000)]));const candidates=webJobCandidates(web as any,occupation,suppliedCity);searchResult={...candidates,sourceUnavailable:{code:unavailable.code,retryAfterSeconds:unavailable.retryAfterSeconds,originalSearchUrl:unavailable.originalSearchUrl}};}catch{searchResult=unavailable;}}}}
++              // remain browsing suggestions only; even detail-shaped URLs are not vacancy evidence.
++              if(unavailable.status==='unavailable'&&options?.search){const occupation=unavailable.occupation??jobIntent({query:call.args.query,city:suppliedCity}).occupation;if(occupation){try{const web=await options.search(`${occupation} ${suppliedCity} offerte lavoro`,AbortSignal.any([abort.signal,AbortSignal.timeout(60000)]));const candidates=webJobCandidates(web as any,occupation,suppliedCity,noAgencies);searchResult={...candidates,sourceUnavailable:{code:unavailable.code,limitReason:unavailable.limitReason,retryAfterSeconds:unavailable.retryAfterSeconds,originalSearchUrl:unavailable.originalSearchUrl}};}catch{searchResult=unavailable;}}}}
+             }else searchResult={status:'needs_city',occupation:jobIntent({query:call.args.query,city:''}).occupation,question:'In quale città vuoi cercare lavoro?'};
+           }
+           if(call.name==='web_search'){

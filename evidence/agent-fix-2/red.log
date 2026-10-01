@@ -1,0 +1,43 @@
+TAP version 13
+# Subtest: lock-observation invalidation before queued lease error must not emit an unhandled pool error
+not ok 1 - lock-observation invalidation before queued lease error must not emit an unhandled pool error
+  ---
+  duration_ms: 1481.247051
+  type: 'test'
+  location: '/home/azureuser/nova-community-agent/tests/agent-lease-order.test.ts:1:3135'
+  failureType: 'testCodeFailure'
+  error: |-
+    dedicated lease error must not escape through pg-pool after lock-observation invalidation
+    + actual - expected
+    
+    + [
+    +   {
+    +     code: '57P01',
+    +     message: 'terminating connection due to administrator command'
+    +   }
+    + ]
+    - []
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+    0:
+      message: 'terminating connection due to administrator command'
+      code: '57P01'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/agent-lease-order.test.ts:60:10)
+    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1846.226632

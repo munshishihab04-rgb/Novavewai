@@ -1,0 +1,11 @@
+{
+  "fullscreen_mobile": true,
+  "mute_changes_track": true,
+  "states_from_events": true,
+  "captions_toggle": true,
+  "close_stops_tracks": true,
+  "close_during_permission": true,
+  "small_viewport": true,
+  "console_errors": [],
+  "provider": "controlled RTC fixture"
+}

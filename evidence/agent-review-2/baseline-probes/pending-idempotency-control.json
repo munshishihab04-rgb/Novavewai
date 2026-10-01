@@ -1,0 +1,28 @@
+{
+  "turn": {
+    "status": 409,
+    "body": {
+      "error": "idempotency_conflict"
+    }
+  },
+  "upload": {
+    "status": 201,
+    "body": {
+      "id": "f056459d-535b-448d-ab0d-bde42b48034c",
+      "conversationId": "cf5f12fb-c5cf-4a77-815b-97895b6de839",
+      "name": "normal.txt",
+      "mime": "text/plain",
+      "size": 14,
+      "hash": "5e57d8f7bed5b9677d8ca32411deb1d5141782ab098945092843af332aeb2318",
+      "state": "ready",
+      "storage": "local-encrypted-development"
+    }
+  },
+  "persisted": {
+    "runs": [],
+    "messages": [],
+    "artifacts": [],
+    "receipts": [],
+    "providerCalls": 0
+  }
+}

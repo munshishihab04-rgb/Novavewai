@@ -1,0 +1,12 @@
+b33dc1812ec41833360a6b9cab03ee87f650e20c74009dfc4716ab36af2f1428  REPORT.md
+d8f72ca4cc4e000a8df63d9ff6f4cac6719926081db8eafd63cd019d60b8e9c6  test-full.log
+4e383a5cd4638859f59bb257cecbf4e203e911e5a65e3fc320e9a3991d2029cc  typecheck.log
+a0967c2d7b28b366724e5986b0382c041dcdcf6d5f416805de431dd84cbf8110  live-trial-more-offers-B.json
+5717506bdec0c9b325c4beb34a8a897b75df33b1285097f4c379637710ef4223  live-trial-more-offers-B-milano.json
+1297fe30e2155b839fb94f09ee584fa8064f98cfd7b445509d16fa65107a0d4f  ../../src/jobs-subito-playwright.ts
+2aa9b6643eadeac1ea1c0676613b1fcd473de69be9df52c401a90cc6e844d258  ../../src/jobs-live.ts
+5d589fe82aae8d9949b65ad02ee710c6632a6c61d4e2282b5a29257c1f6babda  ../../src/agent.ts
+9230204310fcad8ca7afc04cb41f4f36d333228e6c34af8082244318cd2f1620  ../../public/app.js
+4888672e84a6d2ad4697a0407f2f7195f91cafe2ca208310081706b8b87d872d  ../../tests/jobs-subito-pagination.test.ts
+82ed1a13accdde16b23f6efd7f6365a7181e54226da3a8dc23e43fbbb7b44d52  ../../scripts/jobs-more-live-smoke.ts
+6a3a27427227a8c9279537115b9c19a3d38f5ea21b72d1ebf0c766d9059b9f8b  ../../docs/decisions/2026-10-01-subito-pagination.md

@@ -1,0 +1,48 @@
+✖ startup reservation also excludes non-agent file runtime: false (1578.967872ms)
+✖ startup reservation also excludes non-agent file runtime: true (1356.372001ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3324.033049
+
+✖ failing tests:
+
+test at tests/agent-runtime.test.ts:1:3122
+✖ startup reservation also excludes non-agent file runtime: false (1578.967872ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/agent-runtime.test.ts:44:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/agent-runtime.test.ts:1:3122
+✖ startup reservation also excludes non-agent file runtime: true (1356.372001ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/agent-runtime.test.ts:44:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

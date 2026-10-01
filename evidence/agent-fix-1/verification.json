@@ -1,0 +1,27 @@
+{
+  "baselineCommit": "43e981937cfeadfef5e38c9d40d856bffc6b7c23",
+  "preservationMismatches": [],
+  "preservedFileCount": 51,
+  "changedFromDirtyBaseline": [
+    "src/agent.ts",
+    "src/app.ts",
+    "src/file-lifecycle.ts",
+    "src/files.ts",
+    "src/provenance.ts",
+    "src/runtime.ts",
+    "docs/AGENT-CORE.md",
+    "tests/agent-review-regressions.test.ts",
+    "tests/agent-runtime.test.ts"
+  ],
+  "candidateSha256": {
+    "src/agent.ts": "8299e638a5135fda16dae023b52833ab72077a9391568c2ce3340d5600a16e71",
+    "src/app.ts": "88d6b80bbd511d8a01bef9cf726bad9df52d176ed5af5f5900aa2f0ddb3e8be4",
+    "src/file-lifecycle.ts": "5e009c707eb6fd4f96bd3115bab75f3b9722c25567d99ad179f2ffa72670837c",
+    "src/files.ts": "60663f13e57265103d2a233d35760ef9404cfd1818f51212d81560cd945c02e7",
+    "src/provenance.ts": "286a5abc2a72d38840177654386c4bdd22a6a0da0e875cff7f88709a9b024bd7",
+    "src/runtime.ts": "dba6d9f2f79073f4d08a4c7663a9007e5930fc338d043b2888910350af676e73",
+    "docs/AGENT-CORE.md": "5713059cccb50636507aa1af20b42cff63b93daf6923b6283b04e580a1152fdf",
+    "tests/agent-review-regressions.test.ts": "d32622a716f0d1caff00e3bcc5ecf791aa9ff421586f0ab1ba80cff36b5d2565",
+    "tests/agent-runtime.test.ts": "ff90bd8a88754f4e8cb5fb5b483f8708206649c37e0d568b1100d118b50650a6"
+  }
+}

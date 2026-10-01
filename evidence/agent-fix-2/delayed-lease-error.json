@@ -1,0 +1,22 @@
+{
+  "response": {
+    "status": 503,
+    "body": {
+      "error": "runtime_interrupted"
+    }
+  },
+  "events": [
+    {
+      "event": "error",
+      "message": "terminating connection due to administrator command"
+    },
+    {
+      "event": "error",
+      "message": "Connection terminated unexpectedly"
+    },
+    {
+      "event": "end"
+    }
+  ],
+  "poolErrors": []
+}

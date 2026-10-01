@@ -1,0 +1,37 @@
+{
+  "label": "CONTROLLED INTERFACE ONLY; zero network/provider requests",
+  "requests": [
+    {
+      "endpoint": "MOCK identity",
+      "network": false
+    },
+    {
+      "endpoint": "MOCK responses",
+      "network": false,
+      "model": "gpt-5.4-mini",
+      "tool_choice": "required",
+      "tools": [
+        {
+          "type": "web_search_preview"
+        }
+      ],
+      "query": "ristoranti Milano sito ufficiale lavora con noi"
+    }
+  ],
+  "result": {
+    "text": "REVIEW FIXTURE business discovery, not live result",
+    "sources": [
+      {
+        "title": "REVIEW FIXTURE official candidate",
+        "url": "https://miscusi.com/lavora-con-noi"
+      },
+      {
+        "title": "REVIEW FIXTURE unsafe discovery URL",
+        "url": "https://127.0.0.1/private"
+      }
+    ],
+    "checkedAt": "2026-09-26T12:00:40.055Z",
+    "kind": "web_search"
+  },
+  "adapterImplication": "Citation URLs are candidates, not safe URLs or proof of officialness. Runtime validation/SSRF defense required before fetching."
+}

@@ -1,0 +1,775 @@
+{
+  "endpoint": "https://foundryn.services.ai.azure.com",
+  "analyzers": [
+    {
+      "id": "prebuilt-tax.us.w4",
+      "status": "ready",
+      "description": "Extract tax US w4 document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-tax.us.1099NEC",
+      "status": "ready",
+      "description": "Extract tax US 1099 nec document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-purchaseOrder",
+      "status": "ready",
+      "description": "Extract purchase order document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-creditCard",
+      "status": "ready",
+      "description": "Extract credit card document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-tax.us.1099QA",
+      "status": "ready",
+      "description": "Extract tax US 1099 qa document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-audio",
+      "status": "ready",
+      "description": "Transcribe conversations.",
+      "models": {}
+    },
+    {
+      "id": "prebuilt-tax.us.1099H",
+      "status": "ready",
+      "description": "Extract tax US 1099 h document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-tax.us.1099S",
+      "status": "ready",
+      "description": "Extract tax US 1099 s document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-tax.us.1099LS",
+      "status": "ready",
+      "description": "Extract tax US 1099 ls document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-tax.us.1099DA",
+      "status": "ready",
+      "description": "Extract tax US 1099 da document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-tax.us.1099G",
+      "status": "ready",
+      "description": "Extract tax US 1099 g document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-tax.us.1099K",
+      "status": "ready",
+      "description": "Extract tax US 1099 k document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-tax.us.1099R",
+      "status": "ready",
+      "description": "Extract tax US 1099 r document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-tax.us.1099CAP",
+      "status": "ready",
+      "description": "Extract tax US 1099 cap document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-tax.us.1099SB",
+      "status": "ready",
+      "description": "Extract tax US 1099 sb document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-read",
+      "status": "ready",
+      "description": "Extract various content elements such as words, formulas, and barcodes from documents.",
+      "models": {}
+    },
+    {
+      "id": "prebuilt-tax.us.1099INT",
+      "status": "ready",
+      "description": "Extract tax US 1099 int document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-tax.us.1099SA",
+      "status": "ready",
+      "description": "Extract tax US 1099 sa document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-tax.us.1098",
+      "status": "ready",
+      "description": "Extract tax US 1098 document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-tax.us.1040Schedule1",
+      "status": "ready",
+      "description": "Extract tax US 1040 schedule1 document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-receipt.generic",
+      "status": "ready",
+      "description": "Extract receipt generic document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-idDocument.generic",
+      "status": "ready",
+      "description": "Extract generic id document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-mortgage.us.1004",
+      "status": "ready",
+      "description": "Extract mortgage US 1004 document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-mortgage.us.1008",
+      "status": "ready",
+      "description": "Extract mortgage US 1008 document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-idDocument",
+      "status": "ready",
+      "description": "Extract IdDocument document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-document",
+      "status": "ready",
+      "description": "Extract various content and layout elements such as words, paragraphs, and tables from documents.",
+      "models": {
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-video",
+      "status": "ready",
+      "description": "Analyze videos to extract transcript and description for each segment.",
+      "models": {}
+    },
+    {
+      "id": "prebuilt-tax.us.1099DIV",
+      "status": "ready",
+      "description": "Extract tax US 1099 div document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-documentFieldSchema",
+      "status": "ready",
+      "description": "Propose field schema for document content.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-tax.us.1099PATR",
+      "status": "ready",
+      "description": "Extract tax US 1099 patr document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-tax.us.1095C",
+      "status": "ready",
+      "description": "Extract tax US 1095 c document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-documentFields",
+      "status": "ready",
+      "description": "Propose key-value document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-videoSynopsis",
+      "status": "ready",
+      "description": "Analyze video segment to extract transcripts and descriptions.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion-mini"
+      }
+    },
+    {
+      "id": "prebuilt-tax.us.1040ScheduleF",
+      "status": "ready",
+      "description": "Extract tax US 1040 schedule f document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-creditMemo",
+      "status": "ready",
+      "description": "Extract credit memo document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-tax.us.1040ScheduleR",
+      "status": "ready",
+      "description": "Extract tax US 1040 schedule r document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-payStub.us",
+      "status": "ready",
+      "description": "Extract pay stub US document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-tax.us.1099Q",
+      "status": "ready",
+      "description": "Extract tax US 1099 q document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-tax.us.1040ScheduleE",
+      "status": "ready",
+      "description": "Extract tax US 1040 schedule e document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-tax.us.1040ScheduleH",
+      "status": "ready",
+      "description": "Extract tax US 1040 schedule h document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-tax.us.1099MISC",
+      "status": "ready",
+      "description": "Extract tax US 1099 misc document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-tax.us.1040ScheduleD",
+      "status": "ready",
+      "description": "Extract tax US 1040 schedule d document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-imageSearch",
+      "status": "ready",
+      "description": "Analyze images to generate descriptions.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion-mini"
+      }
+    },
+    {
+      "id": "prebuilt-videoSearch",
+      "status": "ready",
+      "description": "Analyze videos to extract transcript and description for each segment.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion-mini"
+      }
+    },
+    {
+      "id": "prebuilt-audioSearch",
+      "status": "ready",
+      "description": "Transcribe conversations and extract summaries.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion-mini"
+      }
+    },
+    {
+      "id": "prebuilt-documentSearch",
+      "status": "ready",
+      "description": "Extract various content and layout elements such as words, paragraphs, and tables from documents.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion-mini",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-tax.us.w2",
+      "status": "ready",
+      "description": "Extract tax US w2 document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-tax.us.1040Schedule3",
+      "status": "ready",
+      "description": "Extract tax US 1040 schedule3 document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-idDocument.passport",
+      "status": "ready",
+      "description": "Extract passport document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-receipt",
+      "status": "ready",
+      "description": "Extract Receipt document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-check.us",
+      "status": "ready",
+      "description": "Extract check US document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-tax.us.1040Schedule2",
+      "status": "ready",
+      "description": "Extract tax US 1040 schedule2 document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-tax.us.1040ScheduleSE",
+      "status": "ready",
+      "description": "Extract tax US 1040 schedule se document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-image",
+      "status": "ready",
+      "description": "Base analyzer for extracting insights from images.",
+      "models": {}
+    },
+    {
+      "id": "prebuilt-mortgage.us.1005",
+      "status": "ready",
+      "description": "Extract mortgage US 1005 document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-tax.us.1040Schedule8812",
+      "status": "ready",
+      "description": "Extract tax US 1040 schedule8812 document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-tax.us.1099SSA",
+      "status": "ready",
+      "description": "Extract tax US 1099 ssa document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-mortgage.us.closingDisclosure",
+      "status": "ready",
+      "description": "Extract mortgage US closing disclosure document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-bankStatement.us",
+      "status": "ready",
+      "description": "Extract bank statement US document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-tax.us.1099B",
+      "status": "ready",
+      "description": "Extract tax US 1099 b document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-tax.us.1040ScheduleA",
+      "status": "ready",
+      "description": "Extract tax US 1040 schedule a document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-tax.us.1095A",
+      "status": "ready",
+      "description": "Extract tax US 1095 a document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-marriageCertificate.us",
+      "status": "ready",
+      "description": "Extract marriage certificate US document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-mortgage.us",
+      "status": "ready",
+      "description": "Extract Mortgage.us document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-tax.us.1099OID",
+      "status": "ready",
+      "description": "Extract tax US 1099 oid document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-digitalParse",
+      "status": "ready",
+      "description": "Parse digital documents to extract text and basic structure without OCR or layout reconstruction",
+      "models": {}
+    },
+    {
+      "id": "prebuilt-tax.us.1040ScheduleJ",
+      "status": "ready",
+      "description": "Extract tax US 1040 schedule j document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-utilityBill",
+      "status": "ready",
+      "description": "Extract utility bill document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-mortgage.us.1003",
+      "status": "ready",
+      "description": "Extract mortgage US 1003 document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-tax.us.1098T",
+      "status": "ready",
+      "description": "Extract tax US 1098 t document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-callCenter",
+      "status": "ready",
+      "description": "Analyze call center conversations to extract transcripts, summaries, sentiment, and more.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion"
+      }
+    },
+    {
+      "id": "prebuilt-tax.us.1040Senior",
+      "status": "ready",
+      "description": "Extract tax US 1040 senior document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-tax.us.1040",
+      "status": "ready",
+      "description": "Extract tax US 1040 document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-contract",
+      "status": "ready",
+      "description": "Extract contract document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-invoice",
+      "status": "ready",
+      "description": "Extract invoice document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-procurement",
+      "status": "ready",
+      "description": "Extract Procurement document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-tax.us.1099A",
+      "status": "ready",
+      "description": "Extract tax US 1099 a document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-healthInsuranceCard.us",
+      "status": "ready",
+      "description": "Extract health insurance card US document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-layout",
+      "status": "ready",
+      "description": "Extract various content and layout elements such as words, figures, paragraphs, and tables from documents.",
+      "models": {}
+    },
+    {
+      "id": "prebuilt-tax.us.1040ScheduleC",
+      "status": "ready",
+      "description": "Extract tax US 1040 schedule c document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-tax.us.1040ScheduleEIC",
+      "status": "ready",
+      "description": "Extract tax US 1040 schedule eic document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-tax.us.1099Combo",
+      "status": "ready",
+      "description": "Extract tax US 1099 combo document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-tax.us.1098E",
+      "status": "ready",
+      "description": "Extract tax US 1098 e document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-tax.us.1099C",
+      "status": "ready",
+      "description": "Extract tax US 1099 c document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-receipt.hotel",
+      "status": "ready",
+      "description": "Extract receipt hotel document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-tax.us.1099LTC",
+      "status": "ready",
+      "description": "Extract tax US 1099 ltc document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-tax.us.1040ScheduleB",
+      "status": "ready",
+      "description": "Extract tax US 1040 schedule b document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    },
+    {
+      "id": "prebuilt-tax.us",
+      "status": "ready",
+      "description": "Extract Tax.us document fields.",
+      "models": {
+        "completion": "prebuilt-analyzer-completion",
+        "embedding": "prebuilt-analyzer-embedding"
+      }
+    }
+  ],
+  "nextLink": null,
+  "scope": "catalog access only, not analysis execution"
+}

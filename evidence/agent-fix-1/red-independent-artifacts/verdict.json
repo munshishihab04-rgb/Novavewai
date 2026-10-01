@@ -1,0 +1,57 @@
+{
+  "passed": false,
+  "security_concerns": [
+    {
+      "id": "R1-SESSION-WRITER",
+      "severity": "high",
+      "title": "La sessione scade durante l'attesa del writer, ma revisione e receipt vengono comunque persistite",
+      "locations": ["src/agent.ts:111-125", "src/agent.ts:47", "src/artifacts.ts:13-19"],
+      "reproduction": "evidence/agent-review-1/adversarial.test.ts:108-128",
+      "evidence": "evidence/agent-review-1/writer-session-expiry.json",
+      "observed": "Un lock PG su artifacts blocca reviseArtifact dopo il fence iniziale. La sessione, predisposta a scadere prima di rilasciare il provider, scade naturalmente durante l'attesa. Dopo il rilascio del lock si persistono current_revision=2, contenuto AFTER_SESSION_EXPIRY e una receipt update_artifact. Solo il ciclo successivo marca il run failed/session_revoked; model_calls=1, tool_calls=1.",
+      "expected": "Rivalidare la sessione con clock_timestamp dopo attese potenzialmente bloccanti e prima della conferma della transazione; la revisione e la receipt devono essere annullate se la sessione è scaduta.",
+      "scope_note": "Il lock è fault injection DB locale, non un endpoint non autenticato. La scadenza è naturale; nessuna revoca concorrente aggira il lock owner."
+    },
+    {
+      "id": "R1-PROVENANCE",
+      "severity": "medium",
+      "title": "Un messaggio generato dall'assistente viene riclassificato come fonte user_supplied",
+      "locations": ["src/agent.ts:54", "migrations/012_agent_core.sql:1", "src/provenance.ts:21-26"],
+      "reproduction": "evidence/agent-review-1/adversarial.test.ts:55-65",
+      "evidence": "evidence/agent-review-1/assistant-source-provenance.json",
+      "observed": "POST /sources con messageId dell'assistente risponde 201 e trust=user_supplied. JOIN persistita sources/messages conferma trust=user_supplied e role=assistant per MODEL_GENERATED_ONLY review fixture.",
+      "expected": "Rifiutare messaggi assistant come fonti user_supplied oppure preservare esplicitamente l'origine generated. Adattare il consumer provenance al nuovo ruolo introdotto da J1.",
+      "scope_note": "Non è elevazione a verified né accesso cross-owner: è perdita concreta dell'origine del contenuto; richiede il proprietario autenticato."
+    }
+  ],
+  "logic_errors": [
+    {
+      "id": "R1-STARTUP-RESERVATION",
+      "severity": "high",
+      "title": "Il runtime rifiutato dal singleton ha già cancellato upload e reservation del runtime attivo",
+      "locations": ["src/app.ts:143-148", "src/agent.ts:28-30", "src/files.ts:12-22", "src/file-lifecycle.ts:13-20"],
+      "reproduction": "evidence/agent-review-1/adversarial.test.ts:30-53",
+      "evidence": "evidence/agent-review-1/startup-pending-upload.json",
+      "observed": "Runtime A mantiene un upload pending. Runtime B con stesso DB/fileRoot esegue recoverFiles prima di fallire con Agent runtime already active. La riga pending scompare; A accetta una turn con la chiave già riservata, produce un run completed con una inferenza e memorizza l'idempotency della turn. L'upload originale fallisce 409 upload_cancelled.",
+      "expected": "Acquisire la proprietà esclusiva prima di qualsiasi recovery distruttiva. Un avvio rifiutato deve lasciare intatto il pending del runtime attivo e la turn con quella chiave deve restare 409 idempotency_conflict."
+    },
+    {
+      "id": "R1-LEASE-LOSS",
+      "severity": "medium",
+      "title": "La perdita della connessione singleton termina l'intero server con errore PG non gestito",
+      "locations": ["src/agent.ts:27-41", "src/agent.ts:148"],
+      "reproduction": "evidence/agent-review-1/lease-loss.test.ts:10-28",
+      "evidence": "evidence/agent-review-1/lease-loss.json",
+      "observed": "pg_terminate_backend del solo client che detiene advisory lock 913004, con DB sano e provider in attesa, produce Unhandled 'error' event e exitCode=1. Il lock non esiste più; il run resta running/inference_in_flight, error_code=null, model_calls=1. Nessun artifact né messaggio assistant è stato creato.",
+      "expected": "Gestire error/end del client dedicato, invalidare il runtime e abortire i job senza un crash non gestito; quando il DB resta raggiungibile, conservare esplicitamente outcome_unknown. Non limitarsi ad aggiungere un listener che lasci attivo un runtime privo di lease.",
+      "scope_note": "È un difetto di disponibilità e lifecycle, non una dimostrazione di doppia inferenza: il crash attuale fail-stop impedisce output tardivo e il restart già testato può recuperare lo stato."
+    }
+  ],
+  "suggestions": [
+    "Test eseguiti solo su HTTP loopback e PG privato con provider controllato. Inferenza reale e resistenza semantica del modello al prompt injection NON VERIFICATE; non richieste come blocker della review del codice.",
+    "I controlli indipendenti confermano namespace pending nel percorso ordinario, separazione old/new run dopo cancel, sessione iniziante esatta, validazione dell'intero batch prima di mutare, receipt/writer/outbox atomici e redazione degli errori DB.",
+    "La suite agent/config/restart esistente è stata rieseguita: 38/38 pass; typecheck pass. Suite avversariale finale: 9 test, 5 pass e 4 corrected-behavior failure. Non è stato rieseguito l'intero npm test da questo reviewer.",
+    "Il primo harness esteso è andato in timeout per una modifica sessione eseguita mentre il trigger aspettava il lock owner: harness corretto impostando la scadenza prima del provider release. Il log intermedio è conservato, ma non conta come finding."
+  ],
+  "summary": "NON APPROVATO: quattro difetti riprodotti su PG e HTTP reali locali contro 43e981937cfeadfef5e38c9d40d856bffc6b7c23. Persistenza dopo scadenza sessione, perdita di provenance assistant, recovery prima del singleton e perdita lease non gestita. Nessuna modifica a src/tests, nessun commit, nessuna ricerca credenziali o chiamata cloud."
+}

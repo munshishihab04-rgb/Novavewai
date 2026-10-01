@@ -1,0 +1,16 @@
+{
+  "base": "https://overnight-businesses-fun-fred.trycloudflare.com",
+  "checkedAt": "2026-10-01T00:31:49.705Z",
+  "answers": [
+    {
+      "question": "Ciao! Chi ti ha creata? Chi c'è dietro Nova?",
+      "runStatus": "completed",
+      "answer": "Ciao! Nova è stata fondata nel 2026 a Bologna da **Shihab Rahman**, imprenditore di origine bengalese che vive e lavora in Italia.\n\nL’idea nasce per aiutare chi arriva in un Paese nuovo con documenti, burocrazia, ricerca del lavoro e lingua, offrendo un supporto concreto e paziente.\n\nSe vuoi, posso anche dirti **cosa sa fare Nova** in questo momento."
+    },
+    {
+      "question": "Cosa sai fare esattamente? Riesci a leggere la foto di un documento?",
+      "runStatus": "completed",
+      "answer": "Posso fare queste cose:\n\n- creare file scaricabili nella conversazione, come PDF, TXT, ZIP e alcuni file di codice\n- cercare offerte di lavoro reali per mestiere e città\n- cercare informazioni attuali sul web con fonti citate\n- consultare il contesto della conversazione e i documenti collegati\n- rileggere un documento creato in precedenza\n- scrivere, salvare e aggiornare bozze e documenti con versioni\n- leggere file caricati nella conversazione, se sono testo, PDF testuale o codice\n- farti una domanda quando manca un dato necessario\n\n**No, non leggo foto o scansioni di documenti**: non ho OCR.  \nSe vuoi, puoi caricare il **testo** del documento oppure posso aiutarti a **trascriverlo manualmente**."
+    }
+  ]
+}

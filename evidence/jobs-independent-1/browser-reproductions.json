@@ -1,0 +1,19 @@
+[
+  {
+    "id": "S1",
+    "case": "blocked image requests consume document budget",
+    "requests": 6,
+    "denied": true,
+    "wouldThrow": "jobs_request_budget"
+  },
+  {
+    "id": "S2",
+    "case": "Playwright route is invoked only on original URL of redirect chain",
+    "routed": [
+      "http://127.0.0.1:40045/start"
+    ],
+    "forbiddenTargetHits": 1,
+    "finalURL": "http://127.0.0.1:40045/not-allowlisted",
+    "note": "Local controlled redirect only; no claim Subito exposes open redirect."
+  }
+]

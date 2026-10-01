@@ -1,0 +1,20 @@
+{
+  "source": {
+    "status": 201,
+    "body": {
+      "id": "58e27d9d-1436-434d-a913-b571e6938333",
+      "conversationId": "a71dc2bf-6504-4387-a83b-821778c34d3b",
+      "messageId": "ce3c1a39-2d7d-49d6-a218-9f28bbffc35e",
+      "snapshot": "MODEL_GENERATED_ONLY review fixture",
+      "hash": "3a2f5bb55a4c7500d4d8b8929c8157bdf59d3f1bdc37d8334d70579428856cd8",
+      "trust": "user_supplied"
+    }
+  },
+  "persisted": [
+    {
+      "snapshot": "MODEL_GENERATED_ONLY review fixture",
+      "trust": "user_supplied",
+      "role": "assistant"
+    }
+  ]
+}

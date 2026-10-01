@@ -1,0 +1,12 @@
+f0b7468bfb64bbe23f5787abdd5ea0380cbafd34198b813f6c96531450c2deba  REPORT.md
+40d5aa69978750507cc43cee7bab9d1de5e176ea35e275e0f57666fb0e0956f4  test-full.log
+4e383a5cd4638859f59bb257cecbf4e203e911e5a65e3fc320e9a3991d2029cc  typecheck.log
+a758a8e9083f428e42ab5baebd5484e1c8ef8d416c7aca7fd2f6756baa3e940f  live-trial-bologna.json
+799b8287bab73f85bec7a684879b8d69cc183228ec761fd24384b96f8b9eb6a8  live-trial-milano.json
+478260442a7937491294fda940d813ecaa2b1f3472b0c498a72262ac45f2b6f8  cards-adzuna-mobile.png
+2ee7e6825925fca777f777cc2a432fb4858031fd3419ae5602c40e882ab873ee  cards-mobile-top.png
+085ab3208acb0de9647ada767cefdac2aa210eab3408930caae7955dcf701633  ../../src/jobs-adzuna.ts
+5a4f2ca44d48425c718a062ed7285a32ad9b4fb197ffec2da32991a368269e02  ../../src/agent.ts
+14b0f397b7aebab97750d2e606ded11475a73d828f0ca52a23e1a3f290cf4cfc  ../../src/identity.ts
+094f1d1bfd3680f5d210a8a801bb86809a30793717c299fe1c67fa04dcb9ab24  ../../public/app.js
+a1153fb6d74f0327e0317c98cd983e952bb8cfd06e157efef29da0cd54e37207  ../../tests/jobs-adzuna.test.ts

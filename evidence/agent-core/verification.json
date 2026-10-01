@@ -1,0 +1,55 @@
+{
+  "tests": {
+    "tests": 86,
+    "pass": 86,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "prior_tests_unchanged": {
+    "tests/actions.test.ts": true,
+    "tests/artifacts.test.ts": true,
+    "tests/auth-revalidation.test.ts": true,
+    "tests/cli.test.ts": true,
+    "tests/context.test.ts": true,
+    "tests/files.test.ts": true,
+    "tests/foundation.test.ts": true,
+    "tests/helpers.ts": true,
+    "tests/idempotency-files.test.ts": true,
+    "tests/lifecycle.test.ts": true,
+    "tests/privacy.test.ts": true,
+    "tests/recovery.test.ts": true,
+    "tests/security.test.ts": true
+  },
+  "prior_migrations_unchanged": {
+    "migrations/001_core.sql": true,
+    "migrations/002_artifacts.sql": true,
+    "migrations/003_actions.sql": true,
+    "migrations/004_privacy.sql": true,
+    "migrations/005_task_states.sql": true,
+    "migrations/006_messages.sql": true,
+    "migrations/007_provenance.sql": true,
+    "migrations/008_files.sql": true,
+    "migrations/009_file_cleanup.sql": true,
+    "migrations/010_file_sources.sql": true,
+    "migrations/011_local_storage_binding.sql": true
+  },
+  "sha256": {
+    "migrations/012_agent_core.sql": "2a9c7fb82dbf7b336ca777ef629c648cf3f7f9e07a84608921f76159a49549f2",
+    "src/agent-provider.ts": "ee7af0de31dbc7d86505491631cfccac9ced370136b59e340610d28ec8098058",
+    "src/agent-tools.ts": "5601d1880f6d3fd2335a7e8337d9c297f613401559aef509549d121f4b85f940",
+    "src/agent.ts": "2ea37b3658b05de948b31015c1715d80478a5c345b1e4f40a15872c831a4e4f1",
+    "src/artifacts.ts": "a02738a49270d7890d2ebdee1f96713838be825ea5472bf52b2764c5b58dc92c",
+    "tests/agent-child.ts": "73fb25bbb633c25c363283dafe95e63b54249251a66ef491797608982b166fe2",
+    "tests/agent-config.test.ts": "68097850e7c4dabcead05d0025f0e0edb8f18352f9dd50f6d538017e6f6785ae",
+    "tests/agent-restart.test.ts": "0c4bb9b0f2ce8c1f07125c1f75486851ea0964095d31b3a7c6ab659244e5847a",
+    "tests/agent.test.ts": "06f47d0b67aafac2fee184fbb12e6ed38a14ecf72e6876a656ca702e84f577e6",
+    "scripts/config.ts": "515fb9deb523aad1f8f2a6beb2fe6e6816a0a2b384e12cafbee94d73e3bb874d",
+    "scripts/server.ts": "0ede1b7bd740f788337f8af557e6c7d1021ff1ef1df44231cc16c897b04e4f7e",
+    "src/app.ts": "09f257432a1b67cef7447eec6d95a6e7011b51cd174fee00586b45f9781507a1",
+    "src/context.ts": "61cac89e1ee42ed858a644fba6c93725bded375dc93332b34e4c2643e3c83bcf",
+    "src/privacy.ts": "9174b9d37f13375064a0028978624886a76cffc73603f55137cbc6a09a6891f3"
+  },
+  "actual_model_inference": "NOT VERIFIED; authorized resource access blocked pending parent approved access",
+  "review": "independent parent review pending"
+}

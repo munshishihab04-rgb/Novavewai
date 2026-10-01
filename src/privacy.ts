@@ -2,18 +2,31 @@ import type { Pool } from 'pg';
 import type { FastifyInstance } from 'fastify';
 import { cleanupFiles } from './file-lifecycle.ts';
 import type { LocalFiles } from './local-files.ts';
-import { authenticatedOwner, closed, transaction } from './app.ts';
+import { authenticatedOwner, closed, transaction, uuid } from './app.ts';
+import { deleteEphemeral } from './context.ts';
 
 export function privacyRoutes(app: FastifyInstance, pool: Pool, store?: LocalFiles) {
+  // Temporary conversation delete: owner-bound, ephemeral-only, cascades + best-effort synchronous blob cleanup
+  // (the file_cleanup ledger guarantees eventual removal if the store is unavailable right now).
+  app.delete('/conversations/:id', { schema: { params: closed({ id: uuid }), body: closed({}) } }, async (r, reply) => {
+    const id = (r.params as any).id;
+    const owner = await transaction(pool, async c => { const owner = await authenticatedOwner(c, r); await deleteEphemeral(c, owner, id); return owner; });
+    let cleanup: 'done' | 'pending' = 'done';
+    if ((await pool.query('SELECT 1 FROM file_cleanup WHERE owner_id=$1 LIMIT 1', [owner])).rowCount) { try { if (!store) throw new Error('Storage unavailable'); await cleanupFiles(pool, store, owner); } catch { cleanup = 'pending'; } }
+    return reply.code(200).send({ id, deleted: true, cleanup });
+  });
   app.get('/me/export', async r => transaction(pool, async c => {
     const owner = await authenticatedOwner(c, r);
     const snapshot: Record<string, unknown> = { version: 'owner-export-v1', fileDelivery: { binaryIncluded: false, download: '/files/:id/content', storage: 'local-encrypted-development' } };
     const projections: Record<string, [string,string]> = {
       conversations: ['conversations','id,title,created_at'],
-      files: ['files','id,conversation_id,name,mime,size,hash,state,created_at'],
+      files: ['files','id,conversation_id,name,mime,size,hash,state,extraction,created_at'],
       sources: ['sources','id,conversation_id,message_id,file_id,snapshot,hash,trust,created_at'],
       evidence: ['evidence','id,source_id,artifact_id,revision,target_kind,target,excerpt,territory,valid_from,valid_until,verification_method,status,created_at'],
-      messages: ['messages','id,conversation_id,sequence,text,created_at'],
+      messages: ['messages','id,conversation_id,sequence,text,role,channel,provenance,created_at'],
+      agentRuns: ['agent_runs','id,conversation_id,task_id,status,model_calls,tool_calls,error_code,created_at,updated_at'],
+      agentEvents: ['agent_events','id,run_id,kind,detail,created_at'],
+      agentToolReceipts: ['agent_tool_receipts','run_id,call_id,tool,input_hash,result,created_at'],
       tasks: ['tasks','id,conversation_id,goal,status,version,created_at'],
       artifacts: ['artifacts','id,task_id,title,current_revision,created_at'],
       revisions: ['artifact_revisions','artifact_id,revision,content,hash,created_at'],
@@ -33,7 +46,7 @@ export function privacyRoutes(app: FastifyInstance, pool: Pool, store?: LocalFil
       await c.query('INSERT INTO file_cleanup(id,owner_id) SELECT id,owner_id FROM files WHERE owner_id=$1 ON CONFLICT DO NOTHING', [owner]);
       await c.query("UPDATE users SET status='purged',purged_at=clock_timestamp() WHERE id=$1", [owner]);
       // Opaque cleanup work survives while all content/capabilities are removed.
-      for (const table of ['sessions','idempotency','outbox','audit_events','conversations'])
+      for (const table of ['provider_connections','provider_preferences','sessions','idempotency','outbox','audit_events','conversations'])
         await c.query(`DELETE FROM ${table} WHERE owner_id=$1`, [owner]);
       return owner;
     });

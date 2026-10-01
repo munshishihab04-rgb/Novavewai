@@ -1,3 +1,7 @@
+import {generatedFileRoutes} from './generated-files.ts';
+import { Runtime } from './runtime.ts';
+import { createArtifact, reviseArtifact } from './artifacts.ts';
+import { agentRoutes, type AgentOptions } from './agent.ts';
 import { fileRoutes, type FileOptions } from './files.ts';
 import { provenanceRoutes } from './provenance.ts';
 import { contextRoutes } from './context.ts';
@@ -11,7 +15,7 @@ import type { Pool, PoolClient } from 'pg';
 export const hash = (s: string) => createHash('sha256').update(s).digest('hex');
 export const canonical = (value: any): string => value === null || typeof value !== 'object' ? JSON.stringify(value) :
   Array.isArray(value) ? '[' + value.map(canonical).join(',') + ']' : '{' + Object.keys(value).sort().map(k => JSON.stringify(k) + ':' + canonical(value[k])).join(',') + '}';
-export class SafeError extends Error { constructor(public status: number, public code: string) { super(code); } }
+export class SafeError extends Error { detail?: string; constructor(public status: number, public code: string) { super(code); } }
 export const fail = (status: number, code: string): never => { throw new SafeError(status, code); };
 export async function transaction<T>(pool: Pool, run: (c: PoolClient) => Promise<T>): Promise<T> {
   const c = await pool.connect();
@@ -47,7 +51,7 @@ export async function event(c: PoolClient, owner: string, kind: string, resource
 }
 const text = { type: 'string', minLength: 1, maxLength: 300 };
 export const uuid = { type: 'string', format: 'uuid' };
-export const closed = (properties: object, required = Object.keys(properties)) => ({ type: 'object', additionalProperties: false, properties, required });
+export function closed(properties: object, required = Object.keys(properties)) { return { type: 'object', additionalProperties: false, properties, required }; }
 export const identity = (r: FastifyRequest) => (r as any).owner as string;
 export async function authenticatedOwner(c: PoolClient, r: FastifyRequest) {
   const owner = identity(r);
@@ -67,11 +71,15 @@ export async function idempotentResult(c: PoolClient, owner: string, key: string
   const pending = (await c.query('SELECT fingerprint FROM files WHERE owner_id=$1 AND request_key=$2', [owner, key])).rows[0];
   if (pending) fail(409, pending.fingerprint === fingerprint ? 'upload_pending' : 'idempotency_conflict');
 }
-export function buildApp(pool: Pool, options: FileOptions = {}) {
+export function buildApp(pool: Pool, options: FileOptions & { agent?: AgentOptions } = {}) {
   const app = Fastify({ logger: false, bodyLimit: 65536, ajv: { customOptions: { removeAdditional: false, coerceTypes: false } } });
+  const runtime = new Runtime(pool);
+  app.addHook('onReady', () => runtime.start());
+  app.addHook('onClose', async () => { runtime.close(); });
   app.decorateRequest('owner', '');
   app.addHook('onRoute', route => { route.schema = { ...route.schema, querystring: route.schema?.querystring ?? closed({}) }; });
   app.addHook('onRequest', async r => {
+    if (!runtime.available()) fail(503, 'agent_unavailable');
     const auth = r.headers.authorization;
     if (!auth || !/^Bearer [A-Za-z0-9_-]{43}$/.test(auth)) fail(401, 'unauthorized');
     const result = await pool.query("SELECT s.owner_id FROM sessions s JOIN users u ON u.id=s.owner_id WHERE s.token_hash=$1 AND s.expires_at>now() AND u.status='active'", [hash(auth!.slice(7))]);
@@ -80,14 +88,14 @@ export function buildApp(pool: Pool, options: FileOptions = {}) {
   });
   app.setErrorHandler((error: any, _r, reply) => {
     const status = error instanceof SafeError ? error.status : error.validation || error.statusCode === 400 ? 400 : error.statusCode === 413 ? 413 : 500;
-    reply.status(status).send({ error: error instanceof SafeError ? error.code : status === 400 ? 'invalid_request' : status === 413 ? 'request_too_large' : 'internal_error' });
+    reply.status(status).send({ error: error instanceof SafeError ? error.code : status === 400 ? 'invalid_request' : status === 413 ? 'request_too_large' : 'internal_error', ...(error instanceof SafeError && typeof error.detail === 'string' ? { detail: error.detail } : {}) });
   });
   app.setNotFoundHandler((_r, reply) => reply.status(404).send({ error: 'not_found' }));
   const mutate = (run: (c: PoolClient, owner: string, body: any, r: FastifyRequest) => Promise<any>, status = 201) => async (r: FastifyRequest, reply: any) => {
     const key = r.headers['idempotency-key'];
     if (typeof key !== 'string' || !/^[A-Za-z0-9_-]{1,100}$/.test(key)) return fail(400, 'idempotency_key_required');
     const owner = identity(r), fingerprint = hash(canonical({ method: r.method, url: r.url, body: r.body ?? null }));
-    const result = await transaction(pool, async c => {
+    const result = await runtime.transaction(async c => {
       await authenticatedOwner(c, r);
       const old = await idempotentResult(c, owner, key, fingerprint);
       if (old) return { status: old.status, body: old.response };
@@ -97,11 +105,11 @@ export function buildApp(pool: Pool, options: FileOptions = {}) {
     });
     reply.status(result.status).send(result.body);
   };
-  app.post('/conversations', { schema: { body: closed({ title: text }) } }, mutate(async (c, owner, body) => {
+  app.post('/conversations', { schema: { body: closed({ title: text, ephemeral: { type: 'boolean' } }, ['title']) } }, mutate(async (c, owner, body) => {
     const id = randomUUID();
-    await c.query('INSERT INTO conversations(id,owner_id,title) VALUES($1,$2,$3)', [id, owner, body.title]);
+    await c.query('INSERT INTO conversations(id,owner_id,title,ephemeral) VALUES($1,$2,$3,$4)', [id, owner, body.title, body.ephemeral === true]);
     await event(c, owner, 'conversation.created', id);
-    return { id, title: body.title };
+    return { id, title: body.title, ephemeral: body.ephemeral === true };
   }));
   app.post('/tasks', { schema: { body: closed({ conversationId: uuid, goal: text }) } }, mutate(async (c, owner, body) => {
     if (!(await c.query('SELECT 1 FROM conversations WHERE owner_id=$1 AND id=$2', [owner, body.conversationId])).rowCount) fail(404, 'not_found');
@@ -126,23 +134,11 @@ export function buildApp(pool: Pool, options: FileOptions = {}) {
   });
   const content = closed({ text: { type: 'string', maxLength: 20000 }, language: { type: 'string', enum: ['it', 'bn', 'en'] } });
   app.post('/artifacts', { schema: { body: closed({ taskId: uuid, title: text, content }) } }, mutate(async (c, owner, body) => {
-    if (!(await c.query('SELECT 1 FROM tasks WHERE owner_id=$1 AND id=$2', [owner, body.taskId])).rowCount) fail(404, 'not_found');
-    const id = randomUUID(), digest = hash(canonical(body.content));
-    await c.query('INSERT INTO artifacts(id,owner_id,task_id,title,current_revision) VALUES($1,$2,$3,$4,1)', [id, owner, body.taskId, body.title]);
-    await c.query('INSERT INTO artifact_revisions(owner_id,artifact_id,revision,content,hash) VALUES($1,$2,1,$3,$4)', [owner, id, body.content, digest]);
-    await event(c, owner, 'artifact.created', id);
-    return { id, revision: 1, content: body.content, hash: digest };
+    return createArtifact(c, owner, body);
   }));
   app.post('/artifacts/:id/revisions', { schema: { params: closed({ id: uuid }), body: closed({ baseRevision: { type: 'integer', minimum: 1 }, content }) } }, mutate(async (c, owner, body, r) => {
     const id = (r.params as any).id;
-    const artifact = (await c.query('SELECT current_revision FROM artifacts WHERE owner_id=$1 AND id=$2 FOR UPDATE', [owner, id])).rows[0];
-    if (!artifact) fail(404, 'not_found');
-    if (artifact.current_revision !== body.baseRevision) fail(409, 'revision_conflict');
-    const revision = artifact.current_revision + 1, digest = hash(canonical(body.content));
-    await c.query('INSERT INTO artifact_revisions(owner_id,artifact_id,revision,content,hash) VALUES($1,$2,$3,$4,$5)', [owner, id, revision, body.content, digest]);
-    await c.query('UPDATE artifacts SET current_revision=$3 WHERE owner_id=$1 AND id=$2', [owner, id, revision]);
-    await event(c, owner, 'artifact.revised', id);
-    return { id, revision, content: body.content, hash: digest };
+    return reviseArtifact(c, owner, id, body);
   }));
   for (const suffix of ['', '/export']) app.get('/artifacts/:id/revisions/:revision' + suffix, { schema: { params: closed({ id: uuid, revision: { type: 'string', pattern: '^[1-9][0-9]{0,8}$' } }) } }, async r => {
     const p = r.params as any;
@@ -150,10 +146,12 @@ export function buildApp(pool: Pool, options: FileOptions = {}) {
     if (!row) fail(404, 'not_found');
     return suffix ? { ...row, renderer: 'canonical-json-v1' } : row;
   });
-  const fileStore = fileRoutes(app, pool, options);
+  generatedFileRoutes(app,pool,runtime);
+  const fileStore = fileRoutes(app, pool, options, runtime);
   provenanceRoutes(app, pool, mutate, fileStore);
   contextRoutes(app, pool, mutate);
   privacyRoutes(app, pool, fileStore);
   actionRoutes(app, pool, mutate);
+  agentRoutes(app, pool, mutate, runtime, options.agent, fileStore);
   return app;
 }

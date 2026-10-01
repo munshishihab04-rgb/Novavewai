@@ -1,0 +1,22 @@
+✔ native jobs_search accepts intent and an empty city, not arbitrary browser options (1.83525ms)
+✔ missing city asks before any source or cache access and cooking infers cuoco (1.245028ms)
+✔ natural role/city search shares only canonical metadata with TTL across service instances (27.506664ms)
+
+Interrupted while running:
+
+⚠ tests/jobs-search.test.ts (tests/jobs-search.test.ts:1:1)
+✖ tests/jobs-search.test.ts (179975.389463ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 1
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 179982.356338
+
+✖ failing tests:
+
+test at tests/jobs-search.test.ts:1:1
+✖ tests/jobs-search.test.ts (179975.389463ms)
+  'Promise resolution is still pending but the event loop has already resolved'

@@ -1,0 +1,22 @@
+✖ legacy injected source no longer crashes after nonwhitelist city normalization (18.001208ms)
+✔ a legacy policy reference cannot authorize Subito automation (2.961026ms)
+✔ generic default gates automation and returns named original-source searches, not vacancies (4.300385ms)
+✔ permitted imports are dated observations, unknown publisher allowed, never relabelled live or city (5.710856ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 3
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 676.832294
+
+✖ failing tests:
+
+test at tests/jobs-generic-service.test.ts:6:1
+✖ legacy injected source no longer crashes after nonwhitelist city normalization (18.001208ms)
+  TypeError: Cannot read properties of undefined (reading 'region')
+      at JobsService.search (/home/azureuser/nova-community-agent/src/jobs.ts:57:132)
+      at async TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/jobs-generic-service.test.ts:6:170)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)

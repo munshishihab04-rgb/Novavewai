@@ -1,0 +1,144 @@
+{
+  "boundary": "Isolated real PostgreSQL + native staged UI + actual managed chat and WebRTC synthetic microphone. No trial data.",
+  "errors": [],
+  "providerOutputs": [
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "id": "call_7IUmT44w9ox8s6PVFHQsYhcn",
+          "type": "function",
+          "function": {
+            "name": "create_file",
+            "arguments": "{\"name\":\"hello.js\",\"format\":\"text\",\"text\":\"console.log('Hello Nova');\",\"entries\":[]}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": "Done — I created the downloadable file `hello.js`.\n\nDownload: `/artifacts/215b0295-2abd-4bee-9faf-02cb28dd0f11/revisions/1/download`\n\nIt contains:\n```js\nconsole.log('Hello Nova');\n```"
+    }
+  ],
+  "run": {
+    "id": "02c3cef4-7a1a-4c35-8a58-bfddfca2d4b7",
+    "status": "completed",
+    "error_code": null
+  },
+  "messages": [
+    {
+      "role": "user",
+      "channel": "voice",
+      "provenance": "provider_transcribed_audio",
+      "text": "Create a downloadable JavaScript file named hello.js containing console.log with the text Hello Nova. Do not execute it."
+    },
+    {
+      "role": "assistant",
+      "channel": "voice",
+      "provenance": "agent_generated",
+      "text": "Done — I created the downloadable file `hello.js`.\n\nDownload: `/artifacts/215b0295-2abd-4bee-9faf-02cb28dd0f11/revisions/1/download`\n\nIt contains:\n```js\nconsole.log('Hello Nova');\n```"
+    }
+  ],
+  "receipts": [
+    {
+      "tool": "create_file",
+      "result": {
+        "id": "215b0295-2abd-4bee-9faf-02cb28dd0f11",
+        "hash": "5144efa5473339593d9fb0fac26a50035b45c2036960b7e962a126e3af30b6fb",
+        "name": "hello.js",
+        "origin": "assistant_generated",
+        "download": "/artifacts/215b0295-2abd-4bee-9faf-02cb28dd0f11/revisions/1/download",
+        "executed": false,
+        "revision": 1
+      }
+    }
+  ],
+  "audio": {
+    "events": [
+      {
+        "type": "response.output_audio_transcript.done",
+        "event_id": "event_ESLttwQXZ1tfDcF2IdNNr",
+        "response_id": "resp_ESLtqzglhFbWB06bD8Oro",
+        "item_id": "item_ESLtq3vnVvwtqf6gd6Ta7",
+        "output_index": 0,
+        "content_index": 0,
+        "transcript": "Done — I created the downloadable file `hello.js`.\n\nDownload: `/artifacts/215b0295-2abd-4bee-9faf-02cb28dd0f11/revisions/1/download\n\nIt contains:\n```js\nconsole.log('Hello Nova');\n```"
+      },
+      {
+        "type": "response.done",
+        "event_id": "event_ESLttQXPLEMQPqIenckWB",
+        "response": {
+          "object": "realtime.response",
+          "id": "resp_ESLtqzglhFbWB06bD8Oro",
+          "status": "completed",
+          "status_details": null,
+          "output": [
+            {
+              "id": "item_ESLtq3vnVvwtqf6gd6Ta7",
+              "type": "message",
+              "status": "completed",
+              "role": "assistant",
+              "content": [
+                {
+                  "type": "output_audio",
+                  "transcript": "Done — I created the downloadable file `hello.js`.\n\nDownload: `/artifacts/215b0295-2abd-4bee-9faf-02cb28dd0f11/revisions/1/download\n\nIt contains:\n```js\nconsole.log('Hello Nova');\n```"
+                }
+              ],
+              "phase": "final_answer"
+            }
+          ],
+          "conversation_id": null,
+          "output_modalities": [
+            "audio"
+          ],
+          "max_output_tokens": "inf",
+          "audio": {
+            "output": {
+              "format": {
+                "type": "audio/pcm",
+                "rate": 24000
+              },
+              "voice": "marin"
+            }
+          },
+          "usage": {
+            "total_tokens": 718,
+            "input_tokens": 92,
+            "output_tokens": 626,
+            "input_token_details": {
+              "text_tokens": 92,
+              "audio_tokens": 0,
+              "image_tokens": 0,
+              "cached_tokens": 0,
+              "cached_tokens_details": {
+                "text_tokens": 0,
+                "audio_tokens": 0,
+                "image_tokens": 0
+              }
+            },
+            "output_token_details": {
+              "text_tokens": 138,
+              "audio_tokens": 488,
+              "reasoning_tokens": 49
+            }
+          },
+          "metadata": null
+        }
+      }
+    ],
+    "stats": [
+      {
+        "bytesReceived": 188606,
+        "packetsReceived": 1912
+      }
+    ]
+  },
+  "download": {
+    "status": 200,
+    "content": "console.log('Hello Nova');",
+    "name": "hello.js"
+  },
+  "reopenedText": "Create a downloadable JavaScript file named hello.js containing console.log with the text Hello Nova. Do not execute it.\nNOVA\nDone — I created the downloadable file `hello.js`.\n\nDownload: `/artifacts/215b0295-2abd-4bee-9faf-02cb28dd0f11/revisions/1/download`\n\nIt contains:\n```js\nconsole.log('Hello Nova');\n```\nhello.js\n\nBozza da controllare · Versione 1\n\nApri risultato →Scarica file generato",
+  "error": "download.path: canceled"
+}

@@ -1,0 +1,9 @@
+{
+  "source": {
+    "status": 409,
+    "body": {
+      "error": "generated_source_not_allowed"
+    }
+  },
+  "persisted": []
+}

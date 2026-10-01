@@ -1,0 +1,29 @@
+✔ controlled protocol: automatic tools revise canonical artifact, persist assistant, reopen and replay without inference (1711.042012ms)
+✔ fail closed: denied approval (1565.826122ms)
+✔ fail closed: prototype tool (1563.586586ms)
+✔ fail closed: schema owner injection (1512.913715ms)
+✔ fail closed: malformed arguments (1592.19534ms)
+✔ fail closed: invalid JSON (1590.891793ms)
+✔ fail closed: refusal (1589.124017ms)
+✔ fail closed: truncation (1734.154992ms)
+✔ fail closed: empty (1649.267733ms)
+✔ fail closed: oversized (1711.861554ms)
+✔ fail closed: http error (1681.183363ms)
+✔ question pauses task; explicit answer resumes with file observation, scope checks and terminal receipt (1613.463808ms)
+✔ post-provider await fence: cancel (1708.937667ms)
+✔ post-provider await fence: revoke (1703.249199ms)
+✔ post-provider await fence: expire (1573.328417ms)
+✔ post-provider await fence: purge (1655.85011ms)
+✔ post-provider await fence: message (1618.569087ms)
+✔ post-provider await fence: task (1601.330095ms)
+✔ post-provider await fence: artifact (1636.194557ms)
+✔ budgets stop loops and response timeout is explicit unknown; no replay retry (5082.916847ms)
+✔ restart conservatively fails queued and marks interrupted inference unknown without replay (1681.760951ms)
+ℹ tests 21
+ℹ suites 0
+ℹ pass 21
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 38152.739928

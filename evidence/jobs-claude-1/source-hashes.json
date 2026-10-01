@@ -1,0 +1,13 @@
+{
+ "note": "sha256 of files owned/modified by jobs-claude-1 after final tests. src/jobs-live.ts had no committed 'before' (untracked in git); its prior content is described in evidence/jobs-live-delivery-1/REPORT.md and its hash in evidence/jobs-live-delivery-1/SHA256SUMS.",
+ "files": {
+  "src/jobs-live.ts": "2f92a57deb4f5bc3e5787d6a4e43fae58b15c193e3833cf7abedbb5edcf24815",
+  "src/jobs.ts": "769ced93abc8773a48ba0c332070a6079f3e4c739a711d93dc9d6184989d836d",
+  "src/agent.ts": "a42c1740a2270e110748580d6bf268445c8d8e655fb1499204842441bc807cdb",
+  "tests/jobs-live.test.ts": "6e3dbee907de44b572255cd1b190dfd900a5cc60081db5aac1a8231ff7d7fa69",
+  "tests/jobs-live-registry.test.ts": "0422c6826f4baf7ed0d9e243be6e6615cb039b10d25667f0a3f70de3a051a140",
+  "tests/jobs-agent-live-registry.test.ts": "bdc887f090c02f9830d46d8c8e3d4ed5ea69ce580f3f3b4f7bfd27c91f31575d",
+  "tests/jobs-agent-search-links.test.ts": "78f2f0bfd73a2b604eee4d0446a7d50b8a5a53c074f517b5e75aa1d9cf1aeee9",
+  "evidence/jobs-claude-1/before/jobs-live.test.ts": "427e5c5c9ef28d04fa97e63c90060a54bb44e739c0d93c88633d1931cdd6caf2"
+ }
+}

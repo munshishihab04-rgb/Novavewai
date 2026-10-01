@@ -1,0 +1,6 @@
+
+> nova-community-agent@0.1.0 typecheck
+> tsc --noEmit
+
+tests/agent.test.ts(45,43): error TS2345: Argument of type '"turn-one"' is not assignable to parameter of type '`${string}-${string}-${string}-${string}-${string}`'.
+tests/agent.test.ts(51,47): error TS2345: Argument of type '"turn-one"' is not assignable to parameter of type '`${string}-${string}-${string}-${string}-${string}`'.

@@ -1,0 +1,103 @@
+{
+  "base": "https://trademark-inch-dark-investigators.trycloudflare.com",
+  "checkedAt": "2026-09-30T21:29:18.081Z",
+  "syntheticOwner": "cc93a3bf-70b7-479e-a0d4-9332dfe71c7c",
+  "turns": [
+    {
+      "text": "Cerco lavoro come saldatore",
+      "runStatus": "waiting_user",
+      "jobs": []
+    },
+    {
+      "text": "Modena",
+      "runStatus": "completed",
+      "jobs": [
+        {
+          "trust": "untrusted_public_metadata",
+          "notice": "Browsing suggestions only, not vacancies or verified job listings. Requested city is a search constraint, not an observed job location. Publisher identity, location, availability and page access are unverified.",
+          "status": "search_links_only",
+          "retryable": false,
+          "noAgencies": false,
+          "occupation": "saldatore",
+          "searchLinks": [
+            {
+              "url": "https://www.subito.it/annunci-italia/vendita/offerte-lavoro/?q=saldatore+Modena",
+              "kind": "BROWSING_SUGGESTION",
+              "title": "Subito — ricerca nazionale per parole chiave: saldatore Modena",
+              "status": "NOT_FETCHED",
+              "evidence": "Constructed national keyword search URL; not an observed listing or geographic filter.",
+              "pageKind": "SEARCH",
+              "sourceName": "Subito",
+              "discoveredAt": "2026-09-30T21:29:12.442Z",
+              "requestedCity": "Modena",
+              "requestedRole": "saldatore",
+              "publisher_type": "UNKNOWN",
+              "observedLocation": null,
+              "requestedProvince": null
+            },
+            {
+              "url": "https://www.gigroup.it/offerte-lavoro-dettaglio/modena-saldatore-addetto-saldatura-robot/1319819/",
+              "kind": "BROWSING_SUGGESTION",
+              "title": "Offerte di lavoro Saldatore - addetto saldatura robot Modena",
+              "discoveredAt": "2026-09-30T21:29:15.868Z",
+              "observedLocation": null
+            },
+            {
+              "url": "https://www.gigroup.it/offerte-lavoro-dettaglio/lavoro-modena-saldatore-a-filo/1247685/",
+              "kind": "BROWSING_SUGGESTION",
+              "title": "Offerte di lavoro saldatore a filo Modena - gigroup.it",
+              "discoveredAt": "2026-09-30T21:29:15.868Z",
+              "observedLocation": null
+            },
+            {
+              "url": "https://www.helplavoro.it/offerta-di-lavoro-in-provincia-di-modena-cercasi-operaio-a-con-esperienza-in-produzione-metalmeccanica-per-ruolo-di-saldatore/6903100.html",
+              "kind": "BROWSING_SUGGESTION",
+              "title": "HelpLavoro.it - Offerta di Lavoro Gi Group SpA Filiale di Modena ...",
+              "discoveredAt": "2026-09-30T21:29:15.868Z",
+              "observedLocation": null
+            },
+            {
+              "url": "https://lavoroperte.regione.emilia-romagna.it/offerte-lavoro/modena/saldatore-vignola/521226",
+              "kind": "BROWSING_SUGGESTION",
+              "title": "SALDATORE O SALDATRICE - Cerca lavoro",
+              "discoveredAt": "2026-09-30T21:29:15.868Z",
+              "observedLocation": null
+            },
+            {
+              "url": "https://modena.bakeca.it/annunci/operai-produzione-qualita/?keyword=saldatore",
+              "kind": "BROWSING_SUGGESTION",
+              "title": "Annunci lavoro saldatore - Offerte di lavoro Saldatore a Modena ...",
+              "discoveredAt": "2026-09-30T21:29:15.868Z",
+              "observedLocation": null
+            },
+            {
+              "url": "https://www.helplavoro.it/offerta-di-lavoro-in-provincia-di-modena-cercasi-saldatore/6917112.html",
+              "kind": "BROWSING_SUGGESTION",
+              "title": "Offerta di Lavoro Adecco Talent Attraction - helplavoro.it",
+              "discoveredAt": "2026-09-30T21:29:15.868Z",
+              "observedLocation": null
+            }
+          ],
+          "requestedCity": "Modena",
+          "verifiedScope": {
+            "leads": 0,
+            "allowedOrigins": [
+              "https://www.lavoroturismo.it",
+              "https://www.restworld.it",
+              "https://www.jobintourism.it",
+              "https://job.hnh.it",
+              "https://www.adecco.com",
+              "https://www.lavoropiu.it"
+            ]
+          },
+          "constraintStatus": "not_requested",
+          "unavailablePages": [],
+          "excludedNonDirect": 0,
+          "sourceUnavailable": {
+            "code": "jobs_automated_access_not_authorized"
+          }
+        }
+      ]
+    }
+  ]
+}

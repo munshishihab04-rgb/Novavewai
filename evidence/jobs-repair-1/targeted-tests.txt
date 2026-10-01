@@ -1,0 +1,30 @@
+✔ native unavailable source uses one bounded web candidate search and suppresses repeated jobs call (1603.150344ms)
+✔ native agent asks city from jobs receipt without browsing and includes discovery safety instructions (1984.324023ms)
+✔ jobs source receipt cannot persist after session revocation (1708.446946ms)
+✔ cancellation fences uncooperative job providers and does not hang app shutdown (1719.006689ms)
+✔ native jobs dispatch completes with original link receipt and no preference interview (1583.039594ms)
+✔ Subito adapter is deny-by-default until explicit source-policy review (13.284498ms)
+✔ Playwright parser reads only compact listing cards, distinguishes blocks from no matches (281.074202ms)
+✔ fixed search URLs and robots policy do not allow login, third parties or forbidden paths (1.662834ms)
+✔ portal vacancy carries evidence, UNKNOWN publisher and no-agencies excludes unknown even on cache hit (11.367695ms)
+✔ progressive discovery runs search before companies and browser, preserves kinds and exact-URL dedupe (5.141966ms)
+✔ sufficient search avoids expensive stages; missing city starts nothing; strict mode excludes unknown (1.573275ms)
+{"first":{"status":"unavailable","occupation":"cameriere","city":"Bologna","code":"jobs_policy_unreviewed","originalSearchUrl":"https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/bologna/?q=cameriere","retryable":false},"second":{"status":"unavailable","occupation":"cameriere","city":"Bologna","code":"jobs_policy_unreviewed","limitReason":"jobs_rate_limited","retryAfterSeconds":15,"originalSearchUrl":"https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/bologna/?q=cameriere","retryable":false},"calls":1}
+✔ failed source cause survives immediate retry without spending another request (10.319415ms)
+✔ native jobs_search accepts intent and an empty city, not arbitrary browser options (1.136935ms)
+✔ missing city asks before any source or cache access and cooking infers cuoco (1.167286ms)
+✔ natural role/city search shares only canonical metadata with TTL across service instances (54.76355ms)
+✔ live searches have one shared lock, fail fast on overlap and rate limit across instances (3.355876ms)
+✔ source failure is explicit, never stale/simulated data; privacy and origin filter are strict (2.427731ms)
+✔ ambiguous cities do not start a search and invalid budgets fail at construction (0.381308ms)
+✔ job receipt cards expose only original HTTPS listing links and escaped labels (269.665037ms)
+✔ web discovery returns bounded unverified candidate links, never working jobs (1.098112ms)
+✔ web search result cannot persist after initiating session is revoked (1737.092678ms)
+ℹ tests 21
+ℹ suites 0
+ℹ pass 21
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 15815.225728

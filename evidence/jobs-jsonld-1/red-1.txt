@@ -1,0 +1,44 @@
+✔ robots: NovaJobBot group preferred over *, rules merged across repeated groups (1.57529ms)
+✔ robots: longest-match wins, Allow wins ties, wildcards and $ anchors, empty Disallow allows all (0.556936ms)
+✔ gate: 404 permitted, 5xx and network failure denied, per-origin cache with TTL, https only (26.608976ms)
+✔ gate: deny-list origins are refused before any robots fetch, regardless of Allow (0.405154ms)
+✔ JSON-LD: single node, array, @graph, nested mainEntity are all found; fields sanitized (3.639277ms)
+✔ JSON-LD: expired, unknown validity, missing fields, jobLocation array, hiringOrganization string, malformed and non-JobPosting (1.587386ms)
+✖ city vs province classification is honest about comune, provincia and mismatch (2.634238ms)
+✔ URL guards: https public hosts only; detail-shaped vs search links (6.516861ms)
+✔ reader: permission gate, crawl-delay sequencing, size cap, redirects, 403 not bypassed, no JSON-LD fallback, max pages (98.20428ms)
+✔ reader: robots 5xx denies every page of that origin; 404 robots permits; abort stops before I/O (21.682814ms)
+✔ jsonLdOpportunities: cards only for verified reads, expired labelled, publisher UNKNOWN unless agency named, strict no-agencies excludes all (13.279657ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 10
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 587.820324
+
+✖ failing tests:
+
+test at tests/jobs-posting.test.ts:27:1
+✖ city vs province classification is honest about comune, provincia and mismatch (2.634238ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'PROVINCE_OR_REGION'
+  - 'MISMATCH'
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/jobs-posting.test.ts:33:9)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'PROVINCE_OR_REGION',
+    expected: 'MISMATCH',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

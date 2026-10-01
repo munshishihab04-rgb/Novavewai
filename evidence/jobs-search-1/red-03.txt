@@ -1,0 +1,30 @@
+✔ native jobs_search accepts intent and an empty city, not arbitrary browser options (1.290993ms)
+✔ missing city asks before any source or cache access and cooking infers cuoco (0.520271ms)
+✖ natural role/city search shares only canonical metadata with TTL across service instances (15.95033ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 2
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 362.330577
+
+✖ failing tests:
+
+test at tests/jobs-search.test.ts:1:1422
+✖ natural role/city search shares only canonical metadata with TTL across service instances (15.95033ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  'needs_city' !== 'ok'
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/jobs-search.test.ts:32:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'needs_city',
+    expected: 'ok',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

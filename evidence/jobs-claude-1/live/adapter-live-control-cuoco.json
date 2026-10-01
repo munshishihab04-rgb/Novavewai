@@ -1,0 +1,31 @@
+{
+ "startedAt": "2026-09-30T17:44:01.468Z",
+ "role": "cuoco (control, not cameriere)",
+ "v": {
+  "opportunities": [],
+  "unavailable": [
+   {
+    "url": "https://www.restworld.it/posizione/offerta-di-lavoro-aiuto-cuoco-bologna-krf",
+    "title": "Aiuto cuoco/a per fast food",
+    "status": "STALE_DATE",
+    "reason": "published 2026-07-31 (older than 60 days)",
+    "observedAt": "2026-09-30T17:44:01.184Z",
+    "observedLocation": null
+   }
+  ],
+  "skipped": 0,
+  "excludedNonDirect": 0,
+  "fetchedAt": "2026-09-30T17:44:01.468Z",
+  "testedScope": {
+   "leads": 1,
+   "allowedOrigins": [
+    "https://www.lavoroturismo.it",
+    "https://www.restworld.it",
+    "https://www.jobintourism.it",
+    "https://job.hnh.it",
+    "https://www.adecco.com",
+    "https://www.lavoropiu.it"
+   ]
+  }
+ }
+}

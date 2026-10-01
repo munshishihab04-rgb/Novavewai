@@ -1,0 +1,77 @@
+{
+  "passed": true,
+  "changed_existing_files": [
+    "src/runtime.ts"
+  ],
+  "new_permanent_test": "tests/agent-lease-order.test.ts",
+  "historical_evidence_unchanged": true,
+  "source_sha256": {
+    "src/runtime.ts": "037772750b19e658b8983a2acabc37da43148b2c3f01743111abdda6cd6170d5",
+    "src/agent.ts": "8299e638a5135fda16dae023b52833ab72077a9391568c2ce3340d5600a16e71",
+    "tests/agent-lease-order.test.ts": "d50aa94a5075b1106df0b517ea14ae6990bd5318a4bf91728dea4aef35ffcee5"
+  },
+  "results": [
+    {
+      "name": "original-probes",
+      "command": [
+        "node",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-reporter=tap",
+        "--test-concurrency=1",
+        "evidence/agent-fix-2/adversarial.test.ts",
+        "evidence/agent-fix-2/lease-loss.test.ts",
+        "evidence/agent-fix-2/queued-lease-error.test.ts",
+        "evidence/agent-fix-2/delayed-lease-error.test.ts",
+        "evidence/agent-fix-2/delayed-lease-no-listener.test.ts",
+        "evidence/agent-fix-2/supplemental.test.ts"
+      ],
+      "exit_code": 0,
+      "counts": {
+        "tests": 16,
+        "pass": 16,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "name": "full-suite",
+      "command": [
+        "npm",
+        "test"
+      ],
+      "exit_code": 0,
+      "counts": {
+        "tests": 106,
+        "pass": 106,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "name": "typecheck",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "exit_code": 0,
+      "counts": {}
+    },
+    {
+      "name": "diff-check",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "counts": {}
+    }
+  ]
+}

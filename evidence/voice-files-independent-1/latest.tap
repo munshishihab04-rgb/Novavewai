@@ -1,0 +1,94 @@
+TAP version 13
+# Subtest: stable: notes.txt exact downloaded bytes, immutable revision, provenance and owner isolation
+ok 1 - stable: notes.txt exact downloaded bytes, immutable revision, provenance and owner isolation
+  ---
+  duration_ms: 1560.92295
+  type: 'test'
+  ...
+# Subtest: stable: index.js exact downloaded bytes, immutable revision, provenance and owner isolation
+ok 2 - stable: index.js exact downloaded bytes, immutable revision, provenance and owner isolation
+  ---
+  duration_ms: 1653.207507
+  type: 'test'
+  ...
+# Subtest: stable: index.php exact downloaded bytes, immutable revision, provenance and owner isolation
+ok 3 - stable: index.php exact downloaded bytes, immutable revision, provenance and owner isolation
+  ---
+  duration_ms: 1315.209915
+  type: 'test'
+  ...
+# Subtest: stable: theme.liquid exact downloaded bytes, immutable revision, provenance and owner isolation
+ok 4 - stable: theme.liquid exact downloaded bytes, immutable revision, provenance and owner isolation
+  ---
+  duration_ms: 1558.784289
+  type: 'test'
+  ...
+# Subtest: stable: duplicate canonical input same key, distinct keys, lost acknowledgement cannot create twice
+ok 5 - stable: duplicate canonical input same key, distinct keys, lost acknowledgement cannot create twice
+  ---
+  duration_ms: 1331.456681
+  type: 'test'
+  ...
+# Subtest: stable: failed receipt commit rolls back file, success event and assistant saved claim
+ok 6 - stable: failed receipt commit rolls back file, success event and assistant saved claim
+  ---
+  duration_ms: 1464.699999
+  type: 'test'
+  ...
+# Subtest: stable: upload owner isolation and exact bytes, rejected opaque input cannot become understood content
+ok 7 - stable: upload owner isolation and exact bytes, rejected opaque input cannot become understood content
+  ---
+  duration_ms: 1826.750123
+  type: 'test'
+  ...
+# Subtest: stable: generated source is data; shell and unsupported execution tools are denied
+ok 8 - stable: generated source is data; shell and unsupported execution tools are denied
+  ---
+  duration_ms: 0.760001
+  type: 'test'
+  ...
+# Subtest: pending-format: pdf generated download signature and independent content verification
+ok 9 - pending-format: pdf generated download signature and independent content verification # SKIP PENDING: PDF/ZIP implementation changed during review; not executed against moving source. Enable INDEPENDENT_FORMATS_READY=1 after implementation stabilizes.
+  ---
+  duration_ms: 0.142788
+  type: 'test'
+  ...
+# Subtest: pending-format: zip generated download signature and independent content verification
+ok 10 - pending-format: zip generated download signature and independent content verification # SKIP PENDING: PDF/ZIP implementation changed during review; not executed against moving source. Enable INDEPENDENT_FORMATS_READY=1 after implementation stabilizes.
+  ---
+  duration_ms: 0.186292
+  type: 'test'
+  ...
+# Subtest: pending-format: ZIP traversal, backslashes, absolute paths, duplicates, spoofed format and UTF-8 byte budgets
+ok 11 - pending-format: ZIP traversal, backslashes, absolute paths, duplicates, spoofed format and UTF-8 byte budgets # SKIP PENDING: PDF/ZIP implementation changed during review; not executed against moving source. Enable INDEPENDENT_FORMATS_READY=1 after implementation stabilizes.
+  ---
+  duration_ms: 0.091736
+  type: 'test'
+  ...
+# Subtest: pending-voice: duplicate speech input across callback IDs commits once, persists into text continuation and reopen
+ok 12 - pending-voice: duplicate speech input across callback IDs commits once, persists into text continuation and reopen # SKIP PENDING: no canonical voice turn route/input identity contract at inspection. Set INDEPENDENT_VOICE_ADAPTER to an evidence-scoped route adapter after implementation stabilizes.
+  ---
+  duration_ms: 0.117225
+  type: 'test'
+  ...
+# Subtest: pending-voice: owner isolation before dispatch and before replay receipt disclosure
+ok 13 - pending-voice: owner isolation before dispatch and before replay receipt disclosure # SKIP PENDING: no canonical voice turn route/input identity contract at inspection. Set INDEPENDENT_VOICE_ADAPTER to an evidence-scoped route adapter after implementation stabilizes.
+  ---
+  duration_ms: 0.072354
+  type: 'test'
+  ...
+# Subtest: pending-voice: failed file operation cannot emit a confirmed saved result
+ok 14 - pending-voice: failed file operation cannot emit a confirmed saved result # SKIP PENDING: no canonical voice turn route/input identity contract at inspection. Set INDEPENDENT_VOICE_ADAPTER to an evidence-scoped route adapter after implementation stabilizes.
+  ---
+  duration_ms: 0.056333
+  type: 'test'
+  ...
+1..14
+# tests 14
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 6
+# todo 0
+# duration_ms 11663.607547

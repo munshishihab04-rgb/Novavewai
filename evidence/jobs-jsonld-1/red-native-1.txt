@@ -1,0 +1,32 @@
+✖ native dispatcher: robots-permitted JSON-LD pages become JSONLD_VERIFIED cards (expired labelled, province honest); no-JSON-LD and disallowed links stay search links; Subito never fetched (3579.173827ms)
+✔ native dispatcher: strict no-agencies request never turns JSON-LD reads into opportunities; constraint stays unmet (3717.645627ms)
+✔ native dispatcher: revoke during web search prevents every JSON-LD page read (1671.156216ms)
+✔ native dispatcher: cancel during web search prevents every JSON-LD page read (1323.748534ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 3
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 11122.765964
+
+✖ failing tests:
+
+test at tests/jobs-jsonld-native.test.ts:16:1
+✖ native dispatcher: robots-permitted JSON-LD pages become JSONLD_VERIFIED cards (expired labelled, province honest); no-JSON-LD and disallowed links stay search links; Subito never fetched (3579.173827ms)
+  AssertionError [ERR_ASSERTION]: only robots fetched for disallowed origin
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/jobs-jsonld-native.test.ts:27:59)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

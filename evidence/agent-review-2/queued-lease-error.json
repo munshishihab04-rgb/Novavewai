@@ -1,0 +1,30 @@
+{
+  "response": {
+    "status": 503,
+    "body": {
+      "error": "runtime_interrupted"
+    }
+  },
+  "poolErrors": [
+    {
+      "message": "terminating connection due to administrator command",
+      "code": "57P01"
+    }
+  ],
+  "queuedEvents": [
+    "error",
+    "error",
+    "end"
+  ],
+  "leaseListeners": {
+    "error": [
+      ""
+    ],
+    "end": []
+  },
+  "files": [
+    {
+      "state": "pending"
+    }
+  ]
+}

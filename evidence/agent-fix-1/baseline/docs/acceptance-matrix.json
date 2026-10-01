@@ -1,0 +1,194 @@
+{
+  "source": "NOVA master v2 section 108",
+  "criteria": [
+    {
+      "id": "AC-01",
+      "requirement": "l'utente può iniziare solo parlando;",
+      "phase": "J4",
+      "status": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "AC-02",
+      "requirement": "NOVA può capire un obiettivo complesso;",
+      "phase": "J1",
+      "status": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "AC-03",
+      "requirement": "NOVA può creare un task persistente;",
+      "phase": "J0/J1",
+      "status": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "AC-04",
+      "requirement": "NOVA può decidere quali tool usare;",
+      "phase": "J1",
+      "status": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "AC-05",
+      "requirement": "NOVA può fare ricerche multi-step;",
+      "phase": "J6",
+      "status": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "AC-06",
+      "requirement": "NOVA può usare browser;",
+      "phase": "J6/J9",
+      "status": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "AC-07",
+      "requirement": "NOVA può leggere documenti;",
+      "phase": "J5",
+      "status": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "AC-08",
+      "requirement": "NOVA può creare artifact;",
+      "phase": "J2",
+      "status": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "AC-09",
+      "requirement": "NOVA può mostrare lo Studio senza cambiare prodotto;",
+      "phase": "J2",
+      "status": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "AC-10",
+      "requirement": "chat e artifact condividono lo stesso dato;",
+      "phase": "J2",
+      "status": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "AC-11",
+      "requirement": "NOVA può usare italiano/bengalese/inglese;",
+      "phase": "J3/J4",
+      "status": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "AC-12",
+      "requirement": "NOVA può trovare lavoro da più fonti;",
+      "phase": "J6",
+      "status": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "AC-13",
+      "requirement": "NOVA deduplica i risultati;",
+      "phase": "J6",
+      "status": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "AC-14",
+      "requirement": "NOVA mostra le fonti;",
+      "phase": "J5/J6",
+      "status": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "AC-15",
+      "requirement": "NOVA non inventa informazioni;",
+      "phase": "ALL",
+      "status": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "AC-16",
+      "requirement": "NOVA chiede conferma prima delle azioni sensibili;",
+      "phase": "J0/J9",
+      "status": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "AC-17",
+      "requirement": "NOVA può generare CV;",
+      "phase": "J3",
+      "status": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "AC-18",
+      "requirement": "NOVA può modificare il CV in chat;",
+      "phase": "J3",
+      "status": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "AC-19",
+      "requirement": "NOVA può modificare il CV in Studio;",
+      "phase": "J3",
+      "status": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "AC-20",
+      "requirement": "NOVA può esportare PDF;",
+      "phase": "J2/J3",
+      "status": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "AC-21",
+      "requirement": "NOVA può spiegare documenti;",
+      "phase": "J5",
+      "status": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "AC-22",
+      "requirement": "NOVA può creare checklist;",
+      "phase": "J5",
+      "status": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "AC-23",
+      "requirement": "NOVA può impostare reminder;",
+      "phase": "J7",
+      "status": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "AC-24",
+      "requirement": "NOVA può riprendere task dopo giorni;",
+      "phase": "J1",
+      "status": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "AC-25",
+      "requirement": "NOVA recupera da errori;",
+      "phase": "ALL",
+      "status": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "AC-26",
+      "requirement": "NOVA non perde dati confermati;",
+      "phase": "J0/J2",
+      "status": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "AC-27",
+      "requirement": "NOVA non espone la complessità tecnica all'utente.",
+      "phase": "ALL",
+      "status": "not_verified",
+      "evidence": []
+    }
+  ]
+}

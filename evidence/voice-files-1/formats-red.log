@@ -1,0 +1,46 @@
+✖ generated PDF signature/extraction and ZIP independent unzip retain exact source bytes (1.090333ms)
+✖ generated archives reject traversal, duplicate names, wrong format and byte overflow before tool execution (1.076984ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 797.743516
+
+✖ failing tests:
+
+test at tests/file-formats.test.ts:3:1
+✖ generated PDF signature/extraction and ZIP independent unzip retain exact source bytes (1.090333ms)
+  Error: tool_schema
+      at agentError (/home/azureuser/nova-community-agent/src/agent-provider.ts:6:60)
+      at <anonymous> (/home/azureuser/nova-community-agent/src/agent-tools.ts:27:189)
+      at Array.map (<anonymous>)
+      at validateTools (/home/azureuser/nova-community-agent/src/agent-tools.ts:24:16)
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/file-formats.test.ts:4:59)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    status: 409,
+    code: 'tool_schema'
+  }
+
+test at tests/file-formats.test.ts:9:1
+✖ generated archives reject traversal, duplicate names, wrong format and byte overflow before tool execution (1.076984ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/file-formats.test.ts:10:243)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: undefined,
+    operator: 'throws',
+    diff: 'simple'
+  }

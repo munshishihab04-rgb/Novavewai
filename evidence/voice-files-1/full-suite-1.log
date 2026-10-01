@@ -1,0 +1,185 @@
+
+> nova-community-agent@0.1.0 test
+> tsx --test --test-concurrency=1 tests/*.test.ts
+
+✔ Approval binds exact revision/account/recipient; concurrent consumption yields one durable synthetic effect (2339.294191ms)
+✔ NEW project provider env is opt-in, complete, HTTPS-only and ignores unrelated credentials (19.398795ms)
+✔ lock-observation invalidation before queued lease error must not emit an unhandled pool error (1529.91887ms)
+✔ SIGKILL during real provider await survives PG and API restart as unknown; explicit new turn recovers (3844.709213ms)
+✔ corrected behavior: rejected second runtime must not delete first runtime pending upload/reservation (2004.992108ms)
+✔ corrected behavior: assistant-generated content must not become a user_supplied source (1574.020325ms)
+✔ pending upload namespace blocks turn without losing reservation or invoking model (1355.639513ms)
+✔ cancelled generation cannot write after a new run completes; original replay cannot redispatch (1799.157151ms)
+✔ a different live session cannot authorize output of the revoked initiating session (1558.221228ms)
+✔ entire provider batch is allowlist/schema validated before first mutation (1557.987233ms)
+✔ corrected behavior: expiry during canonical writer lock wait must roll back mutation and receipt (2825.76408ms)
+✔ receipt insertion failure atomically rolls back canonical revision and outbox; no replay inference (1344.632956ms)
+✔ session final validation after actual receipt write wait (2634.693227ms)
+✔ session final validation after actual terminal write wait (2782.446327ms)
+✔ lease loss during writer wait rolls back; replacement drains the old transaction before recovery (1862.619749ms)
+✔ failed storage initialization releases singleton before close and removes client listeners (1706.999775ms)
+✔ dedicated client end alone invalidates runtime and cleans listeners (1741.883657ms)
+✔ lease loss while file read awaits records unknown before read returns (1472.215552ms)
+✔ startup reservation also excludes non-agent file runtime: false (1340.355066ms)
+✔ startup reservation also excludes non-agent file runtime: true (1746.454255ms)
+✔ lease loss fences held inference, late output and replacement (1495.270192ms)
+✔ lease loss fences held inference, late output and cancel (2000.861713ms)
+✔ lease loss fences held inference, late output and purge (1825.473843ms)
+✔ controlled protocol: automatic tools revise canonical artifact, persist assistant, reopen and replay without inference (2162.140011ms)
+✔ fail closed: denied approval (1614.466673ms)
+✔ fail closed: prototype tool (1687.628953ms)
+✔ fail closed: schema owner injection (1621.977649ms)
+✔ fail closed: malformed arguments (1318.852419ms)
+✔ fail closed: invalid JSON (1617.701004ms)
+✔ fail closed: refusal (1678.20399ms)
+✔ fail closed: truncation (1738.343389ms)
+✔ fail closed: empty (1582.274095ms)
+✔ fail closed: stop with malformed calls (1712.29116ms)
+✔ fail closed: oversized (1403.251791ms)
+✔ fail closed: http error (1289.85056ms)
+✔ question pauses task; explicit answer resumes with file observation, scope checks and terminal receipt (1690.120905ms)
+✔ post-provider await fence: cancel (1605.119199ms)
+✔ post-provider await fence: revoke (1389.814976ms)
+✔ post-provider await fence: expire (1246.530936ms)
+✔ post-provider await fence: purge (1711.58411ms)
+✔ post-provider await fence: message (1683.596438ms)
+✔ post-provider await fence: task (1880.663335ms)
+✔ post-provider await fence: artifact (1586.901556ms)
+✔ budgets stop loops and response timeout is explicit unknown; no replay retry (4523.850058ms)
+✔ restart conservatively fails queued and marks interrupted inference unknown without replay (1688.020414ms)
+✔ pluggable provider remains untrusted and uncooperative await is bounded (3276.804302ms)
+✔ server-wide active run budget bounds concurrent inference across conversations (1594.962677ms)
+✔ tool scope rejects another conversation: read_artifact (1693.020806ms)
+✔ tool scope rejects another conversation: update_artifact (1719.733318ms)
+✔ tool scope rejects another conversation: read_file (1717.202189ms)
+✔ read_artifact observes canonical revision; duplicate tool ID cannot repeat mutation (1679.193659ms)
+✔ context byte budget rolls back oversized tool mutation and preflight never calls provider (1532.667246ms)
+✔ inference failure after a committed tool preserves its receipt/revision without replay (1706.099305ms)
+✔ tool transaction failure rolls back artifact and receipt together (1710.5901ms)
+✔ post-file await fence: cancel (1330.230486ms)
+✔ post-file await fence: purge (1601.508238ms)
+✔ post-file await fence: revoke (1745.759277ms)
+✔ one runtime per database rejects a concurrent engine without recovering live work (1433.204858ms)
+✔ provider redirects are not followed (1643.888827ms)
+✔ Artifact append-only revisions, concurrent conflict and owner-scoped revision export (2026.259733ms)
+✔ AUTH-RECHECK expiry mutation: reject stale authentication after owner-lock wait (3733.517243ms)
+✔ AUTH-RECHECK expiry replay: reject stale authentication after owner-lock wait (3854.241471ms)
+✔ AUTH-RECHECK expiry export: reject stale authentication after owner-lock wait (3811.505566ms)
+✔ AUTH-RECHECK expiry purge: reject stale authentication after owner-lock wait (3491.514546ms)
+✔ AUTH-RECHECK revoke mutation: reject stale authentication after owner-lock wait (1779.334094ms)
+✔ AUTH-RECHECK revoke replay: reject stale authentication after owner-lock wait (1692.324441ms)
+✔ AUTH-RECHECK revoke export: reject stale authentication after owner-lock wait (1764.020002ms)
+✔ AUTH-RECHECK revoke purge: reject stale authentication after owner-lock wait (1706.939444ms)
+✔ AUTH-RECHECK rebind mutation: reject stale authentication after owner-lock wait (1768.568951ms)
+✔ AUTH-RECHECK rebind replay: reject stale authentication after owner-lock wait (1781.418585ms)
+✔ AUTH-RECHECK rebind export: reject stale authentication after owner-lock wait (1567.191048ms)
+✔ AUTH-RECHECK rebind purge: reject stale authentication after owner-lock wait (1672.345167ms)
+✔ document endpoints authorize owner, reject wrong formats and return exact saved revision PDF (2208.630509ms)
+✔ Local bootstrap CLI writes private credential file; real server subprocess restarts and serves persisted tasks (5146.484803ms)
+✔ CONTEXT AUTH: exact token revoked during owner lock blocks message read and append (1560.657202ms)
+✔ PROVENANCE: exact revision, literal snapshot, conversation boundaries and declared scopes (2022.020644ms)
+✔ MESSAGES: immutable owned sequence, replay, pagination and restart (1862.958068ms)
+✔ PDF render/extract roundtrip, reject fake/encrypted input and escape markup (422.082306ms)
+✔ generated PDF signature/extraction and ZIP independent unzip retain exact source bytes (478.021414ms)
+✔ generated archives reject traversal, duplicate names, wrong format and byte overflow before tool execution (1.038663ms)
+✔ FILE KEY: a previously populated unbound key is never imported (1878.858602ms)
+✔ FILE AUTH: expiry during real blob write rejects ready commit, recovery cleans pending bytes (2676.897962ms)
+✔ FILE FS BOUNDARY: write failure reserves quota but produces no ready cache, byte quota serializes (2119.14827ms)
+✔ FILE STORE IDENTITY: wrong root and missing key fail closed, no replacement key on existing data (1793.952155ms)
+✔ FILE RECOVERY: real DB failure after blob fsync, pending hidden and startup conservative cleanup (2027.688116ms)
+✔ FILE VALIDATION: paths, MIME, strict UTF-8, oversize, quotas and authenticated corruption failures (1650.7619ms)
+✔ FILE PURGING: filesystem failure keeps durable cleanup, restart completes deletion (1892.475873ms)
+✔ FILE SOURCE: owner-bound immutable UTF-8 snapshot and purge cascade (1660.443746ms)
+✔ FILES PURGE: remove bytes and cascaded context, never resurrect a late reservation (2081.426436ms)
+✔ FILES: real encrypted immutable private bytes, owner download and restart (1475.886937ms)
+✔ flexible binary transport is owner-scoped, inert and explicitly not universal extraction (2023.880154ms)
+✔ HTTP authenticated task persists through application and PostgreSQL restart (2106.198518ms)
+✔ native generated file tool commits revision and owner-scoped exact code download (1509.856059ms)
+✔ R1 acceptance: pending upload owns shared key, completes once and replays after restart (2115.309311ms)
+✔ R1 all generic routes conflict before DB or file side effects; owners remain independent (1423.689694ms)
+✔ R1 reverse direction: completed generic key rejects upload before reservation or blob write (1725.69308ms)
+✔ R1 DB failure: reservation blocks other routes until recovery, then same request retries once (1570.925021ms)
+✔ R1 FS failure: reservation blocks other routes until recovery, then same request retries once (1891.764225ms)
+✔ R1 cancelled reservation cannot disturb a replacement completed cache; purge releases only its owner (1696.8628ms)
+✔ R1 pending purge releases reservation and leaves another owner same-key cache intact (1347.012231ms)
+✔ R1 cancelled upload retry with identical key and body gets a new reservation, old request cannot finalize it (1362.643557ms)
+✔ R1 recovery of legacy collision preserves the completed same-owner same-key response (1813.025314ms)
+✔ native agent asks city from jobs receipt without browsing and includes discovery safety instructions (1620.584806ms)
+✔ jobs source receipt cannot persist after session revocation (1617.802409ms)
+✔ cancellation fences uncooperative job providers and does not hang app shutdown (1319.357306ms)
+✔ native jobs dispatch completes with original link receipt and no preference interview (1715.688048ms)
+✔ Subito adapter is deny-by-default until explicit source-policy review (7.760995ms)
+✔ Playwright parser reads only compact listing cards, distinguishes blocks from no matches (287.625966ms)
+✔ fixed search URLs and robots policy do not allow login, third parties or forbidden paths (1.64807ms)
+✔ portal vacancy carries evidence, UNKNOWN publisher and no-agencies excludes unknown even on cache hit (10.880698ms)
+✔ progressive discovery runs search before companies and browser, preserves kinds and exact-URL dedupe (3.619103ms)
+✔ sufficient search avoids expensive stages; missing city starts nothing; strict mode excludes unknown (1.342593ms)
+✔ native jobs_search accepts intent and an empty city, not arbitrary browser options (1.227323ms)
+✔ missing city asks before any source or cache access and cooking infers cuoco (1.035724ms)
+✔ natural role/city search shares only canonical metadata with TTL across service instances (55.070126ms)
+✔ live searches have one shared lock, fail fast on overlap and rate limit across instances (3.623469ms)
+✔ source failure is explicit, never stale/simulated data; privacy and origin filter are strict (2.331945ms)
+✔ ambiguous cities do not start a search and invalid budgets fail at construction (0.372214ms)
+✔ job receipt cards expose only original HTTPS listing links and escaped labels (257.911897ms)
+✔ daily warm cache is bounded to five cities, one role; duplicate daily run does no work (11.172422ms)
+✔ Task lifecycle optimistic locking rejects stale/illegal transitions and resumes persisted checkpoint (2226.322854ms)
+✔ managed provider uses fixed destinations, bounded tokens, caches MI and parses tools (7.370212ms)
+✔ Owner export and purge revoke all sessions and prevent stale worker/direct database resurrection (2274.012953ms)
+✔ BYOK secrets bind owner and provider; endpoints cannot redirect credentials (2.491341ms)
+✔ Bedrock adapter retains tool IDs and results rather than replacing requested model (0.435047ms)
+✔ running BYOK turn is pinned and revoked replacement key fences late provider output (1951.757125ms)
+✔ provider routes never return keys; foundry model catalog is complete and paginated (1955.848588ms)
+✔ Revoked and expired approval cannot authorize queued dispatch (3054.612915ms)
+✔ Ambiguous adapter exception and malformed receipt never retry or expose provider secrets (1833.779079ms)
+✔ Expired lease fences old worker; crash executing marker recovers unknown without repeating effect (1880.602923ms)
+✔ Cancelled task invalidates queued policy before dispatch (1271.903014ms)
+✔ Timeout after synthetic dispatch becomes unknown and a late return cannot overwrite it (1797.357742ms)
+✔ Worker revalidates queued revision, session expiry and intent expiry before any call (4816.658655ms)
+✔ Purge during in-flight synthetic call waits and late completion cannot recreate records (1770.18988ms)
+✔ web search result cannot persist after initiating session is revoked (1614.131796ms)
+✔ web_search tool accepts a bounded query and denies injected options (1.047096ms)
+✔ Closed query and body schemas, redacted parser/DB errors, expired sessions and cross-owner foreign keys (1952.367535ms)
+nova
+PROVA PRIVATA
+
+IL TUO SPAZIO PERSONALE
+
+Come posso aiutarti oggi?
+
+Scegli un’attività oppure scrivi direttamente a Nova.
+
+Modello attivo
+Scorri →
+Nova · controlled
+Servizio gestito
+Strumenti Nova
+Scorri →
+Curriculum professionale
+Crea, correggi ed esporta il tuo CV
+Capire documenti
+Carica un PDF e ricevi una spiegazione
+Ricerca con fonti
+Trova informazioni attuali e citate
+Chat vocale
+Parla in italiano, বাংলা o English
+Assistenti
+Scorri →
+Studio e lingua
+Impara, traduci e fai pratica
+Lettere e pratiche
+Prepara testi senza inventare dati
+ Ricerca Web
+✔ staged native voice UI binds conversation, stops late connection and provides authenticated file downloads (1399.792238ms)
+✔ voice defaults to adaptive language and UI preference does not lock later turns (1620.936617ms)
+✔ provider-observed committed voice input uses native tools, persists once, and continues in text (1686.699432ms)
+✔ stop during native inference fences late voice tool completion (1702.316559ms)
+✔ private web login: one-use invite, secure cookie, CSRF, auth and owner isolation (1503.386084ms)
+✔ personal invite preview: private, non-consuming, expiring and origin protected (1886.082896ms)
+ℹ tests 143
+ℹ suites 0
+ℹ pass 143
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 256769.662125

@@ -1,0 +1,64 @@
+[
+  {
+    "name": "original-probes",
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "evidence/agent-fix-2/adversarial.test.ts",
+      "evidence/agent-fix-2/lease-loss.test.ts",
+      "evidence/agent-fix-2/queued-lease-error.test.ts",
+      "evidence/agent-fix-2/delayed-lease-error.test.ts",
+      "evidence/agent-fix-2/delayed-lease-no-listener.test.ts",
+      "evidence/agent-fix-2/supplemental.test.ts"
+    ],
+    "exit_code": 0,
+    "counts": {
+      "tests": 16,
+      "pass": 16,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    }
+  },
+  {
+    "name": "full-suite",
+    "command": [
+      "npm",
+      "test"
+    ],
+    "exit_code": 0,
+    "counts": {
+      "tests": 106,
+      "pass": 106,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    }
+  },
+  {
+    "name": "typecheck",
+    "command": [
+      "npm",
+      "run",
+      "typecheck"
+    ],
+    "exit_code": 0,
+    "counts": {}
+  },
+  {
+    "name": "diff-check",
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "exit_code": 0,
+    "counts": {}
+  }
+]

@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "sources": [
+    {
+      "id": 1,
+      "url": "https://www.subito.it/robots.txt",
+      "title": "Subito robots.txt",
+      "accessed": "2026-09-30"
+    },
+    {
+      "id": 2,
+      "url": "https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere",
+      "title": "Subito.it Cameriere - Offerte di lavoro a Bologna e provincia",
+      "accessed": "2026-09-30"
+    },
+    {
+      "id": 3,
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-bologna-658333217.htm",
+      "title": "Cameriere",
+      "accessed": "2026-09-30"
+    },
+    {
+      "id": 4,
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-con-esperienza-bologna-590242340.htm",
+      "title": "Cameriere con esperienza",
+      "accessed": "2026-09-30"
+    },
+    {
+      "id": 5,
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-banconista-chef-e-cuoco-bologna-649074452.htm",
+      "title": "Cameriere banconista, Chef e cuoco",
+      "accessed": "2026-09-30"
+    },
+    {
+      "id": 6,
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-a-di-sala-bologna-662640160.htm",
+      "title": "Cameriere/a di sala",
+      "accessed": "2026-09-30"
+    },
+    {
+      "id": 7,
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-bologna-659128027.htm",
+      "title": "Cameriere",
+      "accessed": "2026-09-30"
+    }
+  ]
+}

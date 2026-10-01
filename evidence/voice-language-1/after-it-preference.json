@@ -1,0 +1,134 @@
+[
+  {
+    "input_language": "it",
+    "audio_seconds": 6.72,
+    "responses": [
+      "Ciao! Di solito servono il tuo curriculum aggiornato, una lettera di presentazione mirata, e magari un portfolio se è rilevante. Porta anche un documento d’identità, eventuali certificazioni, referenze o lettere di raccomandazione se ce le hai, e magari esempi di lavori se ti sono richiesti. Insomma, un pacchetto completo, ma leggero."
+    ],
+    "events": [
+      {
+        "at": 3351.100000023842,
+        "type": "input_audio_buffer.speech_started",
+        "text": null,
+        "status": null,
+        "error": null
+      },
+      {
+        "at": 10538.5,
+        "type": "input_audio_buffer.speech_stopped",
+        "text": null,
+        "status": null,
+        "error": null
+      },
+      {
+        "at": 13180,
+        "type": "response.output_audio_transcript.done",
+        "text": "Ciao! Di solito servono il tuo curriculum aggiornato, una lettera di presentazione mirata, e magari un portfolio se è rilevante. Porta anche un documento d’identità, eventuali certificazioni, referenze o lettere di raccomandazione se ce le hai, e magari esempi di lavori se ti sono richiesti. Insomma, un pacchetto completo, ma leggero.",
+        "status": null,
+        "error": null
+      },
+      {
+        "at": 13182.5,
+        "type": "response.done",
+        "text": null,
+        "status": "completed",
+        "error": null
+      },
+      {
+        "at": 31675,
+        "type": "output_audio_buffer.stopped",
+        "text": null,
+        "status": null,
+        "error": null
+      }
+    ]
+  },
+  {
+    "input_language": "bn",
+    "audio_seconds": 7.992,
+    "responses": [
+      "আপনি সংক্ষেপে বলতে পারেন: “আমি আগে বড়ি বা জিনিসের স্টোর খালাত করতে করেছি, সেখানে মালামালের ইনভেন্টরি, প্যাকিং, আর শিপমেন্টের কাজ করেছি। সব সময় সময়মতো কাজ করতে চেষ্টা করেছি এবং দলবদ্ধ কাজেও ভালো পারি।” এইভাবে সংক্ষেপে, পরিষ্কারভাবে বলুন, একেকটি কাজের উপরিভাষা যোগ করে।"
+    ],
+    "events": [
+      {
+        "at": 32504.600000023842,
+        "type": "input_audio_buffer.speech_started",
+        "text": null,
+        "status": null,
+        "error": null
+      },
+      {
+        "at": 40355.5,
+        "type": "input_audio_buffer.speech_stopped",
+        "text": null,
+        "status": null,
+        "error": null
+      },
+      {
+        "at": 43048.5,
+        "type": "response.output_audio_transcript.done",
+        "text": "আপনি সংক্ষেপে বলতে পারেন: “আমি আগে বড়ি বা জিনিসের স্টোর খালাত করতে করেছি, সেখানে মালামালের ইনভেন্টরি, প্যাকিং, আর শিপমেন্টের কাজ করেছি। সব সময় সময়মতো কাজ করতে চেষ্টা করেছি এবং দলবদ্ধ কাজেও ভালো পারি।” এইভাবে সংক্ষেপে, পরিষ্কারভাবে বলুন, একেকটি কাজের উপরিভাষা যোগ করে।",
+        "status": null,
+        "error": null
+      },
+      {
+        "at": 43065.699999928474,
+        "type": "response.done",
+        "text": null,
+        "status": "completed",
+        "error": null
+      },
+      {
+        "at": 61455,
+        "type": "output_audio_buffer.stopped",
+        "text": null,
+        "status": null,
+        "error": null
+      }
+    ]
+  },
+  {
+    "input_language": "en",
+    "audio_seconds": 6.816,
+    "responses": [
+      "If you honestly don’t remember exact dates, say something like: “I don’t recall the exact dates, but it was roughly this period. I’m happy to check my records to be precise.” That way, you’re being honest and helpful without guessing."
+    ],
+    "events": [
+      {
+        "at": 62000.299999952316,
+        "type": "input_audio_buffer.speech_started",
+        "text": null,
+        "status": null,
+        "error": null
+      },
+      {
+        "at": 69232.69999992847,
+        "type": "input_audio_buffer.speech_stopped",
+        "text": null,
+        "status": null,
+        "error": null
+      },
+      {
+        "at": 82028.69999992847,
+        "type": "response.output_audio_transcript.done",
+        "text": "If you honestly don’t remember exact dates, say something like: “I don’t recall the exact dates, but it was roughly this period. I’m happy to check my records to be precise.” That way, you’re being honest and helpful without guessing.",
+        "status": null,
+        "error": null
+      },
+      {
+        "at": 82030.69999992847,
+        "type": "response.done",
+        "text": null,
+        "status": "completed",
+        "error": null
+      },
+      {
+        "at": 93334.60000002384,
+        "type": "output_audio_buffer.stopped",
+        "text": null,
+        "status": null,
+        "error": null
+      }
+    ]
+  }
+]

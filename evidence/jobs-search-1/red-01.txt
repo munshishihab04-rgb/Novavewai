@@ -1,0 +1,27 @@
+✖ native jobs_search accepts intent and an empty city, not arbitrary browser options (2.171138ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 351.86801
+
+✖ failing tests:
+
+test at tests/jobs-search.test.ts:1:231
+✖ native jobs_search accepts intent and an empty city, not arbitrary browser options (2.171138ms)
+  Error: tool_denied
+      at agentError (/home/azureuser/nova-community-agent/src/agent-provider.ts:6:60)
+      at <anonymous> (/home/azureuser/nova-community-agent/src/agent-tools.ts:21:65)
+      at Array.map (<anonymous>)
+      at validateTools (/home/azureuser/nova-community-agent/src/agent-tools.ts:20:16)
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/jobs-search.test.ts:7:16)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    status: 409,
+    code: 'tool_denied'
+  }

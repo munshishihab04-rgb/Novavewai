@@ -1,0 +1,22 @@
+✔ stable: notes.txt exact downloaded bytes, immutable revision, provenance and owner isolation (1482.069233ms)
+✔ stable: index.js exact downloaded bytes, immutable revision, provenance and owner isolation (1665.088209ms)
+✔ stable: index.php exact downloaded bytes, immutable revision, provenance and owner isolation (1370.804477ms)
+✔ stable: theme.liquid exact downloaded bytes, immutable revision, provenance and owner isolation (1582.44304ms)
+✔ stable: duplicate canonical input same key, distinct keys, lost acknowledgement cannot create twice (1731.984232ms)
+✔ stable: failed receipt commit rolls back file, success event and assistant saved claim (1549.31543ms)
+✔ stable: upload owner isolation and exact bytes, rejected opaque input cannot become understood content (1748.7953ms)
+✔ stable: generated source is data; shell and unsupported execution tools are denied (0.931974ms)
+✔ pending-format: pdf generated download signature and independent content verification (1839.800389ms)
+✔ pending-format: zip generated download signature and independent content verification (1773.237799ms)
+✔ pending-format: ZIP traversal, backslashes, absolute paths, duplicates, spoofed format and UTF-8 byte budgets (1.458658ms)
+﹣ pending-voice: duplicate speech input across callback IDs commits once, persists into text continuation and reopen (0.095367ms) # PENDING: no canonical voice turn route/input identity contract at inspection. Set INDEPENDENT_VOICE_ADAPTER to an evidence-scoped route adapter after implementation stabilizes.
+﹣ pending-voice: owner isolation before dispatch and before replay receipt disclosure (0.096897ms) # PENDING: no canonical voice turn route/input identity contract at inspection. Set INDEPENDENT_VOICE_ADAPTER to an evidence-scoped route adapter after implementation stabilizes.
+﹣ pending-voice: failed file operation cannot emit a confirmed saved result (0.059621ms) # PENDING: no canonical voice turn route/input identity contract at inspection. Set INDEPENDENT_VOICE_ADAPTER to an evidence-scoped route adapter after implementation stabilizes.
+ℹ tests 14
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 3
+ℹ todo 0
+ℹ duration_ms 15582.332941

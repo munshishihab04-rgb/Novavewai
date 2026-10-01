@@ -1,0 +1,30 @@
+{
+  "run": {
+    "id": "41bd72d2-285e-4a5b-94f1-83ad2481d25e",
+    "status": "failed",
+    "error_code": "tool_denied",
+    "model_calls": 1,
+    "tool_calls": 0
+  },
+  "persisted": {
+    "runs": [
+      {
+        "id": "41bd72d2-285e-4a5b-94f1-83ad2481d25e",
+        "status": "failed",
+        "error_code": "tool_denied",
+        "model_calls": 1,
+        "tool_calls": 0
+      }
+    ],
+    "messages": [
+      {
+        "sequence": 1,
+        "role": "user",
+        "text": "untrusted tool injection"
+      }
+    ],
+    "artifacts": [],
+    "receipts": [],
+    "providerCalls": 1
+  }
+}

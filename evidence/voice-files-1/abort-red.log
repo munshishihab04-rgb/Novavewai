@@ -1,0 +1,29 @@
+✔ failed canonical tool never speaks success and exposes voice run failure (1681.017087ms)
+✖ cancelled voice inference is promptly aborted, not merely hidden until provider timeout (3689.164311ms)
+✔ provider-observed committed voice input uses native tools, persists once, and continues in text (1908.681251ms)
+✔ stop during native inference fences late voice tool completion (1240.902173ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 3
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 9290.833965
+
+✖ failing tests:
+
+test at tests/voice-native.test.ts:5:1
+✖ cancelled voice inference is promptly aborted, not merely hidden until provider timeout (3689.164311ms)
+  AssertionError [ERR_ASSERTION]: bounded wait expired
+      at wait (/home/azureuser/nova-community-agent/tests/voice-native.test.ts:6:136)
+      at async TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/voice-native.test.ts:5:371)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: undefined,
+    operator: 'fail',
+    diff: 'simple'
+  }

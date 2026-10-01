@@ -1,0 +1,35 @@
+✔ native jobs_search accepts intent and an empty city, not arbitrary browser options (1.200695ms)
+✔ missing city asks before any source or cache access and cooking infers cuoco (1.194186ms)
+✔ natural role/city search shares only canonical metadata with TTL across service instances (64.109675ms)
+✔ live searches have one shared lock, fail fast on overlap and rate limit across instances (3.330332ms)
+✔ source failure is explicit, never stale/simulated data; privacy and origin filter are strict (2.308157ms)
+✖ ambiguous cities do not start a search and invalid budgets fail at construction (3.407439ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 5
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1328.440769
+
+✖ failing tests:
+
+test at tests/jobs-search.test.ts:1:4788
+✖ ambiguous cities do not start a search and invalid budgets fail at construction (3.407439ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'unavailable'
+  - 'needs_city'
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/jobs-search.test.ts:63:114)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'unavailable',
+    expected: 'needs_city',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

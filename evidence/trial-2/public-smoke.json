@@ -1,0 +1,18 @@
+{
+  "voice_ui_connected": true,
+  "outbound_audio_received": [
+    {
+      "bytes": 1034,
+      "packets": 28
+    }
+  ],
+  "voice_closed": true,
+  "web_search_sources": [
+    "https://www.inps.it/"
+  ],
+  "pdf_ingestion": true,
+  "real_model_cv_from_pdf": true,
+  "pdf_download": true,
+  "page_errors": [],
+  "microphone": "fake device; real human speech not tested"
+}

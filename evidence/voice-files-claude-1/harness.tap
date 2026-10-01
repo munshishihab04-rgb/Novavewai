@@ -1,0 +1,40 @@
+TAP version 13
+# Subtest: generated PDF/TXT/ZIP/HTML: real bytes, owner scoped, safe headers, ZIP verified by python zipfile
+ok 1 - generated PDF/TXT/ZIP/HTML: real bytes, owner scoped, safe headers, ZIP verified by python zipfile
+  ---
+  duration_ms: 2458.829099
+  type: 'test'
+  ...
+# Subtest: create_file validation rejects traversal, absolute, non-source names, disguised formats, duplicates
+ok 2 - create_file validation rejects traversal, absolute, non-source names, disguised formats, duplicates
+  ---
+  duration_ms: 0.952118
+  type: 'test'
+  ...
+# Subtest: flexible uploads: recognized JS text, transparent unsupported ZIP/binary, owner isolation, read_file honesty
+ok 3 - flexible uploads: recognized JS text, transparent unsupported ZIP/binary, owner isolation, read_file honesty
+  ---
+  duration_ms: 1935.801054
+  type: 'test'
+  ...
+# Subtest: voice sessions: owner isolation on create/stop, foreign conversation, reload marks active failed, uncommitted transcript ignored
+ok 4 - voice sessions: owner isolation on create/stop, foreign conversation, reload marks active failed, uncommitted transcript ignored
+  ---
+  duration_ms: 1612.170793
+  type: 'test'
+  ...
+# Subtest: voice session budget and provider failure paths
+ok 5 - voice session budget and provider failure paths
+  ---
+  duration_ms: 1751.42198
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 8569.921037

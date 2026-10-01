@@ -1,0 +1,39 @@
+✖ native agent asks city from jobs receipt without browsing and includes discovery safety instructions (1622.473835ms)
+✖ jobs source receipt cannot persist after session revocation (3378.91874ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5409.714502
+
+✖ failing tests:
+
+test at tests/jobs-agent.test.ts:1:770
+✖ native agent asks city from jobs receipt without browsing and includes discovery safety instructions (1622.473835ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'outcome_unknown'
+  - 'waiting_user'
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/jobs-agent.test.ts:22:55)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'outcome_unknown',
+    expected: 'waiting_user',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/jobs-agent.test.ts:1:2424
+✖ jobs source receipt cannot persist after session revocation (3378.91874ms)
+  Error: jobs dispatch missing
+      at Timeout._onTimeout (/home/azureuser/nova-community-agent/tests/jobs-agent.test.ts:32:81)
+      at listOnTimeout (node:internal/timers:685:17)
+      at process.processTimers (node:internal/timers:618:7)

@@ -1,0 +1,41 @@
+{
+  "public_asset_hashes": {
+    "app.js": "cb6237282568d17bdd0de4ef78e8ac82cf5b6a082cdf5da18bc8b25ffa7a020c",
+    "style.css": "86ef5b436a8ffcc5eb42424371b34803cf105311cce60fe4e78dbf9597776078"
+  },
+  "tests": {
+    "tests": 108,
+    "pass": 108,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "cleanup": {
+    "syntheticOwnersPurged": 4,
+    "syntheticConversationsRemaining": 0,
+    "realOwnerUntouched": true
+  },
+  "browser": {
+    "public_url": "https://loving-say-than-seemed.trycloudflare.com",
+    "login": true,
+    "fragment_cleared": true,
+    "real_model_artifact_created": true,
+    "edit_saved": true,
+    "reload_preserved": true,
+    "mobile_studio": true,
+    "horizontal_overflow": false,
+    "page_errors": []
+  },
+  "restart": {
+    "restart_readback": true,
+    "late_preview_preserves_editor": true,
+    "download_revision_2": true,
+    "mobile_widths": [
+      320,
+      390,
+      844
+    ],
+    "anonymous_api": 401,
+    "download_sha256": "af1fc29e8d7491ba4d5079f46f228478301da4ab891a6ab6c8d7037de548bef8"
+  }
+}

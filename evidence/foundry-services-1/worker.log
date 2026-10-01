@@ -1,0 +1,50 @@
+Done. Shared files (agent.ts, agent-tools.ts, files.ts, app.ts, voice.ts, public/, package*.json) were not modified by me; their pre-existing git status is from other workers. No deploy/restart/commit/RBAC/resource changes.
+
+WHAT CHANGED (all new, owned files)
+  src/foundry-documents.ts            bounded CU adapter + route policy + proposed tool schemas (inactive)
+  tests/foundry-documents.test.ts     10 synthetic tests, written first (RED: module-not-found, then GREEN 10/10)
+  scripts/foundry-services-probe.ts   live probe, one op per service, sanitized output
+  docs/foundry-services/SERVICE-MATRIX.md, INTEGRATION-CONTRACT.md, TOOL-POLICY.md
+  evidence/foundry-services-1/live/   service-matrix.json, probe-stdout.txt, synthetic.png, SHA256SUMS
+  Existing analyzers.json / discovery.json / task.md preserved untouched.
+
+VERIFIED SERVICE MATRIX (resource foundryn.services.ai.azure.com, key auth, synthetic data, 2026-09-26)
+  prebuilt-read (OCR)      accessible + EXECUTED: 420x140 PNG -> 202 -> Succeeded in 2019 ms, text exact match
+                           "ACME TEST 123 / Sample Widget 2 x 10.00 / Total 20.00 EUR", 1 page, 11 words,
+                           mean conf 0.94, min 0.58 (1 low-confidence word)        -> adapter ready, NOT wired
+  prebuilt-layout          accessible + EXECUTED: same image, 1787 ms, same text    -> adapter ready (allowlisted), NOT wired
+  Language detection       EXECUTED: Italian sentence -> 200, it, score 1.0         -> schema proposed only
+  PII detection            EXECUTED: 200, masked DateTime + Email (conf 0.8)        -> schema proposed only; masking != anonymization
+  Translator v3.0          EXECUTED: en->it 200 "Questa è una breve frase sintetica di prova."  -> schema proposed only
+  prebuilt-invoice + 85 other analyzers   catalog only, NOT executed, not integrated
+  Managed identity         401 on CU (unchanged); server will need the key in its env or an owner RBAC decision
+  No 403/429 observed; no retries were needed or performed.
+
+ADAPTER GUARANTEES (tested)
+  Fixed endpoint; allowlist {prebuilt-read, prebuilt-layout}; bytes only with magic check (PDF/PNG/JPEG/TIFF), URL inputs rejected before network; Operation-Location must sit under the fixed endpoint or it is not followed; 4 MB cap, 20 s per request, max 20 polls x 1.5 s; states extracted/unsupported/unavailable/denied/throttled/failed/timeout/cancelled; no retries; per-page word count + mean/min confidence + low-confidence count; executed:false, trust:'user_supplied'; key never appears in results (grep for the key across all owned files: NO_KEY_LEAK).
+
+INTEGRATION CONTRACT (for parent, in INTEGRATION-CONTRACT.md)
+  Recommended: lazy document_ocr tool (option b) rather than OCR at upload time, because the credential is a review key and each call bills. Handler resolves owner-scoped fileId -> bytes (same path read_file uses) -> analyzeDocument(..., {signal}). Held-out behavior tests listed (docx must not trigger OCR; PNG must; already-extracted must not; denied/timeout must not be claimed as read). Route helper selectDocumentRoute(file) is ready for the file-inspection path.
+
+DOCS CONSULTED
+  learn.microsoft.com CU REST 2025-11-01 (analyzeBinary / analyzerResults, Ocp-Apim-Subscription-Key) and service-limits page (docs <=200 MB/300 pages async, images 50x50..10k x 10k, S0: 1,000 pages-or-images/min, 3,000 ops/min). Pricing figures not numerically verified (JS-rendered page) — flagged in SERVICE-MATRIX.md.
+
+COMMANDS
+  node_modules/.bin/tsx --test tests/foundry-documents.test.ts     -> pass 10, fail 0
+  node_modules/.bin/tsc --noEmit                                     -> 0 diagnostics in owned files
+  node_modules/.bin/tsx scripts/foundry-services-probe.ts           -> 5 billable synthetic calls, writes evidence/foundry-services-1/live/
+  (Note: `npx` is blocked by the sandbox security scan in this mode; use node_modules/.bin directly.)
+
+SHA256
+  ee88722690dad90ea8aa33425a95b459222bcd2aa69372c04bddbf458d131019  src/foundry-documents.ts
+  7fc2d747f838b137315fe36c129070e1ac9f70ff51d74b1a64383afd05e34f56  tests/foundry-documents.test.ts
+  08d402cd2433fb549ae108040ea946609d271acbe910e44988f7e7b2d17ec275  scripts/foundry-services-probe.ts
+  8593c980c23f474468b94ded2c02da6ac47c0bb4fe1a7a753dd406c9b1128134  docs/foundry-services/INTEGRATION-CONTRACT.md
+  30b000e01e88c5ca4d34749ea2c967aa6c199c90632818b1b078a240b5ee90f5  docs/foundry-services/SERVICE-MATRIX.md
+  832387245e1e588d15ef95a382568a341137ed543c0d9e3a3c2839e68c920222  docs/foundry-services/TOOL-POLICY.md
+  aeda50b8eba260fed171c7d05e6c90034a4c923f4dfbeaa9b70e5586b63a5b73  evidence/foundry-services-1/live/service-matrix.json
+
+REMAINING / NOT DONE
+  Language/PII/Translator adapters not written (HTTP shapes proven only); document_ocr not registered in agent-tools; held-out agent behavior tests to be added by the parent after wiring; table/layout quality, multi-page and scanned-PDF paths not live-tested (only a single synthetic PNG).
+
+session_id: 20260926_124929_bd88da

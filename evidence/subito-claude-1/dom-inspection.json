@@ -1,0 +1,165 @@
+{
+  "observed_at": "2026-09-30T17:53:23.539Z",
+  "list": {
+    "status_note": "lista",
+    "anchor_parent_chain": [
+      "A.index-module_link__sVEwT",
+      "ARTICLE.index-module_card__cC1Fw.index-module_small__OrjT6.AdItem-module__7cUP-a__adItemCard",
+      "DIV.ItemListContainer-module__jGGCSW__list",
+      "DIV.ItemListContainer-module__jGGCSW__container",
+      "DIV.ListingContainer-module__QzQ6rG__items[data-testid=listing-container]",
+      "DIV.ListingContainer-module__QzQ6rG__container"
+    ],
+    "first_card_leaf_nodes": [
+      {
+        "tag": "H3",
+        "cls": "body-text index-module_subject__oSWH6",
+        "testid": null,
+        "text": "Cameriere"
+      },
+      {
+        "tag": "P",
+        "cls": "index-module_price__ArUqZ index-module_price__1My8l index-module_small",
+        "testid": null,
+        "text": "15.000 €"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "caption small book index-module_location__vLPWy index-module_location_",
+        "testid": null,
+        "text": "Bologna (BO)"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "",
+        "testid": null,
+        "text": "Turismo - Ristorazione"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "",
+        "testid": null,
+        "text": "Impiegato"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "",
+        "testid": null,
+        "text": "Part time"
+      }
+    ],
+    "data_testids_on_page": [
+      "layout",
+      "internal-links-header-toggle",
+      "multiselect-control",
+      "listing-container"
+    ],
+    "next_data": "present",
+    "ad_anchor_count": 33,
+    "status": 200
+  },
+  "detail": {
+    "h1": "Cameriere",
+    "h1_path": "index-module__guc_eq__ad-info",
+    "header_leaf_nodes": [
+      {
+        "tag": "SPAN",
+        "cls": "caption book index-module_insertion-date__g6ey6 ",
+        "testid": null,
+        "text": "Oggi alle 12:14"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "index-module__cJIx4W__counter-wrapper__number",
+        "testid": null,
+        "text": "36"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "caption book index-module__o_M6pW__ad-info__id",
+        "testid": null,
+        "text": "ID: 658333217"
+      },
+      {
+        "tag": "H1",
+        "cls": "headline-5 index-module__o_M6pW__title",
+        "testid": null,
+        "text": "Cameriere"
+      },
+      {
+        "tag": "P",
+        "cls": "body-text book small index-module__o_M6pW__locationText",
+        "testid": null,
+        "text": "Bologna (BO)"
+      },
+      {
+        "tag": "P",
+        "cls": "index-module_price__ArUqZ index-module_large__uFBUs",
+        "testid": null,
+        "text": "15.000 €"
+      }
+    ],
+    "publisher_label_nodes": [],
+    "advertiser_blocks": [
+      {
+        "cls": "index-module__rPSsEa__private-user-info",
+        "text": "[redatto: nome utente/recensioni non conservati]"
+      },
+      {
+        "cls": "index-module__I0LlBG__seller-info-content",
+        "text": "[redatto: nome utente/recensioni non conservati]"
+      }
+    ],
+    "feature_nodes": [
+      {
+        "cls": "index-module__6LNB4a__features",
+        "text": "DescrizioneCercasi Cameriere/a per noto Ristorante Greco. FULL TIME/ PART TIMEIl"
+      },
+      {
+        "cls": "index-module__QBHFVG__feature-list undefined",
+        "text": "Tipo di contrattoTempo determinatoTitolo di studioScuola dell'obbligoOrario di L"
+      },
+      {
+        "cls": "index-module__QBHFVG__feature",
+        "text": "Tipo di contrattoTempo determinato"
+      },
+      {
+        "cls": "index-module__QBHFVG__feature",
+        "text": "Titolo di studioScuola dell'obbligo"
+      },
+      {
+        "cls": "index-module__QBHFVG__feature",
+        "text": "Orario di LavoroPart time"
+      },
+      {
+        "cls": "index-module__QBHFVG__feature",
+        "text": "SettoreTurismo - Ristorazione"
+      },
+      {
+        "cls": "index-module__QBHFVG__feature",
+        "text": "LivelloImpiegato"
+      }
+    ],
+    "ldjson_types": [],
+    "meta": {
+      "title": "Cameriere - Offerte di lavoro In vendita a Bologna",
+      "ogTitle": "Cameriere | Subito",
+      "description_len": 68
+    },
+    "date_line": "Oggi alle 12:14",
+    "data_testids": [
+      "layout",
+      "internal-links-header-toggle",
+      "ad-feature-list"
+    ],
+    "has_next_data": false,
+    "cta_texts": [
+      "candidati lavoro cameriera Bologna provincia",
+      "Contatta",
+      "Contatta",
+      "candidati in cerca di lavoro bergamo",
+      "Candidati in cerca di lavoro"
+    ],
+    "status": 200
+  }
+}

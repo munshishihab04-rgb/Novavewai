@@ -1,0 +1,13 @@
+{
+  "checked_at": "2026-09-26T12:00:40.093642+00:00",
+  "files": {
+    "src/jobs-discovery.ts": "1bef74ba345ae8d06a86c9e462bc27f0e87ab08cdfa7710b020fdc2629279491",
+    "src/jobs-warm.ts": "1c9588e4e1bea3b713ce98bcb25cbec6efde78e1c4538cfc398180921d28c9a2",
+    "src/jobs.ts": "e4f8d50fdcd67af79dd7ead2f23779d25818a8501731010ff6bd05c647888ac3",
+    "src/jobs-subito.ts": "fbbe67cee563eb353ca1f9fc72cd9077cf61c39859eb69ab48fc6c572c500db2",
+    "src/agent.ts": "2874b9a4080244a2899ea25f7d20f3310121ce8356e7ecab97a6a1472d978c98",
+    "src/agent-tools.ts": "ad038ce3ec162732a282f28b7355971ee420342bf1e1d25ae3d69bcb212403f6",
+    "src/azure-services.ts": "a9f727a09d1df93169ca5af3404e9774be5d3a670c0d591848cf0ed32d368015",
+    "public/app.js": "51d09b739c8d59e2d50ce0f585ca2c5df57d781c2708b7650ef678db9e46b2de"
+  }
+}

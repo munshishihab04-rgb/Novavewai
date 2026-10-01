@@ -1,0 +1,52 @@
+{
+  "tests": {
+    "tests": 112,
+    "pass": 112,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "typecheck_exit": 0,
+  "public_asset_hashes": {
+    "app.js": "cb6237282568d17bdd0de4ef78e8ac82cf5b6a082cdf5da18bc8b25ffa7a020c",
+    "features.js": "184140abc4cafa51859d96ce86645af71bd1b251ab4f6638bc1400fc0dfa2b50",
+    "style.css": "c113dcc64044122683f308f0b05f0d150b0041b77fcd999aa74415a21607a1c5"
+  },
+  "public_smoke": {
+    "voice_ui_connected": true,
+    "outbound_audio_received": [
+      {
+        "bytes": 1034,
+        "packets": 28
+      }
+    ],
+    "voice_closed": true,
+    "web_search_sources": [
+      "https://www.inps.it/"
+    ],
+    "pdf_ingestion": true,
+    "real_model_cv_from_pdf": true,
+    "pdf_download": true,
+    "page_errors": [],
+    "microphone": "fake device; real human speech not tested"
+  },
+  "cleanup": {
+    "syntheticOwnersPurged": 0,
+    "syntheticConversationsRemaining": 0,
+    "realOwnerUntouched": true
+  },
+  "pdf_page_count": 1,
+  "pdf_text_contains": [
+    "Amina Test",
+    "Gestione inventario",
+    "Italiano B2"
+  ],
+  "voice_limit": "WebRTC connected and inbound audio bytes verified with fake browser microphone; synthetic audio injection produced replies but semantic assertion was inconsistent; no human phone microphone test",
+  "scope_limits": [
+    "text-layer PDFs only, <=4 MiB, <=30 pages, <=15.5KB extracted text",
+    "web search has cited current sources; no unrestricted browsing/clicking/form submission",
+    "voice is separate and non-mutating; 3-minute UI limit",
+    "CV quality depends on confirmed user content; missing information is not invented",
+    "no email/government/external side effects"
+  ]
+}

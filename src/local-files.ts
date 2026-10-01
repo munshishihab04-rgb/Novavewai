@@ -44,7 +44,7 @@ export class LocalFiles {
   async get(owner: string, id: string, size: number, hash: string) {
     const f = await open(this.path(id), constants.O_RDONLY | constants.O_NOFOLLOW);
     let blob: Buffer;
-    try { const s = await f.stat(); if (!s.isFile() || s.size !== size + 28 || s.size > 16412) throw new Error('Corrupt blob'); blob = await f.readFile(); } finally { await f.close(); }
+    try { const s = await f.stat(); if (!s.isFile() || s.size !== size + 28 || s.size > 4194332) throw new Error('Corrupt blob'); blob = await f.readFile(); } finally { await f.close(); }
     const decipher = createDecipheriv('aes-256-gcm', this.key, blob.subarray(0, 12));
     decipher.setAAD(Buffer.from(owner + ':' + id)); decipher.setAuthTag(blob.subarray(12, 28));
     const bytes = Buffer.concat([decipher.update(blob.subarray(28)), decipher.final()]);

@@ -1,0 +1,29 @@
+✖ voice defaults to adaptive language and UI preference does not lock later turns (1380.61951ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1727.859507
+
+✖ failing tests:
+
+test at tests/voice-language.test.ts:1:210
+✖ voice defaults to adaptive language and UI preference does not lock later turns (1380.61951ms)
+  AssertionError [ERR_ASSERTION]: {"error":"invalid_request"}
+  
+  400 !== 200
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/voice-language.test.ts:6:171)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 400,
+    expected: 200,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

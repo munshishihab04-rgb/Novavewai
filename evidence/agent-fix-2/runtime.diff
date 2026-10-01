@@ -1,0 +1,26 @@
+--- before/src/runtime.ts
++++ src/runtime.ts
+@@ -20,14 +20,19 @@
+   };
+   private release() {
+     const client = this.client; this.client = undefined;
+-    // Destroy, never return a lease connection to the pool. Keep error handling
+-    // until end (PG can emit error followed by end on backend termination).
+-    if (client) client.release(true);
++    // End while still checked out: release(true) installs pg-pool's idle error
++    // listener, which would forward a queued lease error onto the pool. Return
++    // the destroyed client only after its terminal end event drains errors.
++    if (client) void client.end();
+   }
+   async start() {
+     try {
+       const client = await this.pool.connect(); this.client = client;
+-      const ended = () => { this.invalidate(); client.removeListener('error', this.invalidate); client.removeListener('end', ended); };
++      const ended = () => {
++        this.invalidate();
++        client.removeListener('error', this.invalidate); client.removeListener('end', ended);
++        client.release(true);
++      };
+       client.on('error', this.invalidate); client.on('end', ended);
+       const row = (await client.query('SELECT pg_backend_pid() pid,pg_try_advisory_lock(913004) ok')).rows[0];
+       if (!row.ok) throw new Error('Agent/storage runtime already active');

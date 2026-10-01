@@ -1,0 +1,82 @@
+TAP version 13
+# Subtest: lock-observation invalidation before queued lease error must not emit an unhandled pool error
+ok 1 - lock-observation invalidation before queued lease error must not emit an unhandled pool error
+  ---
+  duration_ms: 1525.243641
+  type: 'test'
+  ...
+# Subtest: session final validation after actual receipt write wait
+ok 2 - session final validation after actual receipt write wait
+  ---
+  duration_ms: 2992.2246
+  type: 'test'
+  ...
+# Subtest: session final validation after actual terminal write wait
+ok 3 - session final validation after actual terminal write wait
+  ---
+  duration_ms: 2699.924799
+  type: 'test'
+  ...
+# Subtest: lease loss during writer wait rolls back; replacement drains the old transaction before recovery
+ok 4 - lease loss during writer wait rolls back; replacement drains the old transaction before recovery
+  ---
+  duration_ms: 1738.467886
+  type: 'test'
+  ...
+# Subtest: failed storage initialization releases singleton before close and removes client listeners
+ok 5 - failed storage initialization releases singleton before close and removes client listeners
+  ---
+  duration_ms: 1839.665922
+  type: 'test'
+  ...
+# Subtest: dedicated client end alone invalidates runtime and cleans listeners
+ok 6 - dedicated client end alone invalidates runtime and cleans listeners
+  ---
+  duration_ms: 1691.369583
+  type: 'test'
+  ...
+# Subtest: lease loss while file read awaits records unknown before read returns
+ok 7 - lease loss while file read awaits records unknown before read returns
+  ---
+  duration_ms: 1733.11356
+  type: 'test'
+  ...
+# Subtest: startup reservation also excludes non-agent file runtime: false
+ok 8 - startup reservation also excludes non-agent file runtime: false
+  ---
+  duration_ms: 1599.673748
+  type: 'test'
+  ...
+# Subtest: startup reservation also excludes non-agent file runtime: true
+ok 9 - startup reservation also excludes non-agent file runtime: true
+  ---
+  duration_ms: 1687.657651
+  type: 'test'
+  ...
+# Subtest: lease loss fences held inference, late output and replacement
+ok 10 - lease loss fences held inference, late output and replacement
+  ---
+  duration_ms: 1836.602493
+  type: 'test'
+  ...
+# Subtest: lease loss fences held inference, late output and cancel
+ok 11 - lease loss fences held inference, late output and cancel
+  ---
+  duration_ms: 1596.074984
+  type: 'test'
+  ...
+# Subtest: lease loss fences held inference, late output and purge
+ok 12 - lease loss fences held inference, late output and purge
+  ---
+  duration_ms: 1462.602989
+  type: 'test'
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 12
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 23094.110896

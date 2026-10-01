@@ -1,0 +1,28 @@
+{
+  "name": "nova-community-agent",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Independent NOVA Community Agent — foundation",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "tsx --test --test-concurrency=1 tests/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "start": "tsx scripts/server.ts",
+    "bootstrap": "tsx scripts/bootstrap.ts",
+    "worker": "tsx scripts/worker.ts"
+  },
+  "dependencies": {
+    "fastify": "5.12.5",
+    "pg": "8.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.2",
+    "@types/pg": "8.23.1",
+    "embedded-postgres": "17.10.0-beta.17",
+    "tsx": "4.23.15",
+    "typescript": "7.0.2"
+  }
+}

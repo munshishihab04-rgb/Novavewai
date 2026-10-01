@@ -1,0 +1,13 @@
+import {voiceInstructions} from './voice-policy.ts';
+import type {FastifyInstance} from 'fastify';import type {Pool} from 'pg';import {authenticatedOwner,transaction,closed,uuid,fail} from './app.ts';import {extractPdf,renderPdf} from './documents.ts';import {azureToken,azureBase,searchWeb} from './azure-services.ts';import {renderCvPdf} from './cv-render.ts';import {isCvContent,CV_TEMPLATES,CV_LANGUAGES} from './cv-schema.ts';
+export function capabilityRoutes(app:FastifyInstance,pool:Pool){
+ const authorize=(r:any)=>transaction(pool,c=>authenticatedOwner(c,r));
+ const busy=new Map<string,number>();
+ async function bounded<T>(r:any,work:()=>Promise<T>){const owner=await authorize(r);if((busy.get(owner)??0)>=2)fail(429,'capability_busy');busy.set(owner,(busy.get(owner)??0)+1);try{const result=await work();await authorize(r);return result}finally{const n=(busy.get(owner)??1)-1;if(n)busy.set(owner,n);else busy.delete(owner)}}
+ app.post('/documents/extract',{bodyLimit:5700000,schema:{body:closed({dataBase64:{type:'string',maxLength:5600000}})}},async r=>bounded(r,async()=>{const b=Buffer.from((r.body as any).dataBase64,'base64');try{return await extractPdf(b)}catch{fail(422,'pdf_unreadable_or_over_limit')}}));
+ // Preview projection of an exact revision. Structured CV revisions use the CV renderer (3 templates, document language);
+ // plain-text artifacts keep the legacy renderer (classic|modern only; 'professional' falls back to classic there).
+ app.get('/artifacts/:id/revisions/:revision/pdf',{schema:{params:closed({id:uuid,revision:{type:'string',pattern:'^[1-9][0-9]{0,8}$'}}),querystring:closed({template:{type:'string',enum:[...CV_TEMPLATES]},language:{type:'string',enum:[...CV_LANGUAGES]}},[])}},async(r,reply)=>bounded(r,async()=>{const owner=await authorize(r),p=r.params as any,q=r.query as any;const row=(await pool.query('SELECT a.title,r.content FROM artifact_revisions r JOIN artifacts a ON a.id=r.artifact_id WHERE r.owner_id=$1 AND r.artifact_id=$2 AND r.revision=$3',[owner,p.id,Number(p.revision)])).rows[0];if(!row)fail(404,'not_found');const pdf=isCvContent(row.content)?await renderCvPdf(row.content.cv,q.template??row.content.cv.presentation.template_id,q.language??row.content.cv.presentation.language):await renderPdf(row.title,row.content.text,q.template==='modern'?'modern':'classic');reply.type('application/pdf').header('content-disposition',`attachment; filename="nova-v${p.revision}.pdf"`);return pdf}));
+ app.post('/research',{schema:{body:closed({query:{type:'string',minLength:3,maxLength:1000}})}},async r=>bounded(r,()=>searchWeb((r.body as any).query,AbortSignal.timeout(60000))));
+ app.post('/voice/connect',async()=>fail(410,'use_native_voice_session'));
+}

@@ -1,0 +1,51 @@
+[
+  {
+    "label": "supplemental",
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "evidence/agent-review-2/supplemental.test.ts"
+    ],
+    "exit_code": 1,
+    "seconds": 10.519,
+    "counts": {},
+    "log": "supplemental.log",
+    "log_sha256": "cc441203da1eac5ccd032d6f33988fa7ce4752ac4c5d3c946c5b7159233ea4b3"
+  },
+  {
+    "label": "baseline-original-probes",
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "evidence/agent-review-2/baseline-probes/adversarial.test.ts",
+      "evidence/agent-review-2/baseline-probes/lease-loss.test.ts"
+    ],
+    "exit_code": 1,
+    "seconds": 23.833,
+    "counts": {},
+    "log": "baseline-original-probes.log",
+    "log_sha256": "667693c38008b69cdc57dfd78680e8b9ce6a5fbc307f710f0dc1455fe243946b"
+  },
+  {
+    "label": "baseline-final-write-probes",
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=session final validation",
+      "evidence/agent-review-2/baseline-probes/agent-runtime.test.ts"
+    ],
+    "exit_code": 1,
+    "seconds": 9.06,
+    "counts": {},
+    "log": "baseline-final-write-probes.log",
+    "log_sha256": "4f2026e067c71628737adf687c679def1bd02a367b7c265a47abff2d1c38c12f"
+  }
+]

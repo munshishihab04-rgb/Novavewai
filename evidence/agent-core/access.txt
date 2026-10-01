@@ -1,0 +1,1 @@
+User authorization is limited to the existing Azure Foundry resource. Parent reports its access probe was blocked by tool approval timeout. No provider secret is available to this worker. No credential/metadata/vault/old-project/cloud discovery attempted. Actual model inference NOT VERIFIED; parent handles access separately.

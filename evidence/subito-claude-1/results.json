@@ -1,0 +1,374 @@
+{
+  "task": "cameriere Bologna su Subito.it",
+  "list_url": "https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere",
+  "list_http_status": 200,
+  "list_page_title": "Subito.it Cameriere - Offerte di lavoro a Bologna e provincia",
+  "robots": {
+    "status": 200,
+    "observed_at": "2026-09-30T17:51:56.341Z",
+    "disallow_count": 18,
+    "note": "valutazione euristica su User-agent: * ; vedi robots.txt salvato",
+    "correction": "il campo matching_disallows in robots-eval.json era un falso positivo dell'euristica (prefisso vuoto dopo rimozione wildcard). Verifica per-URL sotto.",
+    "per_url_directive_check": [
+      {
+        "url": "https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere",
+        "path_query": "/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere",
+        "matched_disallow": []
+      },
+      {
+        "url": "https://www.subito.it/offerte-lavoro/cameriere-bologna-658333217.htm",
+        "path_query": "/offerte-lavoro/cameriere-bologna-658333217.htm",
+        "matched_disallow": []
+      },
+      {
+        "url": "https://www.subito.it/offerte-lavoro/cameriere-con-esperienza-bologna-590242340.htm",
+        "path_query": "/offerte-lavoro/cameriere-con-esperienza-bologna-590242340.htm",
+        "matched_disallow": []
+      },
+      {
+        "url": "https://www.subito.it/offerte-lavoro/cameriere-banconista-chef-e-cuoco-bologna-649074452.htm",
+        "path_query": "/offerte-lavoro/cameriere-banconista-chef-e-cuoco-bologna-649074452.htm",
+        "matched_disallow": []
+      },
+      {
+        "url": "https://www.subito.it/offerte-lavoro/cameriere-a-di-sala-bologna-662640160.htm",
+        "path_query": "/offerte-lavoro/cameriere-a-di-sala-bologna-662640160.htm",
+        "matched_disallow": []
+      },
+      {
+        "url": "https://www.subito.it/offerte-lavoro/cameriere-bologna-659128027.htm",
+        "path_query": "/offerte-lavoro/cameriere-bologna-659128027.htm",
+        "matched_disallow": []
+      }
+    ],
+    "pagination_disallowed": true,
+    "policy_comment_verbatim": "It is expressively forbidden to use search robots or other automatic methods to access Subito.it. Only if Subito.it has given such permission can be accepted.",
+    "policy_note": "Le direttive User-agent:* consentono i percorsi usati (Allow: /, nessun Disallow corrispondente), ma il commento di testa vieta espressamente accessi automatici senza permesso di Subito.it. Questo è un vincolo di policy/termini da valutare prima di qualsiasi adapter automatico; non è stato aggirato nulla, la lettura è stata un browser ordinario a bassa frequenza."
+  },
+  "observed_at": "2026-09-30T17:55:00.395Z",
+  "counts": {
+    "unique_ad_urls": 30,
+    "pertinenti_camerier_titolo": 25,
+    "bologna_citta": 17,
+    "provincia": 8,
+    "nd": 0
+  },
+  "dedup_ok": true,
+  "list_items": [
+    {
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-bologna-658333217.htm",
+      "title": "Cameriere",
+      "comune_dichiarato": "Bologna",
+      "area": "Bologna città (dichiarato)",
+      "pertinente_camerier": true
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-con-esperienza-bologna-590242340.htm",
+      "title": "Cameriere con esperienza",
+      "comune_dichiarato": "Bologna",
+      "area": "Bologna città (dichiarato)",
+      "pertinente_camerier": true
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-banconista-chef-e-cuoco-bologna-649074452.htm",
+      "title": "Cameriere banconista, Chef e cuoco",
+      "comune_dichiarato": "Bologna",
+      "area": "Bologna città (dichiarato)",
+      "pertinente_camerier": true
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-a-di-sala-bologna-662640160.htm",
+      "title": "Cameriere/a di sala",
+      "comune_dichiarato": "Bologna",
+      "area": "Bologna città (dichiarato)",
+      "pertinente_camerier": true
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/badante-colf-bologna-662500225.htm",
+      "title": "Badante colf",
+      "comune_dichiarato": "Bologna",
+      "area": "Bologna città (dichiarato)",
+      "pertinente_camerier": false
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-bologna-659128027.htm",
+      "title": "Cameriere",
+      "comune_dichiarato": "Bologna",
+      "area": "Bologna città (dichiarato)",
+      "pertinente_camerier": true
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/camerieri-e-ai-piani-castel-san-pietro-bo01-bologna-662140743.htm",
+      "title": "Camerieri/e ai Piani CASTEL SAN PIETRO (BO01)",
+      "comune_dichiarato": "Castel San Pietro Terme",
+      "area": "provincia BO",
+      "pertinente_camerier": true
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-part-time-bologna-658433930.htm",
+      "title": "cameriere part-time",
+      "comune_dichiarato": "Bologna",
+      "area": "Bologna città (dichiarato)",
+      "pertinente_camerier": true
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-bologna-662055543.htm",
+      "title": "Cameriere",
+      "comune_dichiarato": "Bologna",
+      "area": "Bologna città (dichiarato)",
+      "pertinente_camerier": true
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/cameriera-e-ai-piani-hotel-bologna-020-bologna-662014346.htm",
+      "title": "CAMERIERA/E AI PIANI HOTEL -  BOLOGNA 020",
+      "comune_dichiarato": "Bologna",
+      "area": "Bologna città (dichiarato)",
+      "pertinente_camerier": true
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-bologna-658439957.htm",
+      "title": "Cameriere",
+      "comune_dichiarato": "Granarolo dell'Emilia",
+      "area": "provincia BO",
+      "pertinente_camerier": true
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-a-bologna-661586954.htm",
+      "title": "Cameriere/a",
+      "comune_dichiarato": "Castel Maggiore",
+      "area": "provincia BO",
+      "pertinente_camerier": true
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-a-per-ristorante-sushi-bologna-661573406.htm",
+      "title": "Cameriere/a per ristorante sushi",
+      "comune_dichiarato": "Castel Maggiore",
+      "area": "provincia BO",
+      "pertinente_camerier": true
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/addetto-a-alla-ristorazione-bologna-661571664.htm",
+      "title": "ADDETTO/A ALLA RISTORAZIONE",
+      "comune_dichiarato": "Casalecchio di Reno",
+      "area": "provincia BO",
+      "pertinente_camerier": false
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-addetto-al-catering-bologna-bo-20160-bologna-661511023.htm",
+      "title": "CAMERIERE ADDETTO AL CATERING-BOLOGNA (BO)-#20160",
+      "comune_dichiarato": "Bologna",
+      "area": "Bologna città (dichiarato)",
+      "pertinente_camerier": true
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/cameriera-ai-piani-bologna-661141663.htm",
+      "title": "Cameriera ai piani",
+      "comune_dichiarato": "Valsamoggia",
+      "area": "provincia BO",
+      "pertinente_camerier": true
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-di-sala-bologna-655572187.htm",
+      "title": "Cameriere - di sala",
+      "comune_dichiarato": "Bologna",
+      "area": "Bologna città (dichiarato)",
+      "pertinente_camerier": true
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-a-di-sala-bologna-657647368.htm",
+      "title": "Cameriere/a di sala",
+      "comune_dichiarato": "Bologna",
+      "area": "Bologna città (dichiarato)",
+      "pertinente_camerier": true
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/castel-san-pietro-terme-bo-camerieri-e-evento-bologna-660844950.htm",
+      "title": "Castel San Pietro Terme (BO) camerieri/e evento",
+      "comune_dichiarato": "Castel San Pietro Terme",
+      "area": "provincia BO",
+      "pertinente_camerier": true
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/cameriera-ai-piani-bologna-660766171.htm",
+      "title": "Cameriera ai piani",
+      "comune_dichiarato": "Bologna",
+      "area": "Bologna città (dichiarato)",
+      "pertinente_camerier": true
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/barista-cameriere-bologna-660549033.htm",
+      "title": "Barista/ cameriere",
+      "comune_dichiarato": "Bologna",
+      "area": "Bologna città (dichiarato)",
+      "pertinente_camerier": true
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/barista-cameriera-e-san-mamolo-alta-bologna-657351696.htm",
+      "title": "Barista/Cameriera-e San Mamolo Alta",
+      "comune_dichiarato": "Bologna",
+      "area": "Bologna città (dichiarato)",
+      "pertinente_camerier": true
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-bologna-660100898.htm",
+      "title": "Cameriere",
+      "comune_dichiarato": "Bologna",
+      "area": "Bologna città (dichiarato)",
+      "pertinente_camerier": true
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-di-sala-bologna-660095637.htm",
+      "title": "cameriere di sala",
+      "comune_dichiarato": "Bologna",
+      "area": "Bologna città (dichiarato)",
+      "pertinente_camerier": true
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/cameriera-di-sala-per-organico-fisso-bologna-659841657.htm",
+      "title": "Cameriera di sala per organico fisso",
+      "comune_dichiarato": "San Giorgio di Piano",
+      "area": "provincia BO",
+      "pertinente_camerier": true
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/barista-e-o-cameriere-part-time-bologna-659164805.htm",
+      "title": "Barista e/o Cameriere part time",
+      "comune_dichiarato": "Bologna",
+      "area": "Bologna città (dichiarato)",
+      "pertinente_camerier": true
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/pizzaiolo-bologna-645218414.htm",
+      "title": "Pizzaiolo",
+      "comune_dichiarato": "Casalecchio di Reno",
+      "area": "provincia BO",
+      "pertinente_camerier": false
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/assisitenza-anziani-bologna-658736893.htm",
+      "title": "Assisitenza anziani",
+      "comune_dichiarato": "Marzabotto",
+      "area": "provincia BO",
+      "pertinente_camerier": false
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-a-bologna-658559180.htm",
+      "title": "Cameriere/a",
+      "comune_dichiarato": "Granarolo dell'Emilia",
+      "area": "provincia BO",
+      "pertinente_camerier": true
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/governante-convivente-bologna-657143206.htm",
+      "title": "Governante convivente",
+      "comune_dichiarato": "Bologna",
+      "area": "Bologna città (dichiarato)",
+      "pertinente_camerier": false
+    }
+  ],
+  "details_read": 5,
+  "details": [
+    {
+      "n": 1,
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-bologna-658333217.htm",
+      "http_status": 200,
+      "observed_at": "2026-09-30T17:52:07.118Z",
+      "title": "Cameriere",
+      "insertion_date_text": "Oggi alle 12:14",
+      "location_text": "Cameriere Bologna (BO)",
+      "area": "Bologna città (dichiarato dall'annuncio)",
+      "publisher_label": "blocco inserzionista con classe private-user-info (account privato); nessuna etichetta testuale",
+      "company_name_published": null,
+      "publisher_type": "UNKNOWN",
+      "unavailable_notice": false,
+      "cta_present_not_clicked": true,
+      "role_hit": true,
+      "bologna_hit": true,
+      "jobposting_ldjson": null,
+      "verification_status": "PARTIALLY_VERIFIED: pagina pubblica 200, titolo camerier*, località Bologna (BO), data inserimento presente, nessun avviso non disponibile; datore/azienda non verificati"
+    },
+    {
+      "n": 2,
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-con-esperienza-bologna-590242340.htm",
+      "http_status": 200,
+      "observed_at": "2026-09-30T17:52:12.374Z",
+      "title": "Cameriere con esperienza",
+      "insertion_date_text": "Oggi alle 11:24",
+      "location_text": "Cameriere con esperienza Bologna (BO)",
+      "area": "Bologna città (dichiarato dall'annuncio)",
+      "publisher_label": "non rilevato (regex etichetta senza match; serve selettore dedicato)",
+      "company_name_published": null,
+      "publisher_type": "UNKNOWN",
+      "unavailable_notice": false,
+      "cta_present_not_clicked": true,
+      "role_hit": true,
+      "bologna_hit": true,
+      "jobposting_ldjson": null,
+      "verification_status": "PARTIALLY_VERIFIED: pagina pubblica 200, titolo camerier*, località Bologna (BO), data inserimento presente, nessun avviso non disponibile; datore/azienda non verificati"
+    },
+    {
+      "n": 3,
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-banconista-chef-e-cuoco-bologna-649074452.htm",
+      "http_status": 200,
+      "observed_at": "2026-09-30T17:52:17.636Z",
+      "title": "Cameriere banconista, Chef e cuoco",
+      "insertion_date_text": "Ieri alle 21:11",
+      "location_text": "Chef e cuoco Bologna (BO)",
+      "area": "Bologna città (dichiarato dall'annuncio)",
+      "publisher_label": "non rilevato (regex etichetta senza match; serve selettore dedicato)",
+      "company_name_published": null,
+      "publisher_type": "UNKNOWN",
+      "unavailable_notice": false,
+      "cta_present_not_clicked": true,
+      "role_hit": true,
+      "bologna_hit": true,
+      "jobposting_ldjson": null,
+      "verification_status": "PARTIALLY_VERIFIED: pagina pubblica 200, titolo camerier*, località Bologna (BO), data inserimento presente, nessun avviso non disponibile; datore/azienda non verificati"
+    },
+    {
+      "n": 4,
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-a-di-sala-bologna-662640160.htm",
+      "http_status": 200,
+      "observed_at": "2026-09-30T17:52:22.856Z",
+      "title": "Cameriere/a di sala",
+      "insertion_date_text": "Ieri alle 17:49",
+      "location_text": "Bologna (BO)",
+      "area": "Bologna città (dichiarato dall'annuncio)",
+      "publisher_label": "non rilevato (regex etichetta senza match; serve selettore dedicato)",
+      "company_name_published": null,
+      "publisher_type": "UNKNOWN",
+      "unavailable_notice": false,
+      "cta_present_not_clicked": true,
+      "role_hit": true,
+      "bologna_hit": true,
+      "jobposting_ldjson": null,
+      "verification_status": "PARTIALLY_VERIFIED: pagina pubblica 200, titolo camerier*, località Bologna (BO), data inserimento presente, nessun avviso non disponibile; datore/azienda non verificati"
+    },
+    {
+      "n": 5,
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-bologna-659128027.htm",
+      "http_status": 200,
+      "observed_at": "2026-09-30T17:52:28.087Z",
+      "title": "Cameriere",
+      "insertion_date_text": "27 set alle 18:58",
+      "location_text": "Cameriere Bologna (BO)",
+      "area": "Bologna città (dichiarato dall'annuncio)",
+      "publisher_label": "non rilevato (regex etichetta senza match; serve selettore dedicato)",
+      "company_name_published": null,
+      "publisher_type": "UNKNOWN",
+      "unavailable_notice": false,
+      "cta_present_not_clicked": true,
+      "role_hit": true,
+      "bologna_hit": true,
+      "jobposting_ldjson": null,
+      "verification_status": "PARTIALLY_VERIFIED: pagina pubblica 200, titolo camerier*, località Bologna (BO), data inserimento presente, nessun avviso non disponibile; datore/azienda non verificati"
+    }
+  ],
+  "limits": [
+    "1 pagina lista, 5 dettagli, nessuna paginazione (pattern ?o= è Disallow in robots)",
+    "publisher/azienda non verificati; Privato/Azienda verificata non implica datore diretto",
+    "località = comune dichiarato nell'annuncio, non verificato",
+    "nessun JSON-LD JobPosting: campi da DOM con classi CSS-module (fragili)",
+    "descrizioni, foto, contatti non conservati"
+  ]
+}

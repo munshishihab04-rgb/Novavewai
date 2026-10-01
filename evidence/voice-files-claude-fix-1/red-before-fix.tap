@@ -1,0 +1,103 @@
+TAP version 13
+# Subtest: global voice capacity of four is serialized across owners under database coordination
+not ok 1 - global voice capacity of four is serialized across owners under database coordination
+  ---
+  duration_ms: 1848.176781
+  type: 'test'
+  location: '/home/azureuser/nova-community-agent/tests/voice-admission.test.ts:14:1'
+  failureType: 'testCodeFailure'
+  error: 'more than four sessions admitted concurrently'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/voice-admission.test.ts:17:9)
+    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: duplicate handshake replays the durable answer without a second provider call and rejects mismatched payloads
+not ok 2 - duplicate handshake replays the durable answer without a second provider call and rejects mismatched payloads
+  ---
+  duration_ms: 1723.643043
+  type: 'test'
+  location: '/home/azureuser/nova-community-agent/tests/voice-admission.test.ts:25:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    409 !== 201
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 201
+  actual: 409
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/voice-admission.test.ts:27:76)
+    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: lost ack during connection: pending is reported honestly, recovery is read-only, replay follows the real outcome
+not ok 3 - lost ack during connection: pending is reported honestly, recovery is read-only, replay follows the real outcome
+  ---
+  duration_ms: 1402.013322
+  type: 'test'
+  location: '/home/azureuser/nova-community-agent/tests/voice-admission.test.ts:36:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'voice_active'
+    - 'voice_pending'
+             ^
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'voice_pending'
+  actual: 'voice_active'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/voice-admission.test.ts:38:107)
+    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: replay respects revocation and restart: stale answers are never replayed for dead sessions
+not ok 4 - replay respects revocation and restart: stale answers are never replayed for dead sessions
+  ---
+  duration_ms: 1382.029977
+  type: 'test'
+  location: '/home/azureuser/nova-community-agent/tests/voice-admission.test.ts:48:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + null
+    - 'runtime_interrupted'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'runtime_interrupted'
+  actual: ~
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/voice-admission.test.ts:50:27)
+    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 0
+# fail 4
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 7137.715674

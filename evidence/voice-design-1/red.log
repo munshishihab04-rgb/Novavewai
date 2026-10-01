@@ -1,0 +1,91 @@
+Error occurred in event listener
+Traceback (most recent call last):
+  File "/home/azureuser/.cache/uv/archive-v0/ARO9IC5AtxcuV9C3/lib/python3.12/site-packages/playwright/_impl/_page.py", line 310, in _on_route
+    handled = await route_handler.handle(route)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/.cache/uv/archive-v0/ARO9IC5AtxcuV9C3/lib/python3.12/site-packages/playwright/_impl/_helper.py", line 455, in handle
+    raise e
+  File "/home/azureuser/.cache/uv/archive-v0/ARO9IC5AtxcuV9C3/lib/python3.12/site-packages/playwright/_impl/_helper.py", line 442, in handle
+    return await self._handle_internal(route)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/.cache/uv/archive-v0/ARO9IC5AtxcuV9C3/lib/python3.12/site-packages/playwright/_impl/_helper.py", line 483, in _handle_internal
+    await asyncio.ensure_future(coro_or_future)
+  File "/home/azureuser/.cache/uv/archive-v0/ARO9IC5AtxcuV9C3/lib/python3.12/site-packages/playwright/async_api/_generated.py", line 782, in fulfill
+    await self._impl_obj.fulfill(
+  File "/home/azureuser/.cache/uv/archive-v0/ARO9IC5AtxcuV9C3/lib/python3.12/site-packages/playwright/_impl/_network.py", line 407, in fulfill
+    await self._handle_route(
+  File "/home/azureuser/.cache/uv/archive-v0/ARO9IC5AtxcuV9C3/lib/python3.12/site-packages/playwright/_impl/_network.py", line 484, in _handle_route
+    raise e
+  File "/home/azureuser/.cache/uv/archive-v0/ARO9IC5AtxcuV9C3/lib/python3.12/site-packages/playwright/_impl/_network.py", line 480, in _handle_route
+    await callback()
+  File "/home/azureuser/.cache/uv/archive-v0/ARO9IC5AtxcuV9C3/lib/python3.12/site-packages/playwright/_impl/_network.py", line 457, in _inner_fulfill
+    file_content = Path(path).read_bytes()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 1021, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 1015, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: "<Request url='https:/loving-say-than-seemed.trycloudflare.com/style.css' method='GET'>"
+Error occurred in event listener
+Traceback (most recent call last):
+  File "/home/azureuser/.cache/uv/archive-v0/ARO9IC5AtxcuV9C3/lib/python3.12/site-packages/playwright/_impl/_page.py", line 310, in _on_route
+    handled = await route_handler.handle(route)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/.cache/uv/archive-v0/ARO9IC5AtxcuV9C3/lib/python3.12/site-packages/playwright/_impl/_helper.py", line 455, in handle
+    raise e
+  File "/home/azureuser/.cache/uv/archive-v0/ARO9IC5AtxcuV9C3/lib/python3.12/site-packages/playwright/_impl/_helper.py", line 442, in handle
+    return await self._handle_internal(route)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/.cache/uv/archive-v0/ARO9IC5AtxcuV9C3/lib/python3.12/site-packages/playwright/_impl/_helper.py", line 483, in _handle_internal
+    await asyncio.ensure_future(coro_or_future)
+  File "/home/azureuser/.cache/uv/archive-v0/ARO9IC5AtxcuV9C3/lib/python3.12/site-packages/playwright/async_api/_generated.py", line 782, in fulfill
+    await self._impl_obj.fulfill(
+  File "/home/azureuser/.cache/uv/archive-v0/ARO9IC5AtxcuV9C3/lib/python3.12/site-packages/playwright/_impl/_network.py", line 407, in fulfill
+    await self._handle_route(
+  File "/home/azureuser/.cache/uv/archive-v0/ARO9IC5AtxcuV9C3/lib/python3.12/site-packages/playwright/_impl/_network.py", line 484, in _handle_route
+    raise e
+  File "/home/azureuser/.cache/uv/archive-v0/ARO9IC5AtxcuV9C3/lib/python3.12/site-packages/playwright/_impl/_network.py", line 480, in _handle_route
+    await callback()
+  File "/home/azureuser/.cache/uv/archive-v0/ARO9IC5AtxcuV9C3/lib/python3.12/site-packages/playwright/_impl/_network.py", line 457, in _inner_fulfill
+    file_content = Path(path).read_bytes()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 1021, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 1015, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: "<Request url='https:/loving-say-than-seemed.trycloudflare.com/features.js' method='GET'>"
+Traceback (most recent call last):
+  File "/home/azureuser/nova-community-agent/scripts/voice-design-test.py", line 30, in <module>
+    asyncio.run(main())
+  File "/usr/lib/python3.12/asyncio/runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/azureuser/nova-community-agent/scripts/voice-design-test.py", line 14, in main
+    await page.goto(BASE);await page.locator('#shell').wait_for(state='visible');await page.locator('[data-action=voice]').first.click();await expect(page.locator('#voicepanel')).to_be_visible()
+    ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/.cache/uv/archive-v0/ARO9IC5AtxcuV9C3/lib/python3.12/site-packages/playwright/async_api/_generated.py", line 9901, in goto
+    await self._impl_obj.goto(
+  File "/home/azureuser/.cache/uv/archive-v0/ARO9IC5AtxcuV9C3/lib/python3.12/site-packages/playwright/_impl/_page.py", line 562, in goto
+    return await self._main_frame.goto(**locals_to_params(locals()))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/.cache/uv/archive-v0/ARO9IC5AtxcuV9C3/lib/python3.12/site-packages/playwright/_impl/_frame.py", line 157, in goto
+    await self._channel.send(
+  File "/home/azureuser/.cache/uv/archive-v0/ARO9IC5AtxcuV9C3/lib/python3.12/site-packages/playwright/_impl/_connection.py", line 76, in send
+    return await self._connection.wrap_api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/.cache/uv/archive-v0/ARO9IC5AtxcuV9C3/lib/python3.12/site-packages/playwright/_impl/_connection.py", line 632, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.TimeoutError: Page.goto: Timeout 30000ms exceeded.
+Call log:
+  - navigating to "https://loving-say-than-seemed.trycloudflare.com/", waiting until "load"
+

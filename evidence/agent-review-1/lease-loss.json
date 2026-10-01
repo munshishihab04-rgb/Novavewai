@@ -1,0 +1,20 @@
+{
+  "exitCode": 1,
+  "signal": null,
+  "stderr": "node:events:505\n    throw er; // Unhandled 'error' event\n    ^\n\nerror: terminating connection due to administrator command\n    at parseErrorMessage (/home/azureuser/nova-community-agent/node_modules/pg-protocol/src/parser.ts:395:9)\n    at Parser.handlePacket (/home/azureuser/nova-community-agent/node_modules/pg-protocol/src/parser.ts:212:19)\n    at Parser.parse (/home/azureuser/nova-community-agent/node_modules/pg-protocol/src/parser.ts:105:30)\n    at Socket.<anonymous> (/home/azureuser/nova-community-agent/node_modules/pg-protocol/src/index.ts:7:48)\n    at Socket.emit (node:events:514:20)\n    at addChunk (node:internal/streams/readable:575:12)\n    at readableAddChunkPushByteMode (node:internal/streams/readable:526:3)\n    at Readable.push (node:internal/streams/readable:406:5)\n    at TCP.onStreamRead (node:internal/stream_base_commons:189:23)\nEmitted 'error' event on Client instance at:\n    at Client._handleErrorEvent (/home/azureuser/nova-community-agent/node_modules/pg/lib/client.js:422:10)\n    at Client._handleErrorMessage (/home/azureuser/nova-community-agent/node_modules/pg/lib/client.js:433:12)\n    at Connection.emit (node:events:514:20)\n    at /home/azureuser/nova-community-agent/node_modules/pg/lib/connection.js:137:12\n    at Parser.parse (/home/azureuser/nova-community-agent/node_modules/pg-protocol/src/parser.ts:106:9)\n    at Socket.<anonymous> (/home/azureuser/nova-community-agent/node_modules/pg-protocol/src/index.ts:7:48)\n    at Socket.emit (node:events:514:20)\n    at addChunk (node:internal/streams/readable:575:12)\n    at readableAddChunkPushByteMode (node:internal/streams/readable:526:3)\n    at Readable.push (node:internal/streams/readable:406:5) {\n  length: 116,\n  severity: 'FATAL',\n  code: '57P01',\n  detail: undefined,\n  hint: undefined,\n  position: undefined,\n  internalPosition: undefined,\n  internalQuery: undefined,\n  where: undefined,\n  schema: undefined,\n  table: undefined,\n  column: undefined,\n  dataType: undefined,\n  constraint: undefined,\n  file: 'postgres.c',\n  line: '3318',\n  routine: 'ProcessInterrupts'\n}\n\nNode.js v26.8.2\n",
+  "runs": [
+    {
+      "status": "running",
+      "error_code": null,
+      "model_calls": 1,
+      "tool_calls": 0,
+      "phase": "inference_in_flight"
+    }
+  ],
+  "counts": {
+    "artifacts": 0,
+    "assistants": 0
+  },
+  "providerCalls": 1,
+  "remainingLease": []
+}

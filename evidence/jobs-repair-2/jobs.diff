@@ -1,0 +1,38 @@
+--- evidence/jobs-repair-2/before/jobs.ts	2026-09-30 17:15:19.101434357 +0000
++++ src/jobs.ts	2026-09-30 17:16:53.149141577 +0000
+@@ -4,14 +4,21 @@
+ import {join} from 'node:path';
+ export type JobsInput = {query:string;city:string};
+ export type Job = {title:string;url:string;city:string;source:'Subito';publishedAt?:string;contract?:string;compensation?:string};
+-export type JobsResult = {sourceUnavailable?:{code?:string;retryAfterSeconds?:number;originalSearchUrl?:string};retryable?:boolean;retryAfterSeconds?:number;limitReason?:string;originalSearchUrl?:string;opportunities?:Opportunity[];excludedUnknown?:number;status:string;occupation?:string;city?:string;question?:string;code?:string;jobs?:Job[];fetchedAt?:string;expiresAt?:string;cache?:'hit'|'live';trust?:'untrusted_public_metadata'};
++export type JobSearchLink = {kind:'BROWSING_SUGGESTION';title:string;url:string;discoveredAt:string;observedLocation:null};
++export type JobsResult = {searchLinks?:JobSearchLink[];requestedCity?:string;notice?:string;noAgencies?:boolean;constraintStatus?:'unmet'|'not_requested';sourceUnavailable?:{code?:string;limitReason?:string;retryAfterSeconds?:number;originalSearchUrl?:string};retryable?:boolean;retryAfterSeconds?:number;limitReason?:string;originalSearchUrl?:string;opportunities?:Opportunity[];excludedUnknown?:number;status:string;occupation?:string;city?:string;question?:string;code?:string;jobs?:Job[];fetchedAt?:string;expiresAt?:string;cache?:'hit'|'live';trust?:'untrusted_public_metadata'};
+ export type JobsSource = (occupation:string,city:string,signal:AbortSignal)=>Promise<Job[]>;
+ type WebSearchReceipt={sources?:unknown;checkedAt?:unknown};
+ const publicCandidate=(value:string)=>{try{const u=new URL(value);if(u.protocol!=='https:'||u.username||u.password||u.port)return false;const h=u.hostname.toLowerCase();if(h==='localhost'||h.endsWith('.local')||/^127\./.test(h)||/^10\./.test(h)||/^192\.168\./.test(h)||/^169\.254\./.test(h)||/^0\./.test(h)||h==='::1'||h==='[::1]'||/^172\.(1[6-9]|2\d|3[01])\./.test(h))return false;return true}catch{return false}};
+-export function webJobCandidates(receipt:WebSearchReceipt,occupation:string,city:string):JobsResult{
+- const at=typeof receipt.checkedAt==='string'&&!Number.isNaN(Date.parse(receipt.checkedAt))?receipt.checkedAt:new Date().toISOString();const seen=new Set<string>();const opportunities:Opportunity[]=[];
+- for(const row of Array.isArray(receipt.sources)?receipt.sources.slice(0,6):[]){if(!row||typeof row.title!=='string'||typeof row.url!=='string'||!publicCandidate(row.url))continue;const u=new URL(row.url);u.hash='';const url=u.toString();if(seen.has(url))continue;seen.add(url);opportunities.push({opportunity_kind:'VACANCY',title:row.title.replace(/[\x00-\x1f<>]/g,' ').trim().slice(0,120)||`${occupation} — candidate`,city,source_url:url,source_type:'UNKNOWN',publisher_type:'UNKNOWN',verification_status:'UNVERIFIED',discovered_at:at,last_verified_at:null,status:'UNKNOWN',evidence:[{url,observed_at:at,claim:'Candidate link returned by bounded web search; vacancy, location, publisher identity and availability are not verified.'}]});}
+- return {status:'candidates_unverified',occupation,city,opportunities,retryable:false,trust:'untrusted_public_metadata'};
++export function requiresDirectEmployer(query:string):boolean{return /senza agenzie|niente agenzie|no agenc|only direct|solo aziende|senza intermediari|solo datori diretti|direct employers only/i.test(query)}
++export function webJobCandidates(receipt:WebSearchReceipt,occupation:string,city:string,noAgencies=false):JobsResult{
++ // Citations prove discovery only, including URLs that look like individual ads.
++ // No listing evidence is fetched here, so this path cannot create opportunities.
++ const at=typeof receipt.checkedAt==='string'&&!Number.isNaN(Date.parse(receipt.checkedAt))?receipt.checkedAt:new Date().toISOString();const seen=new Set<string>();const searchLinks:JobSearchLink[]=[];
++ for(const row of Array.isArray(receipt.sources)?receipt.sources.slice(0,6):[]){if(!row||typeof row.title!=='string'||typeof row.url!=='string'||!publicCandidate(row.url))continue;const u=new URL(row.url);
++  // InfoJobs Italia closure observed in evidence/jobs-sources-1/report.md.
++  const host=u.hostname.toLowerCase().replace(/\.$/,'');if(host==='infojobs.it'||host.endsWith('.infojobs.it'))continue;
++  u.hash='';const url=u.toString();if(seen.has(url))continue;seen.add(url);searchLinks.push({kind:'BROWSING_SUGGESTION',title:row.title.replace(/[\x00-\x1f<>]/g,' ').trim().slice(0,120)||`${occupation} — search link`,url,discoveredAt:at,observedLocation:null});}
++ return {status:'search_links_only',occupation,requestedCity:city,searchLinks,noAgencies,constraintStatus:noAgencies?'unmet':'not_requested',notice:(noAgencies?'No-agencies constraint unmet: no direct employer has been confirmed. ':'')+'Browsing suggestions only, not vacancies or verified job listings. Requested city is a search constraint, not an observed job location. Publisher identity, location, availability and page access are unverified.',retryable:false,trust:'untrusted_public_metadata'};
+ }
+ export const JOB_CITIES:Record<string,{region:string;province:string;slug:string}> = {
+  Bologna:{region:'emilia-romagna',province:'bologna',slug:'bologna'}, Milano:{region:'lombardia',province:'milano',slug:'milano'}, Roma:{region:'lazio',province:'roma',slug:'roma'}, Napoli:{region:'campania',province:'napoli',slug:'napoli'}, Torino:{region:'piemonte',province:'torino',slug:'torino'},
+@@ -50,7 +57,7 @@
+     if(result.status==='unavailable')result.retryable=false; // No automatic model retries, including cooldowns.
+     if(result.status==='ok'&&result.jobs&&result.fetchedAt){
+       result.opportunities=portalOpportunities(result.jobs,result.fetchedAt);
+-      if(/senza agenzie|niente agenzie|no agenc|only direct|solo aziende/i.test(input.query)){result.excludedUnknown=result.jobs.length;result.jobs=[];result.opportunities=[];}
++      if(requiresDirectEmployer(input.query)){result.excludedUnknown=result.jobs.length;result.jobs=[];result.opportunities=[];}
+     }
+     return result;
+   }

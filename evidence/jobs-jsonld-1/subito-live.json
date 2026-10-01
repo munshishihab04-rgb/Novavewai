@@ -1,0 +1,144 @@
+{
+  "probedAt": "2026-09-30T22:08:40.863Z",
+  "elapsedMs": 3000,
+  "policyFlag": "NOVA_JOBS_SUBITO_AUTOMATED_ACCESS=owner-accepted (set only for this probe shell; not in service env)",
+  "provenance": {
+    "listUrl": "https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere",
+    "observedAt": "2026-09-30T22:08:38.870Z",
+    "cache": "live",
+    "cardsObserved": 20,
+    "blocked": null,
+    "navigations": 1,
+    "policy": "NOVA_JOBS_SUBITO_AUTOMATED_ACCESS=owner-accepted: owner accepted robots-comment/ToS risk; on-demand single list page, no pagination, no contacts"
+  },
+  "sourceUnavailable": null,
+  "count": 12,
+  "byLocation": {
+    "CITY": 9,
+    "PROVINCE_OR_REGION": 3,
+    "MISMATCH": 0,
+    "UNKNOWN": 0
+  },
+  "results": [
+    {
+      "title": "Cameriere banconista, Chef e cuoco",
+      "comune": "Bologna",
+      "provincia": "BO",
+      "locationMatch": "CITY",
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-banconista-chef-e-cuoco-bologna-649074452.htm",
+      "publisher_type": "UNKNOWN",
+      "verification_status": "LISTING_OBSERVED",
+      "status": "UNKNOWN"
+    },
+    {
+      "title": "Cameriere con esperienza",
+      "comune": "Bologna",
+      "provincia": "BO",
+      "locationMatch": "CITY",
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-con-esperienza-bologna-590242340.htm",
+      "publisher_type": "UNKNOWN",
+      "verification_status": "LISTING_OBSERVED",
+      "status": "UNKNOWN"
+    },
+    {
+      "title": "Cameriere",
+      "comune": "Bologna",
+      "provincia": "BO",
+      "locationMatch": "CITY",
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-bologna-658333217.htm",
+      "publisher_type": "UNKNOWN",
+      "verification_status": "LISTING_OBSERVED",
+      "status": "UNKNOWN"
+    },
+    {
+      "title": "Cameriere/a di sala",
+      "comune": "Bologna",
+      "provincia": "BO",
+      "locationMatch": "CITY",
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-a-di-sala-bologna-662640160.htm",
+      "publisher_type": "UNKNOWN",
+      "verification_status": "LISTING_OBSERVED",
+      "status": "UNKNOWN"
+    },
+    {
+      "title": "Badante colf",
+      "comune": "Bologna",
+      "provincia": "BO",
+      "locationMatch": "CITY",
+      "url": "https://www.subito.it/offerte-lavoro/badante-colf-bologna-662500225.htm",
+      "publisher_type": "UNKNOWN",
+      "verification_status": "LISTING_OBSERVED",
+      "status": "UNKNOWN"
+    },
+    {
+      "title": "Cameriere",
+      "comune": "Bologna",
+      "provincia": "BO",
+      "locationMatch": "CITY",
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-bologna-659128027.htm",
+      "publisher_type": "UNKNOWN",
+      "verification_status": "LISTING_OBSERVED",
+      "status": "UNKNOWN"
+    },
+    {
+      "title": "Camerieri/e ai Piani CASTEL SAN PIETRO (BO01)",
+      "comune": "Castel San Pietro Terme",
+      "provincia": "BO",
+      "locationMatch": "PROVINCE_OR_REGION",
+      "url": "https://www.subito.it/offerte-lavoro/camerieri-e-ai-piani-castel-san-pietro-bo01-bologna-662140743.htm",
+      "publisher_type": "UNKNOWN",
+      "verification_status": "LISTING_OBSERVED",
+      "status": "UNKNOWN"
+    },
+    {
+      "title": "cameriere part-time",
+      "comune": "Bologna",
+      "provincia": "BO",
+      "locationMatch": "CITY",
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-part-time-bologna-658433930.htm",
+      "publisher_type": "UNKNOWN",
+      "verification_status": "LISTING_OBSERVED",
+      "status": "UNKNOWN"
+    },
+    {
+      "title": "Cameriere",
+      "comune": "Bologna",
+      "provincia": "BO",
+      "locationMatch": "CITY",
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-bologna-662055543.htm",
+      "publisher_type": "UNKNOWN",
+      "verification_status": "LISTING_OBSERVED",
+      "status": "UNKNOWN"
+    },
+    {
+      "title": "CAMERIERA/E AI PIANI HOTEL - BOLOGNA 020",
+      "comune": "Bologna",
+      "provincia": "BO",
+      "locationMatch": "CITY",
+      "url": "https://www.subito.it/offerte-lavoro/cameriera-e-ai-piani-hotel-bologna-020-bologna-662014346.htm",
+      "publisher_type": "UNKNOWN",
+      "verification_status": "LISTING_OBSERVED",
+      "status": "UNKNOWN"
+    },
+    {
+      "title": "Cameriere",
+      "comune": "Granarolo dell'Emilia",
+      "provincia": "BO",
+      "locationMatch": "PROVINCE_OR_REGION",
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-bologna-658439957.htm",
+      "publisher_type": "UNKNOWN",
+      "verification_status": "LISTING_OBSERVED",
+      "status": "UNKNOWN"
+    },
+    {
+      "title": "Cameriere/a",
+      "comune": "Castel Maggiore",
+      "provincia": "BO",
+      "locationMatch": "PROVINCE_OR_REGION",
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-a-bologna-661586954.htm",
+      "publisher_type": "UNKNOWN",
+      "verification_status": "LISTING_OBSERVED",
+      "status": "UNKNOWN"
+    }
+  ]
+}

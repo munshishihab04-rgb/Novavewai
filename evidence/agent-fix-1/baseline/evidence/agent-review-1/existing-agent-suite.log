@@ -1,0 +1,46 @@
+✔ NEW project provider env is opt-in, complete, HTTPS-only and ignores unrelated credentials (32.100084ms)
+✔ SIGKILL during real provider await survives PG and API restart as unknown; explicit new turn recovers (2517.344339ms)
+✔ controlled protocol: automatic tools revise canonical artifact, persist assistant, reopen and replay without inference (1746.347817ms)
+✔ fail closed: denied approval (1281.843927ms)
+✔ fail closed: prototype tool (1313.683231ms)
+✔ fail closed: schema owner injection (1261.96503ms)
+✔ fail closed: malformed arguments (1342.363027ms)
+✔ fail closed: invalid JSON (1212.714423ms)
+✔ fail closed: refusal (1314.041315ms)
+✔ fail closed: truncation (1228.596043ms)
+✔ fail closed: empty (1296.732781ms)
+✔ fail closed: stop with malformed calls (1291.260215ms)
+✔ fail closed: oversized (1265.605221ms)
+✔ fail closed: http error (1390.982711ms)
+✔ question pauses task; explicit answer resumes with file observation, scope checks and terminal receipt (1439.175629ms)
+✔ post-provider await fence: cancel (1355.767985ms)
+✔ post-provider await fence: revoke (1279.642671ms)
+✔ post-provider await fence: expire (1473.141947ms)
+✔ post-provider await fence: purge (1348.412415ms)
+✔ post-provider await fence: message (1260.048551ms)
+✔ post-provider await fence: task (1172.081963ms)
+✔ post-provider await fence: artifact (1303.261006ms)
+✔ budgets stop loops and response timeout is explicit unknown; no replay retry (3782.391018ms)
+✔ restart conservatively fails queued and marks interrupted inference unknown without replay (1281.872293ms)
+✔ pluggable provider remains untrusted and uncooperative await is bounded (2641.252413ms)
+✔ server-wide active run budget bounds concurrent inference across conversations (1232.960807ms)
+✔ tool scope rejects another conversation: read_artifact (1262.833656ms)
+✔ tool scope rejects another conversation: update_artifact (1221.175403ms)
+✔ tool scope rejects another conversation: read_file (1394.311904ms)
+✔ read_artifact observes canonical revision; duplicate tool ID cannot repeat mutation (1356.941136ms)
+✔ context byte budget rolls back oversized tool mutation and preflight never calls provider (1362.026879ms)
+✔ inference failure after a committed tool preserves its receipt/revision without replay (1248.260337ms)
+✔ tool transaction failure rolls back artifact and receipt together (1241.279919ms)
+✔ post-file await fence: cancel (1184.376478ms)
+✔ post-file await fence: purge (1249.259354ms)
+✔ post-file await fence: revoke (1203.384733ms)
+✔ one runtime per database rejects a concurrent engine without recovering live work (1297.18592ms)
+✔ provider redirects are not followed (1278.655585ms)
+ℹ tests 38
+ℹ suites 0
+ℹ pass 38
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 54267.40956

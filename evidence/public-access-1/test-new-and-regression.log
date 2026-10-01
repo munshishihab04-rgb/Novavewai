@@ -1,0 +1,8 @@
+✔ account limits from env: default 60, parsed override, uuid list validated (2.009167ms)
+✔ daily run guard: 429 daily_limit_reached after N runs per account per day, exempt owners unlimited, no cross-account leakage (2023.348496ms)
+✔ password hashing: scrypt with random salt, constant-time verify, dummy path (300.966366ms)
+✔ Approval binds exact revision/account/recipient; concurrent consumption yields one durable synthetic effect (2704.074705ms)
+✔ auth card UI: tabs, inline Italian errors, show/hide password, register+login calls, invite flow regression, no innerHTML (2002.431024ms)
+✔ daily warm cache is bounded to five cities, one role; duplicate daily run does no work (11.662678ms)
+✔ private web login: one-use invite, secure cookie, CSRF, auth and owner isolation (1619.964482ms)
+✔ personal invite preview: private, non-consuming, expiring and origin protected (1614.296338ms)

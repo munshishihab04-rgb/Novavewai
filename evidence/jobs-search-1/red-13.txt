@@ -1,0 +1,25 @@
+✖ job receipt cards expose only original HTTPS listing links and escaped labels (6.586979ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 690.275091
+
+✖ failing tests:
+
+test at tests/jobs-ui.test.ts:1:140
+✖ job receipt cards expose only original HTTPS listing links and escaped labels (6.586979ms)
+  AssertionError [ERR_ASSERTION]: receipt renderer exists
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/jobs-ui.test.ts:4:86)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

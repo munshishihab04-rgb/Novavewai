@@ -1,0 +1,36 @@
+✖ staged native voice UI binds conversation, stops late connection and provides authenticated file downloads (30383.437155ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 31035.904579
+
+✖ failing tests:
+
+test at tests/voice-files-ui.test.ts:2:1
+✖ staged native voice UI binds conversation, stops late connection and provides authenticated file downloads (30383.437155ms)
+  locator.click: Timeout 30000ms exceeded.
+  Call log:
+    - waiting for locator('[data-action="voice"]').first()
+      - locator resolved to <button class="voice" data-action="voice">Parla con Nova</button>
+    - attempting click action
+      2 × waiting for element to be visible, enabled and stable
+        - element is not visible
+      - retrying click action
+      - waiting 20ms
+      2 × waiting for element to be visible, enabled and stable
+        - element is not visible
+      - retrying click action
+        - waiting 100ms
+      58 × waiting for element to be visible, enabled and stable
+         - element is not visible
+       - retrying click action
+         - waiting 500ms
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/voice-files-ui.test.ts:6:182) {
+    name: 'TimeoutError',
+    log: [ `  - waiting for locator('[data-action="voice"]').first()`, '    - locator resolved to <button class="voice" data-action="voice">Parla con Nova</button>', '  - attempting click action', '    2 × waiting for element to be visible, enabled and stable', '      - element is not visible', '    - retrying click action', '    - waiting 20ms', '    2 × waiting for element to be visible, enabled and stable', '      - element is not visible', '    - retrying click action', '      - waiting 100ms', '    58 × waiting for element to be visible, enabled and stable', '       - element is not visible', '     - retrying click action', '       - waiting 500ms' ]
+  }

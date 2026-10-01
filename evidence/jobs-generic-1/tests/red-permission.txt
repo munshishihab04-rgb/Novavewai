@@ -1,0 +1,40 @@
+✖ a legacy policy reference cannot authorize Subito automation (2.480971ms)
+✔ generic default gates automation and returns named original-source searches, not vacancies (6.660233ms)
+✔ permitted imports are dated observations, unknown publisher allowed, never relabelled live or city (5.856874ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 2
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 710.6625
+
+✖ failing tests:
+
+test at tests/jobs-generic-service.test.ts:5:1
+✖ a legacy policy reference cannot authorize Subito automation (2.480971ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /jobs_automated_access_not_authorized/. Input:
+  
+  'Error: jobs_invalid_search'
+  
+      at async TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/jobs-generic-service.test.ts:7:6)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: jobs_invalid_search
+        at subitoURL (/home/azureuser/nova-community-agent/src/jobs-subito.ts:5:107)
+        at searchSubito (/home/azureuser/nova-community-agent/src/jobs-subito.ts:49:37)
+        at <anonymous> (/home/azureuser/nova-community-agent/tests/jobs-generic-service.test.ts:7:31)
+        at waitForActual (node:assert:601:21)
+        at strict.rejects (node:assert:738:31)
+        at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/jobs-generic-service.test.ts:7:19)
+        at Test.runInAsyncScope (node:async_hooks:226:14)
+        at Test.run (node:internal/test_runner/test:1402:25)
+        at Test.start (node:internal/test_runner/test:1262:17)
+        at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17),
+    expected: /jobs_automated_access_not_authorized/,
+    operator: 'rejects',
+    diff: 'simple'
+  }

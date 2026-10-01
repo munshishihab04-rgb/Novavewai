@@ -1,0 +1,115 @@
+✖ lease loss fences held inference, late output and replacement (1231.959922ms)
+✖ lease loss fences held inference, late output and cancel (1091.941268ms)
+✖ lease loss fences held inference, late output and purge (1028.327579ms)
+
+Interrupted while running:
+
+⚠ tests/agent-runtime.test.ts (tests/agent-runtime.test.ts:1:1)
+✖ tests/agent-runtime.test.ts (120112.559375ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 0
+ℹ fail 3
+ℹ cancelled 1
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 120119.852506
+
+✖ failing tests:
+
+test at tests/agent-runtime.test.ts:1:4139
+✖ lease loss fences held inference, late output and replacement (1231.959922ms)
+  error: terminating connection due to administrator command
+      at parseErrorMessage (/home/azureuser/nova-community-agent/node_modules/pg-protocol/src/parser.ts:395:9)
+      at Parser.handlePacket (/home/azureuser/nova-community-agent/node_modules/pg-protocol/src/parser.ts:212:19)
+      at Parser.parse (/home/azureuser/nova-community-agent/node_modules/pg-protocol/src/parser.ts:105:30)
+      at Socket.<anonymous> (/home/azureuser/nova-community-agent/node_modules/pg-protocol/src/index.ts:7:48)
+      at Socket.emit (node:events:514:20)
+      at addChunk (node:internal/streams/readable:575:12)
+      at readableAddChunkPushByteMode (node:internal/streams/readable:526:3)
+      at Readable.push (node:internal/streams/readable:406:5)
+      at TCP.onStreamRead (node:internal/stream_base_commons:189:23) {
+    length: 116,
+    severity: 'FATAL',
+    code: '57P01',
+    detail: undefined,
+    hint: undefined,
+    position: undefined,
+    internalPosition: undefined,
+    internalQuery: undefined,
+    where: undefined,
+    schema: undefined,
+    table: undefined,
+    column: undefined,
+    dataType: undefined,
+    constraint: undefined,
+    file: 'postgres.c',
+    line: '3318',
+    routine: 'ProcessInterrupts'
+  }
+
+test at tests/agent-runtime.test.ts:1:4139
+✖ lease loss fences held inference, late output and cancel (1091.941268ms)
+  error: terminating connection due to administrator command
+      at parseErrorMessage (/home/azureuser/nova-community-agent/node_modules/pg-protocol/src/parser.ts:395:9)
+      at Parser.handlePacket (/home/azureuser/nova-community-agent/node_modules/pg-protocol/src/parser.ts:212:19)
+      at Parser.parse (/home/azureuser/nova-community-agent/node_modules/pg-protocol/src/parser.ts:105:30)
+      at Socket.<anonymous> (/home/azureuser/nova-community-agent/node_modules/pg-protocol/src/index.ts:7:48)
+      at Socket.emit (node:events:514:20)
+      at addChunk (node:internal/streams/readable:575:12)
+      at readableAddChunkPushByteMode (node:internal/streams/readable:526:3)
+      at Readable.push (node:internal/streams/readable:406:5)
+      at TCP.onStreamRead (node:internal/stream_base_commons:189:23) {
+    length: 116,
+    severity: 'FATAL',
+    code: '57P01',
+    detail: undefined,
+    hint: undefined,
+    position: undefined,
+    internalPosition: undefined,
+    internalQuery: undefined,
+    where: undefined,
+    schema: undefined,
+    table: undefined,
+    column: undefined,
+    dataType: undefined,
+    constraint: undefined,
+    file: 'postgres.c',
+    line: '3318',
+    routine: 'ProcessInterrupts'
+  }
+
+test at tests/agent-runtime.test.ts:1:4139
+✖ lease loss fences held inference, late output and purge (1028.327579ms)
+  error: terminating connection due to administrator command
+      at parseErrorMessage (/home/azureuser/nova-community-agent/node_modules/pg-protocol/src/parser.ts:395:9)
+      at Parser.handlePacket (/home/azureuser/nova-community-agent/node_modules/pg-protocol/src/parser.ts:212:19)
+      at Parser.parse (/home/azureuser/nova-community-agent/node_modules/pg-protocol/src/parser.ts:105:30)
+      at Socket.<anonymous> (/home/azureuser/nova-community-agent/node_modules/pg-protocol/src/index.ts:7:48)
+      at Socket.emit (node:events:514:20)
+      at addChunk (node:internal/streams/readable:575:12)
+      at readableAddChunkPushByteMode (node:internal/streams/readable:526:3)
+      at Readable.push (node:internal/streams/readable:406:5)
+      at TCP.onStreamRead (node:internal/stream_base_commons:189:23) {
+    length: 116,
+    severity: 'FATAL',
+    code: '57P01',
+    detail: undefined,
+    hint: undefined,
+    position: undefined,
+    internalPosition: undefined,
+    internalQuery: undefined,
+    where: undefined,
+    schema: undefined,
+    table: undefined,
+    column: undefined,
+    dataType: undefined,
+    constraint: undefined,
+    file: 'postgres.c',
+    line: '3318',
+    routine: 'ProcessInterrupts'
+  }
+
+test at tests/agent-runtime.test.ts:1:1
+✖ tests/agent-runtime.test.ts (120112.559375ms)
+  'Promise resolution is still pending but the event loop has already resolved'

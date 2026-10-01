@@ -1,0 +1,36 @@
+✔ controlled protocol: automatic tools revise canonical artifact, persist assistant, reopen and replay without inference (1711.608656ms)
+✔ fail closed: denied approval (1456.315614ms)
+✔ fail closed: prototype tool (1294.808841ms)
+✔ fail closed: schema owner injection (1241.780957ms)
+✔ fail closed: malformed arguments (1363.689416ms)
+✔ fail closed: invalid JSON (1412.279851ms)
+✔ fail closed: refusal (1233.946893ms)
+✔ fail closed: truncation (1236.489374ms)
+✔ fail closed: empty (1292.625415ms)
+✔ fail closed: oversized (1364.085963ms)
+✔ fail closed: http error (1304.581938ms)
+✔ question pauses task; explicit answer resumes with file observation, scope checks and terminal receipt (1346.157003ms)
+✔ post-provider await fence: cancel (1167.072224ms)
+✔ post-provider await fence: revoke (1292.345969ms)
+✔ post-provider await fence: expire (1270.96323ms)
+✔ post-provider await fence: purge (1396.259911ms)
+✔ post-provider await fence: message (1390.041304ms)
+✔ post-provider await fence: task (1352.377007ms)
+✔ post-provider await fence: artifact (1269.564665ms)
+✔ budgets stop loops and response timeout is explicit unknown; no replay retry (3905.78811ms)
+✔ restart conservatively fails queued and marks interrupted inference unknown without replay (1429.318048ms)
+✔ pluggable provider remains untrusted and uncooperative await is bounded (2514.275093ms)
+✔ server-wide active run budget bounds concurrent inference across conversations (1371.692523ms)
+✔ tool scope rejects another conversation: read_artifact (1271.268041ms)
+✔ tool scope rejects another conversation: update_artifact (1320.551132ms)
+✔ tool scope rejects another conversation: read_file (1252.754615ms)
+✔ read_artifact observes canonical revision; duplicate tool ID cannot repeat mutation (1298.102556ms)
+✔ context byte budget rolls back oversized tool mutation and preflight never calls provider (1271.961337ms)
+ℹ tests 28
+ℹ suites 0
+ℹ pass 28
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 41447.46704

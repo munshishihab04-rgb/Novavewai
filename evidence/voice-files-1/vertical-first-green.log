@@ -1,0 +1,24 @@
+✔ generated PDF signature/extraction and ZIP independent unzip retain exact source bytes (487.604326ms)
+✔ generated archives reject traversal, duplicate names, wrong format and byte overflow before tool execution (0.919548ms)
+✔ FILE KEY: a previously populated unbound key is never imported (1587.560117ms)
+✔ FILE AUTH: expiry during real blob write rejects ready commit, recovery cleans pending bytes (3018.37024ms)
+✔ FILE FS BOUNDARY: write failure reserves quota but produces no ready cache, byte quota serializes (1716.935386ms)
+✔ FILE STORE IDENTITY: wrong root and missing key fail closed, no replacement key on existing data (1887.440602ms)
+✔ FILE RECOVERY: real DB failure after blob fsync, pending hidden and startup conservative cleanup (1916.362433ms)
+✔ FILE VALIDATION: paths, MIME, strict UTF-8, oversize, quotas and authenticated corruption failures (1936.71572ms)
+✔ FILE PURGING: filesystem failure keeps durable cleanup, restart completes deletion (1795.408671ms)
+✔ FILE SOURCE: owner-bound immutable UTF-8 snapshot and purge cascade (1403.185362ms)
+✔ FILES PURGE: remove bytes and cascaded context, never resurrect a late reservation (2346.344161ms)
+✔ FILES: real encrypted immutable private bytes, owner download and restart (2258.429849ms)
+✔ flexible binary transport is owner-scoped, inert and explicitly not universal extraction (1631.181514ms)
+✔ native generated file tool commits revision and owner-scoped exact code download (1996.103573ms)
+✔ provider-observed committed voice input uses native tools, persists once, and continues in text (1853.304064ms)
+✔ stop during native inference fences late voice tool completion (1718.485875ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 31304.740492

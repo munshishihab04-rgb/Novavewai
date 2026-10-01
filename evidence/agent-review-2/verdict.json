@@ -1,0 +1,151 @@
+{
+  "passed": false,
+  "security_concerns": [],
+  "logic_errors": [
+    {
+      "id": "R2-LEASE-DELAYED-ERROR",
+      "reopens": "R1-LEASE-LOSS",
+      "severity": "medium",
+      "title": "Lease invalidation before its error event installs a pg-pool idle listener that can re-emit an unhandled pool error",
+      "locations": [
+        "src/runtime.ts:15-25",
+        "src/runtime.ts:43-49",
+        "node_modules/pg-pool/index.js:51-62",
+        "node_modules/pg-pool/index.js:384-397",
+        "scripts/config.ts:11-14"
+      ],
+      "observed": "Supplemental real file-put handover intermittently failed with PG administrator-termination error. Exact reruns passed, so a deterministic event-order probe delayed actual dedicated-client error/end delivery until a protected request detected the missing pg_locks row. Runtime.check invalidated and release(true) attached pg-pool idleListener. Delivery of the already pending real PG error then emitted pool.error. With an observing pool listener, the leaked error was recorded; with no pool error listener (production configuration), the test threw the PG error. New HTTP work was already rejected with 503, but process availability remains unsafe.",
+      "expected": "Every supported dedicated-lease loss ordering must invalidate/fence without an unhandled pool error, including ownership-check invalidation before delayed client error/end. Retaining the Runtime error listener alone does not suppress pg-pool forwarding.",
+      "reproduction": [
+        "node --import tsx --test --test-reporter=tap evidence/agent-review-2/delayed-lease-error.test.ts",
+        "node --import tsx --test --test-reporter=tap evidence/agent-review-2/delayed-lease-no-listener.test.ts"
+      ],
+      "evidence": [
+        "supplemental.log",
+        "delayed-lease-error.log",
+        "delayed-lease-error.json",
+        "delayed-lease-no-listener.log"
+      ],
+      "scope_note": "Controlled event-delivery scheduling of real PG termination on private local DB; no production/client implementation edited. Does not demonstrate stale tool writes or double inference. Original ordinary lease-loss probe now passes."
+    }
+  ],
+  "suggestions": [
+    "Add this ownership-check-before-client-error ordering to the permanent runtime regression suite when fixing the remaining lease listener lifecycle issue. Do not weaken the corrected assertion to accept a pool error."
+  ],
+  "summary": "NOT APPROVED: session rollback, generated-source rejection and exclusive startup are verified, but one reproducible dedicated-lease error-ordering availability regression remains. The unchanged local controlled-provider engine gate cannot close yet; no implementation edit or commit was made.",
+  "scope": "Local controlled-provider J1 engine only; private embedded PostgreSQL and loopback HTTP.",
+  "gate": {
+    "state": "blocked",
+    "allow_ui_cv_on_pass": false,
+    "reason": "R2-LEASE-DELAYED-ERROR remains unresolved; no blanket new-feature audit requested."
+  },
+  "closed_blockers": [
+    "R1-SESSION-WRITER",
+    "R1-PROVENANCE",
+    "R1-STARTUP-RESERVATION"
+  ],
+  "partially_fixed_blockers": [
+    "R1-LEASE-LOSS"
+  ],
+  "verified_behavior": [
+    "Final initiating-session authorization after canonical artifact, receipt and terminal writes rolls back mutation, revision, receipt, assistant message, task completion and outbox effects on expiry. Positive multi-tool and terminal controls pass.",
+    "Assistant messages rejected as user_supplied sources; user/file source foundation tests pass.",
+    "Exclusive runtime ownership precedes file initialization and destructive startup recovery in agent/non-agent/no-file modes. Pending reservation and upload survive refused overlap.",
+    "Shared handover barrier drains actual old artifact and file-put writes before recovery; old product writes roll back.",
+    "Ordinary lease error and end invalidate runtime; healthy DB persists unknown independently of a held file read; old/new runtime, cancel/purge and listener cleanup controls pass. Delayed error after ownership-check invalidation remains broken."
+  ],
+  "execution_results": "execution-results.json",
+  "independent_supplemental_tests": "tests-verified.json",
+  "independent_event_order_confirmation": {
+    "probe": "queued-lease-error.test.ts",
+    "logs": ["queued-lease-error.log", "queued-lease-error-repeat.log"],
+    "readback": "queued-lease-error.json",
+    "result": "Both deterministic runs fail: delayed real lease error escapes as pool.error code 57P01 after actual-lock invalidation; file transaction is correctly rejected with 503. Ordinary file-put isolated controls and 10 repeats pass but do not clear this ordering defect."
+  },
+  "headline_tests": {
+    "permanent_regressions": {
+      "tests": 19,
+      "pass": 19,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "original_unchanged_probes": {
+      "tests": 9,
+      "pass": 9,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "full_suite": {
+      "tests": 105,
+      "pass": 105,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "typecheck_exit": 0,
+    "diff_check_exit": 0,
+    "baseline_original_expected_failures": {
+      "tests": 9,
+      "pass": 5,
+      "fail": 4,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "baseline_final_write_expected_failures": {
+      "tests": 2,
+      "pass": 0,
+      "fail": 2,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    }
+  },
+  "positive_controls": [
+    "controlled protocol: automatic tools revise canonical artifact, persist assistant, reopen and replay without inference",
+    "SIGKILL during real provider await survives PG and API restart as unknown; explicit new turn recovers",
+    "question pauses task; explicit answer resumes with file observation, scope checks and terminal receipt"
+  ],
+  "source": {
+    "head": "43e981937cfeadfef5e38c9d40d856bffc6b7c23",
+    "state": "uncommitted candidate; HEAD alone is not candidate identity",
+    "candidate_sha256": {
+      "src/agent.ts": "8299e638a5135fda16dae023b52833ab72077a9391568c2ce3340d5600a16e71",
+      "src/app.ts": "88d6b80bbd511d8a01bef9cf726bad9df52d176ed5af5f5900aa2f0ddb3e8be4",
+      "src/file-lifecycle.ts": "5e009c707eb6fd4f96bd3115bab75f3b9722c25567d99ad179f2ffa72670837c",
+      "src/files.ts": "60663f13e57265103d2a233d35760ef9404cfd1818f51212d81560cd945c02e7",
+      "src/provenance.ts": "286a5abc2a72d38840177654386c4bdd22a6a0da0e875cff7f88709a9b024bd7",
+      "src/runtime.ts": "dba6d9f2f79073f4d08a4c7663a9007e5930fc338d043b2888910350af676e73",
+      "docs/AGENT-CORE.md": "5713059cccb50636507aa1af20b42cff63b93daf6923b6283b04e580a1152fdf",
+      "tests/agent-review-regressions.test.ts": "d32622a716f0d1caff00e3bcc5ecf791aa9ff421586f0ab1ba80cff36b5d2565",
+      "tests/agent-runtime.test.ts": "ff90bd8a88754f4e8cb5fb5b483f8708206649c37e0d568b1100d118b50650a6"
+    },
+    "aggregate_sha256": "313ce8f542b0d2b75105f50575390f815ed479408c6197927c5bae1444890d37",
+    "full_manifest": "reviewed-source-manifest.json",
+    "matches_fix_verification": true
+  },
+  "preservation": {
+    "protected_files": 209,
+    "changed": [],
+    "original_current_probe_copies_byte_identical": true,
+    "baseline_probe_assertions_unchanged": true,
+    "baseline_path_only_diffs": "baseline-probes/*.path-only.diff",
+    "review_writes_only": "evidence/agent-review-2/"
+  },
+  "limits": [
+    "Not real-model inference, semantic prompt-injection resistance, UI/CV/voice, cloud identity/authorization, deployment or external providers. No metadata/cloud/credential discovery performed.",
+    "Per-database single-host singleton only; not cross-database shared-root locking or distributed scheduling.",
+    "Full database network partition not injected; persistence during unavailable DB remains best effort with restart fallback.",
+    "Prior committed effects remain durable; arbitrary indefinitely held DB/file work can delay drain/close.",
+    "Synthetic event-delivery ordering reproduces an actual intermittent local failure; repeated ordinary passes do not resolve the deterministic listener defect."
+  ],
+  "environment": {
+    "node": "v26.8.2",
+    "python": "Python 3.12.3"
+  }
+}

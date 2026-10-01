@@ -1,0 +1,1741 @@
+{
+  "base": "https://overnight-businesses-fun-fred.trycloudflare.com",
+  "checkedAt": "2026-10-01T06:38:56.635Z",
+  "syntheticOwner": "00407eba-f860-4051-b45e-1e3a4adc6b7e",
+  "turns": [
+    {
+      "text": "Cerco lavoro come cameriere",
+      "runStatus": "waiting_user",
+      "jobs": [
+        {
+          "status": "needs_city",
+          "question": "In quale città vuoi cercare lavoro?",
+          "occupation": "cameriere"
+        }
+      ]
+    },
+    {
+      "text": "Bologna",
+      "runStatus": "completed",
+      "jobs": [
+        {
+          "city": "Bologna",
+          "cache": "live",
+          "notice": "Each opportunity was read from its original listing page (structured JobPosting data or observed Subito list card) at fetchedAt; title, organization, location and dates come from that page and are labelled EXPIRED when validThrough has passed. Publisher UNKNOWN unless evidenced. Availability may change; the link is the source of truth. Remaining searchLinks are browsing suggestions, not vacancies.",
+          "status": "ok",
+          "subito": {
+            "cache": "live",
+            "policy": "NOVA_JOBS_SUBITO_AUTOMATED_ACCESS=owner-accepted: owner accepted robots-comment/ToS risk; on-demand single list page, no contacts",
+            "blocked": null,
+            "listUrl": "https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere",
+            "offQuery": 5,
+            "pagesRead": 1,
+            "observedAt": "2026-10-01T06:38:30.968Z",
+            "navigations": 1,
+            "cardsObserved": 30
+          },
+          "fetchedAt": "2026-10-01T06:38:32.968Z",
+          "pageReads": [
+            {
+              "url": "https://www.lavoroturismo.it/offerte-lavoro/offerta-cameriere-sala-bologna-smy-hotels",
+              "reason": "body over size cap",
+              "outcome": "UNAVAILABLE",
+              "permitted": true,
+              "observedAt": "2026-10-01T06:38:29.410Z"
+            },
+            {
+              "url": "https://www.restworld.it/posizione/offerta-di-lavoro-cameriere-bologna-yac",
+              "reason": "JobPosting JSON-LD extracted",
+              "outcome": "JSONLD_VERIFIED",
+              "permitted": true,
+              "observedAt": "2026-10-01T06:38:29.720Z"
+            }
+          ],
+          "noAgencies": false,
+          "occupation": "cameriere",
+          "searchLinks": [
+            {
+              "url": "https://www.lavoroturismo.it/offerte-lavoro/offerta-cameriere-sala-bologna-smy-hotels",
+              "kind": "BROWSING_SUGGESTION",
+              "title": "Cameriere/a di sala - LavoroTurismo",
+              "discoveredAt": "2026-10-01T06:38:29.375Z",
+              "observedLocation": null
+            },
+            {
+              "url": "https://job.hnh.it/jobs/job-details?JobID=473250541",
+              "kind": "BROWSING_SUGGESTION",
+              "title": "Cameriere di sala a Bologna | HNH Hospitality Spa Lavora con noi",
+              "discoveredAt": "2026-10-01T06:38:29.375Z",
+              "observedLocation": null
+            },
+            {
+              "url": "https://www.jobintourism.it/search-offerte/",
+              "kind": "BROWSING_SUGGESTION",
+              "title": "Ricerca Offerte di Lavoro - Job In Tourism",
+              "discoveredAt": "2026-10-01T06:38:29.375Z",
+              "observedLocation": null
+            }
+          ],
+          "opportunities": [
+            {
+              "city": "Bologna",
+              "title": "Cameriere/a per ristorante",
+              "status": "OBSERVED",
+              "company": "Roberto Bistrot",
+              "evidence": [
+                {
+                  "url": "https://www.restworld.it/posizione/offerta-di-lavoro-cameriere-bologna-yac",
+                  "claim": "schema.org JobPosting JSON-LD on listing page: title, hiringOrganization, locality Bologna, datePosted 2026-08-29T11:05:38.000Z, validThrough n/a; robots.txt * group allows path",
+                  "observed_at": "2026-10-01T06:38:29.720Z"
+                }
+              ],
+              "validity": "UNKNOWN",
+              "datePosted": "2026-08-29T11:05:38.000Z",
+              "sourceName": "restworld.it",
+              "source_url": "https://www.restworld.it/posizione/offerta-di-lavoro-cameriere-bologna-yac",
+              "directApply": true,
+              "observed_at": "2026-10-01T06:38:29.720Z",
+              "source_type": "JOB_BOARD",
+              "validThrough": null,
+              "discovered_at": "2026-10-01T06:38:29.720Z",
+              "locationMatch": "CITY",
+              "collectionMode": "jsonld_detail_page",
+              "employmentType": "FULL_TIME, TEMPORARY",
+              "observedRegion": "Emilia-Romagna",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": "2026-10-01T06:38:29.720Z",
+              "observedLocality": "Bologna",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "JSONLD_VERIFIED"
+            },
+            {
+              "city": "Bologna",
+              "title": "Cameriere banconista, Chef e cuoco",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/cameriere-banconista-chef-e-cuoco-bologna-649074452.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Bologna (BO); badge none; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:30.968Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/cameriere-banconista-chef-e-cuoco-bologna-649074452.htm",
+              "observed_at": "2026-10-01T06:38:30.968Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:30.968Z",
+              "locationMatch": "CITY",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Bologna",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Bologna",
+              "title": "Cameriere con esperienza",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/cameriere-con-esperienza-bologna-590242340.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Bologna (BO); badge none; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:30.968Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/cameriere-con-esperienza-bologna-590242340.htm",
+              "observed_at": "2026-10-01T06:38:30.968Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:30.968Z",
+              "locationMatch": "CITY",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Bologna",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Bologna",
+              "title": "Cameriere",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/cameriere-bologna-658333217.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Bologna (BO); badge none; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:30.968Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/cameriere-bologna-658333217.htm",
+              "observed_at": "2026-10-01T06:38:30.968Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:30.968Z",
+              "locationMatch": "CITY",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Bologna",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Bologna",
+              "title": "Cameriere/a di sala",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/cameriere-a-di-sala-bologna-662640160.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Bologna (BO); badge none; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:30.968Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/cameriere-a-di-sala-bologna-662640160.htm",
+              "observed_at": "2026-10-01T06:38:30.968Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:30.968Z",
+              "locationMatch": "CITY",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Bologna",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Bologna",
+              "title": "Cameriere",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/cameriere-bologna-659128027.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Bologna (BO); badge none; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:30.968Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/cameriere-bologna-659128027.htm",
+              "observed_at": "2026-10-01T06:38:30.968Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:30.968Z",
+              "locationMatch": "CITY",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Bologna",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Castel San Pietro Terme",
+              "title": "Camerieri/e ai Piani CASTEL SAN PIETRO (BO01)",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/camerieri-e-ai-piani-castel-san-pietro-bo01-bologna-662140743.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Castel San Pietro Terme (BO); badge AZIENDA_VERIFICATA; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:30.968Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/camerieri-e-ai-piani-castel-san-pietro-bo01-bologna-662140743.htm",
+              "observed_at": "2026-10-01T06:38:30.968Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:30.968Z",
+              "locationMatch": "PROVINCE_OR_REGION",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Castel San Pietro Terme",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": "\"Azienda verificata\" badge: verified business account, not proof of direct employer",
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Bologna",
+              "title": "cameriere part-time",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/cameriere-part-time-bologna-658433930.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Bologna (BO); badge none; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:30.968Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/cameriere-part-time-bologna-658433930.htm",
+              "observed_at": "2026-10-01T06:38:30.968Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:30.968Z",
+              "locationMatch": "CITY",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Bologna",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Bologna",
+              "title": "Cameriere",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/cameriere-bologna-662055543.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Bologna (BO); badge none; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:30.968Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/cameriere-bologna-662055543.htm",
+              "observed_at": "2026-10-01T06:38:30.968Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:30.968Z",
+              "locationMatch": "CITY",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Bologna",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Bologna",
+              "title": "CAMERIERA/E AI PIANI HOTEL - BOLOGNA 020",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/cameriera-e-ai-piani-hotel-bologna-020-bologna-662014346.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Bologna (BO); badge AZIENDA_VERIFICATA; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:30.968Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/cameriera-e-ai-piani-hotel-bologna-020-bologna-662014346.htm",
+              "observed_at": "2026-10-01T06:38:30.968Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:30.968Z",
+              "locationMatch": "CITY",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Bologna",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": "\"Azienda verificata\" badge: verified business account, not proof of direct employer",
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Granarolo dell'Emilia",
+              "title": "Cameriere",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/cameriere-bologna-658439957.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Granarolo dell'Emilia (BO); badge none; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:30.968Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/cameriere-bologna-658439957.htm",
+              "observed_at": "2026-10-01T06:38:30.968Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:30.968Z",
+              "locationMatch": "PROVINCE_OR_REGION",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Granarolo dell'Emilia",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Castel Maggiore",
+              "title": "Cameriere/a",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/cameriere-a-bologna-661586954.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Castel Maggiore (BO); badge none; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:30.968Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/cameriere-a-bologna-661586954.htm",
+              "observed_at": "2026-10-01T06:38:30.968Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:30.968Z",
+              "locationMatch": "PROVINCE_OR_REGION",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Castel Maggiore",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Castel Maggiore",
+              "title": "Cameriere/a per ristorante sushi",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/cameriere-a-per-ristorante-sushi-bologna-661573406.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Castel Maggiore (BO); badge none; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:30.968Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/cameriere-a-per-ristorante-sushi-bologna-661573406.htm",
+              "observed_at": "2026-10-01T06:38:30.968Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:30.968Z",
+              "locationMatch": "PROVINCE_OR_REGION",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Castel Maggiore",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Bologna",
+              "title": "CAMERIERE ADDETTO AL CATERING-BOLOGNA (BO)-#20160",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/cameriere-addetto-al-catering-bologna-bo-20160-bologna-661511023.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Bologna (BO); badge AZIENDA_VERIFICATA; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:30.968Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/cameriere-addetto-al-catering-bologna-bo-20160-bologna-661511023.htm",
+              "observed_at": "2026-10-01T06:38:30.968Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:30.968Z",
+              "locationMatch": "CITY",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Bologna",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": "\"Azienda verificata\" badge: verified business account, not proof of direct employer",
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Valsamoggia",
+              "title": "Cameriera ai piani",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/cameriera-ai-piani-bologna-661141663.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Valsamoggia (BO); badge none; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:30.968Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/cameriera-ai-piani-bologna-661141663.htm",
+              "observed_at": "2026-10-01T06:38:30.968Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:30.968Z",
+              "locationMatch": "PROVINCE_OR_REGION",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Valsamoggia",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Bologna",
+              "title": "Cameriere - di sala",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/cameriere-di-sala-bologna-655572187.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Bologna (BO); badge none; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:30.968Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/cameriere-di-sala-bologna-655572187.htm",
+              "observed_at": "2026-10-01T06:38:30.968Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:30.968Z",
+              "locationMatch": "CITY",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Bologna",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Bologna",
+              "title": "Cameriere/a di sala",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/cameriere-a-di-sala-bologna-657647368.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Bologna (BO); badge none; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:30.968Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/cameriere-a-di-sala-bologna-657647368.htm",
+              "observed_at": "2026-10-01T06:38:30.968Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:30.968Z",
+              "locationMatch": "CITY",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Bologna",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Castel San Pietro Terme",
+              "title": "Castel San Pietro Terme (BO) camerieri/e evento",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/castel-san-pietro-terme-bo-camerieri-e-evento-bologna-660844950.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Castel San Pietro Terme (BO); badge AZIENDA_VERIFICATA; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:30.968Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/castel-san-pietro-terme-bo-camerieri-e-evento-bologna-660844950.htm",
+              "observed_at": "2026-10-01T06:38:30.968Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:30.968Z",
+              "locationMatch": "PROVINCE_OR_REGION",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Castel San Pietro Terme",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": "\"Azienda verificata\" badge: verified business account, not proof of direct employer",
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Bologna",
+              "title": "Cameriera ai piani",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/cameriera-ai-piani-bologna-660766171.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Bologna (BO); badge none; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:30.968Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/cameriera-ai-piani-bologna-660766171.htm",
+              "observed_at": "2026-10-01T06:38:30.968Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:30.968Z",
+              "locationMatch": "CITY",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Bologna",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Bologna",
+              "title": "Barista/ cameriere",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/barista-cameriere-bologna-660549033.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Bologna (BO); badge none; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:30.968Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/barista-cameriere-bologna-660549033.htm",
+              "observed_at": "2026-10-01T06:38:30.968Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:30.968Z",
+              "locationMatch": "CITY",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Bologna",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Bologna",
+              "title": "Barista/Cameriera-e San Mamolo Alta",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/barista-cameriera-e-san-mamolo-alta-bologna-657351696.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Bologna (BO); badge none; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:30.968Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/barista-cameriera-e-san-mamolo-alta-bologna-657351696.htm",
+              "observed_at": "2026-10-01T06:38:30.968Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:30.968Z",
+              "locationMatch": "CITY",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Bologna",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Bologna",
+              "title": "Cameriere",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/cameriere-bologna-660100898.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Bologna (BO); badge none; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:30.968Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/cameriere-bologna-660100898.htm",
+              "observed_at": "2026-10-01T06:38:30.968Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:30.968Z",
+              "locationMatch": "CITY",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Bologna",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Bologna",
+              "title": "cameriere di sala",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/cameriere-di-sala-bologna-660095637.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Bologna (BO); badge none; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:30.968Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/cameriere-di-sala-bologna-660095637.htm",
+              "observed_at": "2026-10-01T06:38:30.968Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:30.968Z",
+              "locationMatch": "CITY",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Bologna",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "San Giorgio di Piano",
+              "title": "Cameriera di sala per organico fisso",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/cameriera-di-sala-per-organico-fisso-bologna-659841657.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality San Giorgio di Piano (BO); badge none; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:30.968Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/cameriera-di-sala-per-organico-fisso-bologna-659841657.htm",
+              "observed_at": "2026-10-01T06:38:30.968Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:30.968Z",
+              "locationMatch": "PROVINCE_OR_REGION",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "San Giorgio di Piano",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Granarolo dell'Emilia",
+              "title": "Cameriere/a",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/cameriere-a-bologna-658559180.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Granarolo dell'Emilia (BO); badge none; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:30.968Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/cameriere-a-bologna-658559180.htm",
+              "observed_at": "2026-10-01T06:38:30.968Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:30.968Z",
+              "locationMatch": "PROVINCE_OR_REGION",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Granarolo dell'Emilia",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Alto Reno Terme",
+              "title": "Cameriere/a Sala",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/cameriere-a-sala-bologna-657529923.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Alto Reno Terme (BO); badge none; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:30.968Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/cameriere-a-sala-bologna-657529923.htm",
+              "observed_at": "2026-10-01T06:38:30.968Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:30.968Z",
+              "locationMatch": "PROVINCE_OR_REGION",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Alto Reno Terme",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "LISTING_OBSERVED"
+            }
+          ],
+          "verifiedScope": {
+            "leads": 2,
+            "allowedOrigins": [
+              "https://www.lavoroturismo.it",
+              "https://www.restworld.it",
+              "https://www.jobintourism.it",
+              "https://job.hnh.it",
+              "https://www.adecco.com",
+              "https://www.lavoropiu.it"
+            ]
+          },
+          "constraintStatus": "not_requested",
+          "unavailablePages": [
+            {
+              "url": "https://www.lavoroturismo.it/offerte-lavoro/offerta-cameriere-sala-bologna-smy-hotels",
+              "title": "Cameriere/a di sala - LavoroTurismo",
+              "reason": "automated page access not authorized for this source",
+              "status": "UNAVAILABLE",
+              "observedAt": "2026-10-01T06:38:29.382Z"
+            }
+          ],
+          "excludedNonDirect": 0,
+          "sourceUnavailable": {
+            "code": "jobs_automated_access_not_authorized"
+          }
+        }
+      ]
+    },
+    {
+      "text": "Voglio altre offerte",
+      "runStatus": "completed",
+      "jobs": [
+        {
+          "city": "Bologna",
+          "cache": "live",
+          "notice": "Each opportunity was read from its original listing page (structured JobPosting data or observed Subito list card) at fetchedAt; title, organization, location and dates come from that page and are labelled EXPIRED when validThrough has passed. Publisher UNKNOWN unless evidenced. Availability may change; the link is the source of truth. Remaining searchLinks are browsing suggestions, not vacancies.",
+          "status": "ok",
+          "subito": {
+            "cache": "live",
+            "policy": "NOVA_JOBS_SUBITO_AUTOMATED_ACCESS=owner-accepted + NOVA_JOBS_SUBITO_PAGINATION=owner-accepted: owner accepted robots-comment/ToS risk AND bounded pagination (decision B, 2026-10-01): 3 list pages on explicit user request, max 3, no contacts",
+            "blocked": null,
+            "listUrl": "https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere",
+            "offQuery": 5,
+            "pagesRead": 3,
+            "observedAt": "2026-10-01T06:38:52.206Z",
+            "navigations": 3,
+            "cardsObserved": 31
+          },
+          "fetchedAt": "2026-10-01T06:38:52.435Z",
+          "pageReads": [
+            {
+              "url": "https://www.lavoroturismo.it/offerte-lavoro/offerta-cameriere-sala-bologna-smy-hotels",
+              "reason": "body over size cap",
+              "outcome": "UNAVAILABLE",
+              "permitted": true,
+              "observedAt": "2026-10-01T06:38:38.966Z"
+            },
+            {
+              "url": "https://www.restworld.it/posizione/offerta-di-lavoro-cameriere-bologna-yac",
+              "reason": "JobPosting JSON-LD extracted",
+              "outcome": "JSONLD_VERIFIED",
+              "permitted": true,
+              "observedAt": "2026-10-01T06:38:39.178Z"
+            },
+            {
+              "url": "https://www.restworld.it/posizione/offerta-di-lavoro-cameriere-bologna-xth",
+              "reason": "JobPosting JSON-LD extracted",
+              "outcome": "JSONLD_VERIFIED",
+              "permitted": true,
+              "observedAt": "2026-10-01T06:38:39.455Z"
+            },
+            {
+              "url": "https://www.restworld.it/posizione/offerta-di-lavoro-cameriere-bologna-ojn",
+              "reason": "JobPosting JSON-LD extracted",
+              "outcome": "JSONLD_VERIFIED",
+              "permitted": true,
+              "observedAt": "2026-10-01T06:38:40.432Z"
+            },
+            {
+              "url": "https://job.hnh.it/jobs/Cameriere-di-sala-full-time-o-part-time-Sala-Italia-Bologna-558045909.htm",
+              "reason": "http 404",
+              "outcome": "UNAVAILABLE",
+              "permitted": true,
+              "observedAt": "2026-10-01T06:38:41.691Z"
+            }
+          ],
+          "moreOffers": true,
+          "noAgencies": false,
+          "occupation": "cameriere",
+          "searchLinks": [
+            {
+              "url": "https://www.lavoroturismo.it/offerte-lavoro/offerta-cameriere-sala-bologna-smy-hotels",
+              "kind": "BROWSING_SUGGESTION",
+              "title": "Cameriere/a di sala - LavoroTurismo",
+              "discoveredAt": "2026-10-01T06:38:38.958Z",
+              "observedLocation": null
+            },
+            {
+              "url": "https://job.hnh.it/jobs/Cameriere-di-sala-full-time-o-part-time-Sala-Italia-Bologna-558045909.htm",
+              "kind": "BROWSING_SUGGESTION",
+              "title": "Cameriere di sala | full-time o part-time a Bologna | HNH Hospitality ...",
+              "discoveredAt": "2026-10-01T06:38:38.958Z",
+              "observedLocation": null
+            },
+            {
+              "url": "https://www.jobintourism.it/search-offerte/",
+              "kind": "BROWSING_SUGGESTION",
+              "title": "Ricerca Offerte di Lavoro - Job In Tourism",
+              "discoveredAt": "2026-10-01T06:38:38.958Z",
+              "observedLocation": null
+            }
+          ],
+          "opportunities": [
+            {
+              "city": "Bologna",
+              "title": "Cameriere/a per ristorante",
+              "status": "OBSERVED",
+              "company": "Roberto Bistrot",
+              "evidence": [
+                {
+                  "url": "https://www.restworld.it/posizione/offerta-di-lavoro-cameriere-bologna-yac",
+                  "claim": "schema.org JobPosting JSON-LD on listing page: title, hiringOrganization, locality Bologna, datePosted 2026-08-29T11:05:38.000Z, validThrough n/a; robots.txt * group allows path",
+                  "observed_at": "2026-10-01T06:38:39.178Z"
+                }
+              ],
+              "validity": "UNKNOWN",
+              "datePosted": "2026-08-29T11:05:38.000Z",
+              "sourceName": "restworld.it",
+              "source_url": "https://www.restworld.it/posizione/offerta-di-lavoro-cameriere-bologna-yac",
+              "directApply": true,
+              "observed_at": "2026-10-01T06:38:39.178Z",
+              "source_type": "JOB_BOARD",
+              "validThrough": null,
+              "discovered_at": "2026-10-01T06:38:39.178Z",
+              "locationMatch": "CITY",
+              "collectionMode": "jsonld_detail_page",
+              "employmentType": "FULL_TIME, TEMPORARY",
+              "observedRegion": "Emilia-Romagna",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": "2026-10-01T06:38:39.178Z",
+              "observedLocality": "Bologna",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "JSONLD_VERIFIED"
+            },
+            {
+              "city": "Bologna",
+              "title": "Cameriere/a per ristorante tradizionale",
+              "status": "OBSERVED",
+              "company": "Ristorante Diana",
+              "evidence": [
+                {
+                  "url": "https://www.restworld.it/posizione/offerta-di-lavoro-cameriere-bologna-xth",
+                  "claim": "schema.org JobPosting JSON-LD on listing page: title, hiringOrganization, locality Bologna, datePosted 2026-09-11T10:57:06.000Z, validThrough n/a; robots.txt * group allows path",
+                  "observed_at": "2026-10-01T06:38:39.455Z"
+                }
+              ],
+              "validity": "UNKNOWN",
+              "datePosted": "2026-09-11T10:57:06.000Z",
+              "sourceName": "restworld.it",
+              "source_url": "https://www.restworld.it/posizione/offerta-di-lavoro-cameriere-bologna-xth",
+              "directApply": true,
+              "observed_at": "2026-10-01T06:38:39.455Z",
+              "source_type": "JOB_BOARD",
+              "validThrough": null,
+              "discovered_at": "2026-10-01T06:38:39.455Z",
+              "locationMatch": "CITY",
+              "collectionMode": "jsonld_detail_page",
+              "employmentType": "FULL_TIME, TEMPORARY",
+              "observedRegion": "Emilia-Romagna",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": "2026-10-01T06:38:39.455Z",
+              "observedLocality": "Bologna",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "JSONLD_VERIFIED"
+            },
+            {
+              "city": "Bologna",
+              "title": "Cameriere/a per enoteca",
+              "status": "EXPIRED",
+              "company": "Tannino - Bruschette e Vino",
+              "evidence": [
+                {
+                  "url": "https://www.restworld.it/posizione/offerta-di-lavoro-cameriere-bologna-ojn",
+                  "claim": "schema.org JobPosting JSON-LD on listing page: title, hiringOrganization, locality Bologna, datePosted 2026-09-09T13:15:32.000Z, validThrough 2026-09-16T15:21:23.000Z; robots.txt * group allows path",
+                  "observed_at": "2026-10-01T06:38:40.432Z"
+                }
+              ],
+              "validity": "EXPIRED",
+              "datePosted": "2026-09-09T13:15:32.000Z",
+              "sourceName": "restworld.it",
+              "source_url": "https://www.restworld.it/posizione/offerta-di-lavoro-cameriere-bologna-ojn",
+              "directApply": true,
+              "observed_at": "2026-10-01T06:38:40.432Z",
+              "source_type": "JOB_BOARD",
+              "validThrough": "2026-09-16T15:21:23.000Z",
+              "discovered_at": "2026-10-01T06:38:40.432Z",
+              "locationMatch": "CITY",
+              "collectionMode": "jsonld_detail_page",
+              "employmentType": "PART_TIME, TEMPORARY",
+              "observedRegion": "Emilia-Romagna",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": "2026-10-01T06:38:40.432Z",
+              "observedLocality": "Bologna",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "JSONLD_VERIFIED"
+            },
+            {
+              "city": "Bologna",
+              "title": "Cameriere banconista, Chef e cuoco",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/cameriere-banconista-chef-e-cuoco-bologna-649074452.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Bologna (BO); badge none; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:52.206Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/cameriere-banconista-chef-e-cuoco-bologna-649074452.htm",
+              "observed_at": "2026-10-01T06:38:52.206Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:52.206Z",
+              "locationMatch": "CITY",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Bologna",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Bologna",
+              "title": "Cameriere con esperienza",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/cameriere-con-esperienza-bologna-590242340.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Bologna (BO); badge none; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:52.206Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/cameriere-con-esperienza-bologna-590242340.htm",
+              "observed_at": "2026-10-01T06:38:52.206Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:52.206Z",
+              "locationMatch": "CITY",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Bologna",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Bologna",
+              "title": "Cameriere",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/cameriere-bologna-658333217.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Bologna (BO); badge none; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:52.206Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/cameriere-bologna-658333217.htm",
+              "observed_at": "2026-10-01T06:38:52.206Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:52.206Z",
+              "locationMatch": "CITY",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Bologna",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Bologna",
+              "title": "Cameriere/a di sala",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/cameriere-a-di-sala-bologna-662640160.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Bologna (BO); badge none; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:52.206Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/cameriere-a-di-sala-bologna-662640160.htm",
+              "observed_at": "2026-10-01T06:38:52.206Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:52.206Z",
+              "locationMatch": "CITY",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Bologna",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Bologna",
+              "title": "Cameriere",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/cameriere-bologna-659128027.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Bologna (BO); badge none; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:52.206Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/cameriere-bologna-659128027.htm",
+              "observed_at": "2026-10-01T06:38:52.206Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:52.206Z",
+              "locationMatch": "CITY",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Bologna",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Castel San Pietro Terme",
+              "title": "Camerieri/e ai Piani CASTEL SAN PIETRO (BO01)",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/camerieri-e-ai-piani-castel-san-pietro-bo01-bologna-662140743.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Castel San Pietro Terme (BO); badge AZIENDA_VERIFICATA; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:52.206Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/camerieri-e-ai-piani-castel-san-pietro-bo01-bologna-662140743.htm",
+              "observed_at": "2026-10-01T06:38:52.206Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:52.206Z",
+              "locationMatch": "PROVINCE_OR_REGION",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Castel San Pietro Terme",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": "\"Azienda verificata\" badge: verified business account, not proof of direct employer",
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Bologna",
+              "title": "cameriere part-time",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/cameriere-part-time-bologna-658433930.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Bologna (BO); badge none; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:52.206Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/cameriere-part-time-bologna-658433930.htm",
+              "observed_at": "2026-10-01T06:38:52.206Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:52.206Z",
+              "locationMatch": "CITY",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Bologna",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Bologna",
+              "title": "Cameriere",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/cameriere-bologna-662055543.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Bologna (BO); badge none; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:52.206Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/cameriere-bologna-662055543.htm",
+              "observed_at": "2026-10-01T06:38:52.206Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:52.206Z",
+              "locationMatch": "CITY",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Bologna",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Bologna",
+              "title": "CAMERIERA/E AI PIANI HOTEL - BOLOGNA 020",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/cameriera-e-ai-piani-hotel-bologna-020-bologna-662014346.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Bologna (BO); badge AZIENDA_VERIFICATA; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:52.206Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/cameriera-e-ai-piani-hotel-bologna-020-bologna-662014346.htm",
+              "observed_at": "2026-10-01T06:38:52.206Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:52.206Z",
+              "locationMatch": "CITY",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Bologna",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": "\"Azienda verificata\" badge: verified business account, not proof of direct employer",
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Granarolo dell'Emilia",
+              "title": "Cameriere",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/cameriere-bologna-658439957.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Granarolo dell'Emilia (BO); badge none; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:52.206Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/cameriere-bologna-658439957.htm",
+              "observed_at": "2026-10-01T06:38:52.206Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:52.206Z",
+              "locationMatch": "PROVINCE_OR_REGION",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Granarolo dell'Emilia",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Castel Maggiore",
+              "title": "Cameriere/a",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/cameriere-a-bologna-661586954.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Castel Maggiore (BO); badge none; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:52.206Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/cameriere-a-bologna-661586954.htm",
+              "observed_at": "2026-10-01T06:38:52.206Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:52.206Z",
+              "locationMatch": "PROVINCE_OR_REGION",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Castel Maggiore",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Castel Maggiore",
+              "title": "Cameriere/a per ristorante sushi",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/cameriere-a-per-ristorante-sushi-bologna-661573406.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Castel Maggiore (BO); badge none; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:52.206Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/cameriere-a-per-ristorante-sushi-bologna-661573406.htm",
+              "observed_at": "2026-10-01T06:38:52.206Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:52.206Z",
+              "locationMatch": "PROVINCE_OR_REGION",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Castel Maggiore",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Bologna",
+              "title": "CAMERIERE ADDETTO AL CATERING-BOLOGNA (BO)-#20160",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/cameriere-addetto-al-catering-bologna-bo-20160-bologna-661511023.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Bologna (BO); badge AZIENDA_VERIFICATA; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:52.206Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/cameriere-addetto-al-catering-bologna-bo-20160-bologna-661511023.htm",
+              "observed_at": "2026-10-01T06:38:52.206Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:52.206Z",
+              "locationMatch": "CITY",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Bologna",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": "\"Azienda verificata\" badge: verified business account, not proof of direct employer",
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Valsamoggia",
+              "title": "Cameriera ai piani",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/cameriera-ai-piani-bologna-661141663.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Valsamoggia (BO); badge none; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:52.206Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/cameriera-ai-piani-bologna-661141663.htm",
+              "observed_at": "2026-10-01T06:38:52.206Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:52.206Z",
+              "locationMatch": "PROVINCE_OR_REGION",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Valsamoggia",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Bologna",
+              "title": "Cameriere - di sala",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/cameriere-di-sala-bologna-655572187.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Bologna (BO); badge none; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:52.206Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/cameriere-di-sala-bologna-655572187.htm",
+              "observed_at": "2026-10-01T06:38:52.206Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:52.206Z",
+              "locationMatch": "CITY",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Bologna",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Bologna",
+              "title": "Cameriere/a di sala",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/cameriere-a-di-sala-bologna-657647368.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Bologna (BO); badge none; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:52.206Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/cameriere-a-di-sala-bologna-657647368.htm",
+              "observed_at": "2026-10-01T06:38:52.206Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:52.206Z",
+              "locationMatch": "CITY",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Bologna",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Castel San Pietro Terme",
+              "title": "Castel San Pietro Terme (BO) camerieri/e evento",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/castel-san-pietro-terme-bo-camerieri-e-evento-bologna-660844950.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Castel San Pietro Terme (BO); badge AZIENDA_VERIFICATA; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:52.206Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/castel-san-pietro-terme-bo-camerieri-e-evento-bologna-660844950.htm",
+              "observed_at": "2026-10-01T06:38:52.206Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:52.206Z",
+              "locationMatch": "PROVINCE_OR_REGION",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Castel San Pietro Terme",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": "\"Azienda verificata\" badge: verified business account, not proof of direct employer",
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Bologna",
+              "title": "Cameriera ai piani",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/cameriera-ai-piani-bologna-660766171.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Bologna (BO); badge none; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:52.206Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/cameriera-ai-piani-bologna-660766171.htm",
+              "observed_at": "2026-10-01T06:38:52.206Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:52.206Z",
+              "locationMatch": "CITY",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Bologna",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Bologna",
+              "title": "Barista/ cameriere",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/barista-cameriere-bologna-660549033.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Bologna (BO); badge none; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:52.206Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/barista-cameriere-bologna-660549033.htm",
+              "observed_at": "2026-10-01T06:38:52.206Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:52.206Z",
+              "locationMatch": "CITY",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Bologna",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Bologna",
+              "title": "Barista/Cameriera-e San Mamolo Alta",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/barista-cameriera-e-san-mamolo-alta-bologna-657351696.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Bologna (BO); badge none; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:52.206Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/barista-cameriera-e-san-mamolo-alta-bologna-657351696.htm",
+              "observed_at": "2026-10-01T06:38:52.206Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:52.206Z",
+              "locationMatch": "CITY",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Bologna",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Bologna",
+              "title": "Cameriere",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/cameriere-bologna-660100898.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Bologna (BO); badge none; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:52.206Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/cameriere-bologna-660100898.htm",
+              "observed_at": "2026-10-01T06:38:52.206Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:52.206Z",
+              "locationMatch": "CITY",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Bologna",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Bologna",
+              "title": "cameriere di sala",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/cameriere-di-sala-bologna-660095637.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Bologna (BO); badge none; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:52.206Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/cameriere-di-sala-bologna-660095637.htm",
+              "observed_at": "2026-10-01T06:38:52.206Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:52.206Z",
+              "locationMatch": "CITY",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Bologna",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "San Giorgio di Piano",
+              "title": "Cameriera di sala per organico fisso",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/cameriera-di-sala-per-organico-fisso-bologna-659841657.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality San Giorgio di Piano (BO); badge none; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:52.206Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/cameriera-di-sala-per-organico-fisso-bologna-659841657.htm",
+              "observed_at": "2026-10-01T06:38:52.206Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:52.206Z",
+              "locationMatch": "PROVINCE_OR_REGION",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "San Giorgio di Piano",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Granarolo dell'Emilia",
+              "title": "Cameriere/a",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/cameriere-a-bologna-658559180.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Granarolo dell'Emilia (BO); badge none; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:52.206Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/cameriere-a-bologna-658559180.htm",
+              "observed_at": "2026-10-01T06:38:52.206Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:52.206Z",
+              "locationMatch": "PROVINCE_OR_REGION",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Granarolo dell'Emilia",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Alto Reno Terme",
+              "title": "Cameriere/a Sala",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/cameriere-a-sala-bologna-657529923.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Alto Reno Terme (BO); badge none; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:52.206Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/cameriere-a-sala-bologna-657529923.htm",
+              "observed_at": "2026-10-01T06:38:52.206Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:52.206Z",
+              "locationMatch": "PROVINCE_OR_REGION",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Alto Reno Terme",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "LISTING_OBSERVED"
+            },
+            {
+              "city": "Bologna",
+              "title": "Cameriere/a di sala - Osteria in centro a Bologna",
+              "status": "UNKNOWN",
+              "company": null,
+              "evidence": [
+                {
+                  "url": "https://www.subito.it/offerte-lavoro/cameriere-a-di-sala-osteria-in-centro-a-bologna-bologna-656061762.htm",
+                  "claim": "Card observed on Subito list page https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere; declared locality Bologna (BO); badge none; detail page not opened, availability not verified.",
+                  "observed_at": "2026-10-01T06:38:52.206Z"
+                }
+              ],
+              "sourceName": "Subito",
+              "source_url": "https://www.subito.it/offerte-lavoro/cameriere-a-di-sala-osteria-in-centro-a-bologna-bologna-656061762.htm",
+              "observed_at": "2026-10-01T06:38:52.206Z",
+              "source_type": "JOB_BOARD",
+              "discovered_at": "2026-10-01T06:38:52.206Z",
+              "locationMatch": "CITY",
+              "collectionMode": "subito_list_card",
+              "publisher_type": "UNKNOWN",
+              "last_verified_at": null,
+              "observedLocality": "Bologna",
+              "observedProvince": "BO",
+              "opportunity_kind": "VACANCY",
+              "publisherEvidence": null,
+              "verification_status": "LISTING_OBSERVED"
+            }
+          ],
+          "verifiedScope": {
+            "leads": 5,
+            "allowedOrigins": [
+              "https://www.lavoroturismo.it",
+              "https://www.restworld.it",
+              "https://www.jobintourism.it",
+              "https://job.hnh.it",
+              "https://www.adecco.com",
+              "https://www.lavoropiu.it"
+            ]
+          },
+          "constraintStatus": "not_requested",
+          "unavailablePages": [
+            {
+              "url": "https://www.lavoroturismo.it/offerte-lavoro/offerta-cameriere-sala-bologna-smy-hotels",
+              "title": "Cameriere/a di sala - LavoroTurismo",
+              "reason": "automated page access not authorized for this source",
+              "status": "UNAVAILABLE",
+              "observedAt": "2026-10-01T06:38:38.965Z"
+            },
+            {
+              "url": "https://job.hnh.it/jobs/Cameriere-di-sala-full-time-o-part-time-Sala-Italia-Bologna-558045909.htm",
+              "title": "Cameriere di sala | full-time o part-time a Bologna | HNH Hospitality ...",
+              "reason": "automated page access not authorized for this source",
+              "status": "UNAVAILABLE",
+              "observedAt": "2026-10-01T06:38:38.965Z"
+            }
+          ],
+          "excludedNonDirect": 0,
+          "sourceUnavailable": {
+            "code": "jobs_automated_access_not_authorized"
+          }
+        }
+      ]
+    },
+    {
+      "text": "Aro offer dekhaw",
+      "runStatus": "completed",
+      "jobs": []
+    }
+  ]
+}

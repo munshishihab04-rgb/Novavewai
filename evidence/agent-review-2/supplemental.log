@@ -1,0 +1,27 @@
+✔ non-agent live upload also excludes agent-enabled replacement (2604.560241ms)
+✔ no-file incumbent excludes file recovery: agent=false (2482.140056ms)
+✔ no-file incumbent excludes file recovery: agent=true (2309.417952ms)
+✖ lease loss during actual file put drains before destructive recovery (2246.956502ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 3
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 10450.652449
+
+✖ failing tests:
+
+test at evidence/agent-review-2/supplemental.test.ts:1:4757
+✖ lease loss during actual file put drains before destructive recovery (2246.956502ms)
+  error: terminating connection due to administrator command
+      at parseErrorMessage (/home/azureuser/nova-community-agent/node_modules/pg-protocol/src/parser.ts:395:9)
+      at Parser.handlePacket (/home/azureuser/nova-community-agent/node_modules/pg-protocol/src/parser.ts:212:19)
+      at Parser.parse (/home/azureuser/nova-community-agent/node_modules/pg-protocol/src/parser.ts:105:30)
+      at Socket.<anonymous> (/home/azureuser/nova-community-agent/node_modules/pg-protocol/src/index.ts:7:48)
+      at Socket.emit (node:events:514:20)
+      at addChunk (node:internal/streams/readable:575:12)
+      at readableAddChunkPushByteMode (node:internal/streams/readable:526:3)
+      at Readable.push (node:internal/streams/readable:406:5)
+      at TCP.onStreamRead (node:internal/stream_base_commons:189:23)

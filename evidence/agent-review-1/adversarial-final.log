@@ -1,0 +1,61 @@
+✖ corrected behavior: rejected second runtime must not delete first runtime pending upload/reservation (1597.146126ms)
+✖ corrected behavior: assistant-generated content must not become a user_supplied source (1282.227769ms)
+✔ pending upload namespace blocks turn without losing reservation or invoking model (1427.569038ms)
+✔ cancelled generation cannot write after a new run completes; original replay cannot redispatch (1462.900936ms)
+✔ a different live session cannot authorize output of the revoked initiating session (1338.602324ms)
+✔ entire provider batch is allowlist/schema validated before first mutation (1321.447188ms)
+
+Interrupted while running:
+
+⚠ evidence/agent-review-1/adversarial.test.ts (evidence/agent-review-1/adversarial.test.ts:1:1)
+✖ evidence/agent-review-1/adversarial.test.ts (180037.521418ms)
+✖ evidence/agent-review-1/lease-loss.test.ts
+ℹ tests 8
+ℹ suites 0
+ℹ pass 4
+ℹ fail 2
+ℹ cancelled 2
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 180044.656958
+
+✖ failing tests:
+
+test at evidence/agent-review-1/adversarial.test.ts:1:3231
+✖ corrected behavior: rejected second runtime must not delete first runtime pending upload/reservation (1597.146126ms)
+  AssertionError [ERR_ASSERTION]: runtime refused singleton lease must not recover another live runtime upload
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/evidence/agent-review-1/adversarial.test.ts:50:12)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at evidence/agent-review-1/adversarial.test.ts:1:4910
+✖ corrected behavior: assistant-generated content must not become a user_supplied source (1282.227769ms)
+  AssertionError [ERR_ASSERTION]: generated assistant text must be rejected or labelled generated, not user_supplied
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/evidence/agent-review-1/adversarial.test.ts:63:12)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at evidence/agent-review-1/adversarial.test.ts:1:1
+✖ evidence/agent-review-1/adversarial.test.ts (180037.521418ms)
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at evidence/agent-review-1/lease-loss.test.ts:1:1
+✖ evidence/agent-review-1/lease-loss.test.ts
+  'Promise resolution is still pending but the event loop has already resolved'

@@ -1,0 +1,42 @@
+[
+  {
+    "log": "file-put-repeat-1.log",
+    "exit_code": 0
+  },
+  {
+    "log": "file-put-repeat-2.log",
+    "exit_code": 0
+  },
+  {
+    "log": "file-put-repeat-3.log",
+    "exit_code": 0
+  },
+  {
+    "log": "file-put-repeat-4.log",
+    "exit_code": 0
+  },
+  {
+    "log": "file-put-repeat-5.log",
+    "exit_code": 0
+  },
+  {
+    "log": "file-put-repeat-6.log",
+    "exit_code": 0
+  },
+  {
+    "log": "file-put-repeat-7.log",
+    "exit_code": 0
+  },
+  {
+    "log": "file-put-repeat-8.log",
+    "exit_code": 0
+  },
+  {
+    "log": "file-put-repeat-9.log",
+    "exit_code": 0
+  },
+  {
+    "log": "file-put-repeat-10.log",
+    "exit_code": 0
+  }
+]

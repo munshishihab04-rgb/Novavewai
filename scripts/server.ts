@@ -1,8 +1,9 @@
+import {AzureSpeechProvider} from '../src/voice-provider.ts';
 import { buildApp, migrate } from '../src/app.ts';
-import { localPool } from './config.ts';
+import { localPool, agentFromEnv } from './config.ts';
 
 async function main() {
-  const pool = localPool(); const app = buildApp(pool, { fileRoot: process.env.NOVA_FILE_ROOT }); let closing = false;
+  const agent = agentFromEnv(); const pool = localPool(); const app = buildApp(pool, { fileRoot: process.env.NOVA_FILE_ROOT, agent:agent?{...agent,...(process.env.NOVA_VOICE_MANAGED==='1'?{voice:new AzureSpeechProvider()}:{})}:undefined }); let closing = false;
   const close = async () => { if (closing) return; closing = true; await app.close(); await pool.end(); };
   process.once('SIGINT', () => { void close(); }); process.once('SIGTERM', () => { void close(); });
   try { await migrate(pool); const url = await app.listen({ host: '127.0.0.1', port: Number(process.env.PORT ?? 3000) }); console.log('READY ' + url); }

@@ -1,0 +1,40 @@
+{
+  "tests": {
+    "tests": 117,
+    "pass": 117,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "typecheck": 0,
+  "browser": {
+    "dark_dashboard": true,
+    "mobile_overflow": false,
+    "settings": true,
+    "foundry_managed_catalog_count": 422,
+    "dashboard_to_real_chat": true,
+    "page_errors": []
+  },
+  "cleanup": {
+    "syntheticOwnersPurged": 0,
+    "syntheticConversationsRemaining": 0,
+    "realOwnerUntouched": true
+  },
+  "public_assets": {
+    "dashboard.js": "d29ddc75744a4c7763b3031617bd4b3cf351b3c0154fc33d8850a0d3590e13a1",
+    "dark.css": "bf88e5d89710225fdb3916d4fc5b0b28b4ba3c9011f3720aab76cfb83829913a",
+    "app.js": "cb574b0e0928c6fdf4853fab5b9605111d6b4633df5a9b188dfceee22cea8abf",
+    "features.js": "f68faf6cb3470c228247c7c58dc5a58b91024ed2e00753c3688a1d522b687d8d"
+  },
+  "byok": {
+    "foundry": "implemented; API-key endpoint allowlisted, full bounded model catalog, user model selection",
+    "aws": "implemented for Bedrock long-term API keys and manual model/inference-profile IDs; not live-tested because no user AWS key supplied",
+    "storage": "AES-256-GCM with owner/provider AAD; secret never returned",
+    "routing": "selection applies next turn; running turn pinned; replace/disconnect fences late output; no fallback"
+  },
+  "limitations": [
+    "Foundry catalog shows every ID returned by resource, not guaranteed chat/tool access.",
+    "AWS management catalog not listed using Runtime API key; manual ID required.",
+    "BYOK applies only to text agent; voice/search use managed Nova resources."
+  ]
+}

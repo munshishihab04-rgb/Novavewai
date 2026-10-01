@@ -1,0 +1,17 @@
+{
+ "query": "offerte lavoro cameriere di sala Bologna 2026 annuncio restworld.it OR jobintourism.it OR lavoroturismo.it (pagina della singola offerta, non indice)",
+ "startedAt": "2026-09-30T17:33:39.055Z",
+ "text": "Ho trovato un’annuncio singolo **pertinente su LavoroTurismo** per **cameriere/a di sala a Bologna**: **“Cameriere/a di sala - LavoroTurismo”**. È una pagina di offerta, non un indice, e riguarda Bologna. ([lavoroturismo.it](https://www.lavoroturismo.it/offerte-lavoro/offerta-cameriere-sala-bologna-smy-hotels))\n\nNon sono riuscito a confermare un’annuncio **singolo** su **Restworld** o **Job in Tourism** che sia chiaramente **“cameriere di sala Bologna 2026”** e che rispetti esattamente il filtro richiesto; dai risultati trovati emergono soprattutto pagine indice o offerte simili ma non perfettamente allineate. ([restworld.it](https://www.restworld.it/cerco-lavoro/stagionale-sala))\n\nSe vuoi, posso fare un secondo passaggio e cercarti **solo le offerte singole attive oggi** su uno dei tre siti, restringendo per:\n- **Bologna centro**\n- **ristorante / hotel**\n- **tempo determinato / stagionale**\n- **full time / part time**",
+ "sources": [
+  {
+   "title": "Cameriere/a di sala - LavoroTurismo",
+   "url": "https://www.lavoroturismo.it/offerte-lavoro/offerta-cameriere-sala-bologna-smy-hotels"
+  },
+  {
+   "title": "3 offerte di lavoro stagionale in sala | Restworld",
+   "url": "https://www.restworld.it/cerco-lavoro/stagionale-sala"
+  }
+ ],
+ "checkedAt": "2026-09-30T17:33:42.698Z",
+ "kind": "web_search"
+}

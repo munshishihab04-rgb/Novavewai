@@ -1,0 +1,7 @@
+
+> nova-community-agent@0.1.0 typecheck
+> tsc --noEmit
+
+src/jobs-subito.ts(54,23): error TS18048: 'browser' is possibly 'undefined'.
+src/jobs-subito.ts(64,15): error TS18047: 'robots' is possibly 'null'.
+src/jobs-subito.ts(67,17): error TS18047: 'response' is possibly 'null'.

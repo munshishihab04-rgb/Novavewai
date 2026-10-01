@@ -1,0 +1,30 @@
+✖ portal vacancy carries evidence, UNKNOWN publisher and no-agencies excludes unknown even on cache hit (17.785558ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 182.04237
+
+✖ failing tests:
+
+test at tests/jobs-discovery.test.ts:1:319
+✖ portal vacancy carries evidence, UNKNOWN publisher and no-agencies excludes unknown even on cache hit (17.785558ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + undefined
+  - 'VACANCY'
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/jobs-discovery.test.ts:9:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 'VACANCY',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

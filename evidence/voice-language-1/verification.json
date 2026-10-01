@@ -1,0 +1,51 @@
+{
+  "tests": {
+    "tests": 113,
+    "pass": 113,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "real_audio_turns": 6,
+  "results": [
+    {
+      "run": "after-auto",
+      "language": "it",
+      "response": "Ciao! In modo breve, di solito ti servono il curriculum aggiornato, una lettera di presentazione se richiesta, eventuali certificazioni o portfolio, e un documento di identità valido. Potrebbe servire anche una copia stampata delle tue referenze, se richieste. E non dimenticare di ripassare dettagli dell’azienda e le domande tipiche per il colloquio."
+    },
+    {
+      "run": "after-auto",
+      "language": "bn",
+      "response": "শাকতকারে কাজ করার ইচ্ছা থাকলে, আপনার কাজের অভিজ্ঞতা সংক্ষেপে এমনভাবে বলুন: আপনি কী ধরনের কাজ করেছেন, কত বছর, কোনো বিশেষ সরঞ্জাম বা প্রক্রিয়া ব্যবহার করেছেন কি না, আর আপনার ফলাফল কী ছিল—যেমন দক্ষতা বা প্রগতি। সংক্ষেপে, ফলাফল ও ভূমিকার উপর জোর দিন, তবে তা খুব দ্রুত বা এক লাইনেই শেষ করে দিন।"
+    },
+    {
+      "run": "after-auto",
+      "language": "en",
+      "response": "You can say something like, “I may not remember the exact dates, but I worked there for about X years/months. I can share a brief summary of my role and responsibilities instead.” That’s honest, and it still shows your experience clearly."
+    },
+    {
+      "run": "after-it-preference",
+      "language": "it",
+      "response": "Ciao! Di solito servono il tuo curriculum aggiornato, una lettera di presentazione mirata, e magari un portfolio se è rilevante. Porta anche un documento d’identità, eventuali certificazioni, referenze o lettere di raccomandazione se ce le hai, e magari esempi di lavori se ti sono richiesti. Insomma, un pacchetto completo, ma leggero."
+    },
+    {
+      "run": "after-it-preference",
+      "language": "bn",
+      "response": "আপনি সংক্ষেপে বলতে পারেন: “আমি আগে বড়ি বা জিনিসের স্টোর খালাত করতে করেছি, সেখানে মালামালের ইনভেন্টরি, প্যাকিং, আর শিপমেন্টের কাজ করেছি। সব সময় সময়মতো কাজ করতে চেষ্টা করেছি এবং দলবদ্ধ কাজেও ভালো পারি।” এইভাবে সংক্ষেপে, পরিষ্কারভাবে বলুন, একেকটি কাজের উপরিভাষা যোগ করে।"
+    },
+    {
+      "run": "after-it-preference",
+      "language": "en",
+      "response": "If you honestly don’t remember exact dates, say something like: “I don’t recall the exact dates, but it was roughly this period. I’m happy to check my records to be precise.” That way, you’re being honest and helpful without guessing."
+    }
+  ],
+  "public_assets": {
+    "features.js": "f68faf6cb3470c228247c7c58dc5a58b91024ed2e00753c3688a1d522b687d8d",
+    "style.css": "a1029e7a73fb47bba344037b1e2cf3827b0ae8514b97f0f908eb36774b705ff6"
+  },
+  "limits": [
+    "Synthetic native-language speech fed via WebRTC audio sender, not text prompts. Human device/accents not tested.",
+    "Baseline did switch languages on these clear fixtures, so user-reported universal language failure not reproduced. Removed contradictory instruction and default fixed preference.",
+    "Bangla output switches correctly but some wording is awkward; does not certify native linguistic quality."
+  ]
+}

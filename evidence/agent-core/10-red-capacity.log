@@ -1,0 +1,29 @@
+✖ server-wide active run budget bounds concurrent inference across conversations (1579.716979ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1965.554757
+
+✖ failing tests:
+
+test at tests/agent.test.ts:187:1
+✖ server-wide active run budget bounds concurrent inference across conversations (1579.716979ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  201 !== 409
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/agent.test.ts:194:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 201,
+    expected: 409,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

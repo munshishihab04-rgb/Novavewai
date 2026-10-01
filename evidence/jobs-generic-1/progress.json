@@ -1,0 +1,14 @@
+{
+  "task": "jobs-generic-1",
+  "status": "candidate_verified_not_deployed",
+  "scope": "/home/azureuser/nova-community-agent",
+  "fullSuite": {"tests": 191, "pass": 191, "fail": 0, "skipped": 0, "log": "tests/full-suite-final.txt"},
+  "typecheck": {"exit": 0, "log": "tests/typecheck-final.txt"},
+  "controlledNative": {"tests": 4, "pass": 4, "fail": 0, "log": "tests/native-controlled-final.txt", "realTemporaryPostgres": true, "realHttpEventsReadback": true, "chromiumReceiptRender": true, "externalModelApi": false},
+  "subitoAutomation": "denied_even_with_legacy_policy_reference",
+  "defaultResult": "original_source_search_links_not_vacancies",
+  "importedRecords": "application_injected_permitted_imports_only_dated_not_live",
+  "publicEdited": false,
+  "deployed": false,
+  "remaining": ["parent review and coordinated deployment", "authorized broad live sources", "import ingestion endpoint", "company/Careers discovery", "geographic and semantic disambiguation", "Subito permission before any automation"]
+}

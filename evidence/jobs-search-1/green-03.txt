@@ -1,0 +1,11 @@
+✔ native jobs_search accepts intent and an empty city, not arbitrary browser options (1.730391ms)
+✔ missing city asks before any source or cache access and cooking infers cuoco (1.30654ms)
+✔ natural role/city search shares only canonical metadata with TTL across service instances (23.508135ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 372.251334

@@ -1,0 +1,84 @@
+✖ native agent asks city from jobs receipt without browsing and includes discovery safety instructions (1551.645294ms)
+✔ jobs source receipt cannot persist after session revocation (1595.290989ms)
+✔ cancellation fences uncooperative job providers and does not hang app shutdown (1688.122912ms)
+✔ native jobs dispatch completes with original link receipt and no preference interview (1587.503212ms)
+✖ controlled-provider native generic dispatch persists missing city, corrections, remote and suppresses duplicates (1918.8799ms)
+✔ generic default gates automation and returns named original-source searches, not vacancies (7.638147ms)
+✔ permitted imports are dated observations, unknown publisher allowed, never relabelled live or city (6.39061ms)
+✔ generic occupation and municipality are not limited to a dictionary (5.529867ms)
+✔ current user provenance wins over model cities, negation and old preferences (1.815316ms)
+✔ native jobs_search accepts intent and an empty city, not arbitrary browser options (1.166147ms)
+✖ missing city asks before any source or cache access and cooking infers cuoco (5.328225ms)
+✔ natural role/city search shares only canonical metadata with TTL across service instances (25.734781ms)
+✔ live searches have one shared lock, fail fast on overlap and rate limit across instances (3.863858ms)
+✔ source failure is explicit, never stale/simulated data; privacy and origin filter are strict (2.770892ms)
+✔ ambiguous cities do not start a search and invalid budgets fail at construction (0.438072ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 12
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 10001.073885
+
+✖ failing tests:
+
+test at tests/jobs-agent.test.ts:10:1
+✖ native agent asks city from jobs receipt without browsing and includes discovery safety instructions (1551.645294ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'outcome_unknown'
+  - 'waiting_user'
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/jobs-agent.test.ts:22:55)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'outcome_unknown',
+    expected: 'waiting_user',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/jobs-generic-native.test.ts:5:1
+✖ controlled-provider native generic dispatch persists missing city, corrections, remote and suppresses duplicates (1918.8799ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  201 !== 200
+  
+      at turn (/home/azureuser/nova-community-agent/tests/jobs-generic-native.test.ts:12:162)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/jobs-generic-native.test.ts:13:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 201,
+    expected: 200,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/jobs-search.test.ts:15:1
+✖ missing city asks before any source or cache access and cooking infers cuoco (5.328225ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'needs_occupation'
+  - 'needs_city'
+           ^
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/jobs-search.test.ts:21:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'needs_occupation',
+    expected: 'needs_city',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

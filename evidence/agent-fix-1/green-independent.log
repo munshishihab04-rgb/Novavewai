@@ -1,0 +1,17 @@
+✔ corrected behavior: rejected second runtime must not delete first runtime pending upload/reservation (1495.567619ms)
+✔ corrected behavior: assistant-generated content must not become a user_supplied source (1751.510828ms)
+✔ pending upload namespace blocks turn without losing reservation or invoking model (1665.396403ms)
+✔ cancelled generation cannot write after a new run completes; original replay cannot redispatch (1831.86602ms)
+✔ a different live session cannot authorize output of the revoked initiating session (1559.977467ms)
+✔ entire provider batch is allowlist/schema validated before first mutation (1646.753275ms)
+✔ corrected behavior: expiry during canonical writer lock wait must roll back mutation and receipt (2313.481879ms)
+✔ receipt insertion failure atomically rolls back canonical revision and outbox; no replay inference (1547.927919ms)
+✔ corrected behavior: singleton connection loss is handled and durably fences in-flight run (3666.217114ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 18098.789123

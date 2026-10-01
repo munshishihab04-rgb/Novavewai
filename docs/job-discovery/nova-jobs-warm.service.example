@@ -1,0 +1,16 @@
+# Example only. NOT installed or enabled by this change.
+[Unit]
+Description=Nova bounded daily job metadata cache
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/azureuser/nova-community-agent
+Environment=PLAYWRIGHT_BROWSERS_PATH=/home/azureuser/nova-community-agent/.playwright
+Environment=NOVA_JOBS_CACHE_DIR=/home/azureuser/nova-community-agent/.cache/jobs
+# Configure the identical cache directory in Nova runtime, and provide a reviewed
+# NOVA_JOBS_SUBITO_POLICY_REFERENCE via your approved service configuration.
+# Leaving it unset is intentional: source access fails closed.
+ExecStart=/usr/bin/env node --import tsx scripts/jobs-warm.ts
+TimeoutStartSec=200
+NoNewPrivileges=true
+PrivateTmp=true

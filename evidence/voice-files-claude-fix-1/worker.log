@@ -1,0 +1,19 @@
+Done. Both gaps reproduced red first, then fixed and verified green.
+
+What changed
+- migrations/016_voice_admission.sql (new, additive): voice_sessions.request_key + request_fingerprint, UNIQUE(owner_id, request_key).
+- src/voice.ts: POST /voice/sessions now requires an idempotency-key and reuses the existing idempotentResult/fingerprint mechanism. Admission transaction: owner lock + exact bearer check → key replay/conflict resolution → conversation ownership → one-active-per-owner → global count under pg_advisory_xact_lock(913007), held only inside the short admission transaction, never across the provider network call. Session row is reserved as `connecting` with the key before connect; activation and the durable 201 response commit together, so replay comes from the DB, not a second provider.connect. Dead sessions (stopped/restart-failed/expired) never replay a stale SDP: 409 voice_stopped; still connecting → 409 voice_pending; failed connect → 503. New read-only GET /voice/sessions?requestKey= returns id/status/conversation only.
+- staging/voice-files/public/native.js: handshake uses one requestKey; on network/voice_pending error it recovers the reserved id by key and stops it, no blind reconnect. Staging only, nothing in public/.
+- tests/voice-admission.test.ts (permanent): 8-owner concurrent race (exactly 4×201/4×429, 4 provider calls, ≤4 live during race, freed slot admits), duplicate replay, fingerprint conflict, foreign-owner key namespace, missing key, lost-ack pending + recovery + replay, cancel while connecting, restart, bearer revocation.
+
+Verification
+- Pre-fix: tests/voice-admission.test.ts 0/4 (red-before-fix.tap).
+- Post-fix: new tests + tests/voice-native.test.ts + independent evidence/voice-files-claude-1/harness.test.ts → 13 pass / 0 fail (targeted-after-fix.tap). tsc --noEmit exit 0.
+- Not run: full npm test; Playwright UI test (its mocked 201 path is untouched, but the new native.js recovery branch was not browser-exercised — time budget).
+
+Not fixed, by design: browser data-channel provider control and non-verbatim realtime speech remain release gates; migration 016 needs a coordinated restart; no deploy/commit.
+
+Report with hashes and commands: /home/azureuser/nova-community-agent/evidence/voice-files-claude-fix-1/REPORT.md
+Logs: /home/azureuser/nova-community-agent/evidence/voice-files-claude-fix-1/{red-before-fix.tap,targeted-after-fix.tap,typecheck.log,hashes-before.txt,hashes-after.txt}
+
+session_id: 20260926_123946_39fd9e

@@ -1,0 +1,28 @@
+{
+  "tests": {
+    "tests": 117,
+    "pass": 117,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "typecheck": 0,
+  "public": {
+    "sticky": true,
+    "last_card_clear": true,
+    "custom_svg_icons": 13,
+    "managed_foundry_models": 422,
+    "errors": []
+  },
+  "asset_hashes": {
+    "dashboard.js": "2dc9ed261fc609c7308412a7a519b4646c2498e37e77492cfca814c89d0154a7",
+    "dark.css": "bfd4b43852c5f6d615360d6c0747a4af39a3bc749d8495f16413dfc6de9e5c0b",
+    "icons.js": "40e79ec14df14c4f80f4131eb4bcca72af273cbb56801c18cf9092c286ab0c06"
+  },
+  "visual_review": "pass: composer fully visible, no card overlap, coherent custom icons",
+  "cleanup": {
+    "syntheticOwnersPurged": 0,
+    "syntheticConversationsRemaining": 0,
+    "realOwnerUntouched": true
+  }
+}

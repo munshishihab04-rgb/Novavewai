@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "sources": [
+    {
+      "id": 1,
+      "url": "https://business.linkedin.com/it/it/hire/post-jobs",
+      "title": "Pubblica un’offerta di lavoro su LinkedIn | LinkedIn Talent Solutions",
+      "accessed": "2026-09-26"
+    },
+    {
+      "id": 2,
+      "url": "https://www.helplavoro.it/listino-inserzioni.html",
+      "title": "HelpLavoro.it - Listino Inserzioni",
+      "accessed": "2026-09-26"
+    },
+    {
+      "id": 3,
+      "url": "https://www.cercolavoro.com",
+      "title": "Cerco Lavoro | CercoLavoro.com",
+      "accessed": "2026-09-26"
+    },
+    {
+      "id": 4,
+      "url": "https://www.jobintourism.it",
+      "title": "Job in Tourism | Inserzioni di lavoro nel turismo",
+      "accessed": "2026-09-26"
+    },
+    {
+      "id": 5,
+      "url": "https://www.restworld.it/en",
+      "title": "Restworld | Work in hospitality, done well",
+      "accessed": "2026-09-26"
+    },
+    {
+      "id": 6,
+      "url": "https://www.lavoroturismo.it",
+      "title": "Offerte di lavoro nel settore turistico, alberghiero e della ristorazione - LavoroTurismo",
+      "accessed": "2026-09-26"
+    },
+    {
+      "id": 7,
+      "url": "https://it.talent.com/enterprise",
+      "title": "Talent.com",
+      "accessed": "2026-09-26"
+    },
+    {
+      "id": 8,
+      "url": "https://www.lavoro.it",
+      "title": "Trova il tuo lavoro ideale in Italia su Lavoro.it",
+      "accessed": "2026-09-26"
+    },
+    {
+      "id": 9,
+      "url": "https://trovolavoro.com/aziende",
+      "title": "Pubblica offerte di lavoro | Primo annuncio Gratuito | Trovolavoro",
+      "accessed": "2026-09-26"
+    },
+    {
+      "id": 10,
+      "url": "https://www.cliccalavoro.it/it",
+      "title": "Cliccalavoro – Offerte di lavoro in Italia",
+      "accessed": "2026-09-26"
+    }
+  ]
+}

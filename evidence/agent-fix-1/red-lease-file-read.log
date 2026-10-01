@@ -1,0 +1,30 @@
+✖ lease loss while file read awaits records unknown before read returns (3149.84607ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3540.823854
+
+✖ failing tests:
+
+test at tests/agent-runtime.test.ts:1:9471
+✖ lease loss while file read awaits records unknown before read returns (3149.84607ms)
+  AssertionError [ERR_ASSERTION]: unknown persistence must not depend on non-network read cooperating with abort
+  + actual - expected
+  
+  + 'running'
+  - 'outcome_unknown'
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/agent-runtime.test.ts:115:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'running',
+    expected: 'outcome_unknown',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

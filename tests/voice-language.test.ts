@@ -1,0 +1,5 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {database} from './helpers.ts';import {buildApp,migrate,bootstrap} from '../src/app.ts';import {capabilityRoutes} from '../src/capabilities.ts';import {voiceInstructions} from '../src/voice-policy.ts';
+test('native policy preserves automatic language following; legacy autonomous voice is retired',async()=>{
+ for(const language of ['auto','it','bn','en']){const policy=voiceInstructions(language);assert.match(policy,/latest user speech/i);assert.doesNotMatch(policy,/separate voice conversation|cannot save drafts/i);if(language==='auto'){assert.match(policy,/switch/i);assert.match(policy,/not a language lock/i)}else assert.match(policy,/ALWAYS/)}
+ const db=await database();await migrate(db.pool);const user=await bootstrap(db.pool);const app=buildApp(db.pool);capabilityRoutes(app,db.pool);await app.ready();try{const response=await app.inject({method:'POST',url:'/voice/connect',headers:{authorization:`Bearer ${user.token}`},payload:{sdp:'synthetic-offer',language:'auto'}});assert.equal(response.statusCode,410)}finally{await app.close();await db.close()}
+});

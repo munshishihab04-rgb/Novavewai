@@ -1,0 +1,741 @@
+[
+  {
+    "label": "permanent-regressions",
+    "counts": {
+      "tests": 19,
+      "pass": 19,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "test_names": [
+      "corrected behavior: rejected second runtime must not delete first runtime pending upload/reservation",
+      "corrected behavior: assistant-generated content must not become a user_supplied source",
+      "pending upload namespace blocks turn without losing reservation or invoking model",
+      "cancelled generation cannot write after a new run completes; original replay cannot redispatch",
+      "a different live session cannot authorize output of the revoked initiating session",
+      "entire provider batch is allowlist/schema validated before first mutation",
+      "corrected behavior: expiry during canonical writer lock wait must roll back mutation and receipt",
+      "receipt insertion failure atomically rolls back canonical revision and outbox; no replay inference",
+      "session final validation after actual receipt write wait",
+      "session final validation after actual terminal write wait",
+      "lease loss during writer wait rolls back; replacement drains the old transaction before recovery",
+      "failed storage initialization releases singleton before close and removes client listeners",
+      "dedicated client end alone invalidates runtime and cleans listeners",
+      "lease loss while file read awaits records unknown before read returns",
+      "startup reservation also excludes non-agent file runtime: false",
+      "startup reservation also excludes non-agent file runtime: true",
+      "lease loss fences held inference, late output and replacement",
+      "lease loss fences held inference, late output and cancel",
+      "lease loss fences held inference, late output and purge"
+    ],
+    "log": "permanent-regressions.log",
+    "log_sha256": "c6aa3060e930337f8e2b27eb42b7d1b5216ecd36e17101e3132db2f8d128ecfd",
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "tests/agent-review-regressions.test.ts",
+      "tests/agent-runtime.test.ts"
+    ],
+    "exit_code": 0
+  },
+  {
+    "label": "unchanged-original-probes",
+    "counts": {
+      "tests": 9,
+      "pass": 9,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "test_names": [
+      "corrected behavior: rejected second runtime must not delete first runtime pending upload/reservation",
+      "corrected behavior: assistant-generated content must not become a user_supplied source",
+      "pending upload namespace blocks turn without losing reservation or invoking model",
+      "cancelled generation cannot write after a new run completes; original replay cannot redispatch",
+      "a different live session cannot authorize output of the revoked initiating session",
+      "entire provider batch is allowlist/schema validated before first mutation",
+      "corrected behavior: expiry during canonical writer lock wait must roll back mutation and receipt",
+      "receipt insertion failure atomically rolls back canonical revision and outbox; no replay inference",
+      "corrected behavior: singleton connection loss is handled and durably fences in-flight run"
+    ],
+    "log": "unchanged-original-probes.log",
+    "log_sha256": "4b02e59112339c3d6f97032eaba3dbe2edab4e6dc765e998b31a9f0e69713b3f",
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "evidence/agent-review-2/adversarial.test.ts",
+      "evidence/agent-review-2/lease-loss.test.ts"
+    ],
+    "exit_code": 0
+  },
+  {
+    "label": "full-suite",
+    "counts": {
+      "tests": 105,
+      "pass": 105,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "test_names": [
+      "Approval binds exact revision/account/recipient; concurrent consumption yields one durable synthetic effect",
+      "NEW project provider env is opt-in, complete, HTTPS-only and ignores unrelated credentials",
+      "SIGKILL during real provider await survives PG and API restart as unknown; explicit new turn recovers",
+      "corrected behavior: rejected second runtime must not delete first runtime pending upload/reservation",
+      "corrected behavior: assistant-generated content must not become a user_supplied source",
+      "pending upload namespace blocks turn without losing reservation or invoking model",
+      "cancelled generation cannot write after a new run completes; original replay cannot redispatch",
+      "a different live session cannot authorize output of the revoked initiating session",
+      "entire provider batch is allowlist/schema validated before first mutation",
+      "corrected behavior: expiry during canonical writer lock wait must roll back mutation and receipt",
+      "receipt insertion failure atomically rolls back canonical revision and outbox; no replay inference",
+      "session final validation after actual receipt write wait",
+      "session final validation after actual terminal write wait",
+      "lease loss during writer wait rolls back; replacement drains the old transaction before recovery",
+      "failed storage initialization releases singleton before close and removes client listeners",
+      "dedicated client end alone invalidates runtime and cleans listeners",
+      "lease loss while file read awaits records unknown before read returns",
+      "startup reservation also excludes non-agent file runtime: false",
+      "startup reservation also excludes non-agent file runtime: true",
+      "lease loss fences held inference, late output and replacement",
+      "lease loss fences held inference, late output and cancel",
+      "lease loss fences held inference, late output and purge",
+      "controlled protocol: automatic tools revise canonical artifact, persist assistant, reopen and replay without inference",
+      "fail closed: denied approval",
+      "fail closed: prototype tool",
+      "fail closed: schema owner injection",
+      "fail closed: malformed arguments",
+      "fail closed: invalid JSON",
+      "fail closed: refusal",
+      "fail closed: truncation",
+      "fail closed: empty",
+      "fail closed: stop with malformed calls",
+      "fail closed: oversized",
+      "fail closed: http error",
+      "question pauses task; explicit answer resumes with file observation, scope checks and terminal receipt",
+      "post-provider await fence: cancel",
+      "post-provider await fence: revoke",
+      "post-provider await fence: expire",
+      "post-provider await fence: purge",
+      "post-provider await fence: message",
+      "post-provider await fence: task",
+      "post-provider await fence: artifact",
+      "budgets stop loops and response timeout is explicit unknown; no replay retry",
+      "restart conservatively fails queued and marks interrupted inference unknown without replay",
+      "pluggable provider remains untrusted and uncooperative await is bounded",
+      "server-wide active run budget bounds concurrent inference across conversations",
+      "tool scope rejects another conversation: read_artifact",
+      "tool scope rejects another conversation: update_artifact",
+      "tool scope rejects another conversation: read_file",
+      "read_artifact observes canonical revision; duplicate tool ID cannot repeat mutation",
+      "context byte budget rolls back oversized tool mutation and preflight never calls provider",
+      "inference failure after a committed tool preserves its receipt/revision without replay",
+      "tool transaction failure rolls back artifact and receipt together",
+      "post-file await fence: cancel",
+      "post-file await fence: purge",
+      "post-file await fence: revoke",
+      "one runtime per database rejects a concurrent engine without recovering live work",
+      "provider redirects are not followed",
+      "Artifact append-only revisions, concurrent conflict and owner-scoped revision export",
+      "AUTH-RECHECK expiry mutation: reject stale authentication after owner-lock wait",
+      "AUTH-RECHECK expiry replay: reject stale authentication after owner-lock wait",
+      "AUTH-RECHECK expiry export: reject stale authentication after owner-lock wait",
+      "AUTH-RECHECK expiry purge: reject stale authentication after owner-lock wait",
+      "AUTH-RECHECK revoke mutation: reject stale authentication after owner-lock wait",
+      "AUTH-RECHECK revoke replay: reject stale authentication after owner-lock wait",
+      "AUTH-RECHECK revoke export: reject stale authentication after owner-lock wait",
+      "AUTH-RECHECK revoke purge: reject stale authentication after owner-lock wait",
+      "AUTH-RECHECK rebind mutation: reject stale authentication after owner-lock wait",
+      "AUTH-RECHECK rebind replay: reject stale authentication after owner-lock wait",
+      "AUTH-RECHECK rebind export: reject stale authentication after owner-lock wait",
+      "AUTH-RECHECK rebind purge: reject stale authentication after owner-lock wait",
+      "Local bootstrap CLI writes private credential file; real server subprocess restarts and serves persisted tasks",
+      "CONTEXT AUTH: exact token revoked during owner lock blocks message read and append",
+      "PROVENANCE: exact revision, literal snapshot, conversation boundaries and declared scopes",
+      "MESSAGES: immutable owned sequence, replay, pagination and restart",
+      "FILE KEY: a previously populated unbound key is never imported",
+      "FILE AUTH: expiry during real blob write rejects ready commit, recovery cleans pending bytes",
+      "FILE FS BOUNDARY: write failure reserves quota but produces no ready cache, byte quota serializes",
+      "FILE STORE IDENTITY: wrong root and missing key fail closed, no replacement key on existing data",
+      "FILE RECOVERY: real DB failure after blob fsync, pending hidden and startup conservative cleanup",
+      "FILE VALIDATION: paths, MIME, strict UTF-8, oversize, quotas and authenticated corruption failures",
+      "FILE PURGING: filesystem failure keeps durable cleanup, restart completes deletion",
+      "FILE SOURCE: owner-bound immutable UTF-8 snapshot and purge cascade",
+      "FILES PURGE: remove bytes and cascaded context, never resurrect a late reservation",
+      "FILES: real encrypted immutable private bytes, owner download and restart",
+      "HTTP authenticated task persists through application and PostgreSQL restart",
+      "R1 acceptance: pending upload owns shared key, completes once and replays after restart",
+      "R1 all generic routes conflict before DB or file side effects; owners remain independent",
+      "R1 reverse direction: completed generic key rejects upload before reservation or blob write",
+      "R1 DB failure: reservation blocks other routes until recovery, then same request retries once",
+      "R1 FS failure: reservation blocks other routes until recovery, then same request retries once",
+      "R1 cancelled reservation cannot disturb a replacement completed cache; purge releases only its owner",
+      "R1 pending purge releases reservation and leaves another owner same-key cache intact",
+      "R1 cancelled upload retry with identical key and body gets a new reservation, old request cannot finalize it",
+      "R1 recovery of legacy collision preserves the completed same-owner same-key response",
+      "Task lifecycle optimistic locking rejects stale/illegal transitions and resumes persisted checkpoint",
+      "Owner export and purge revoke all sessions and prevent stale worker/direct database resurrection",
+      "Revoked and expired approval cannot authorize queued dispatch",
+      "Ambiguous adapter exception and malformed receipt never retry or expose provider secrets",
+      "Expired lease fences old worker; crash executing marker recovers unknown without repeating effect",
+      "Cancelled task invalidates queued policy before dispatch",
+      "Timeout after synthetic dispatch becomes unknown and a late return cannot overwrite it",
+      "Worker revalidates queued revision, session expiry and intent expiry before any call",
+      "Purge during in-flight synthetic call waits and late completion cannot recreate records",
+      "Closed query and body schemas, redacted parser/DB errors, expired sessions and cross-owner foreign keys"
+    ],
+    "log": "full-suite.log",
+    "log_sha256": "e2863abf8aa6e09c73b80e0a11bea039d82f59add5e05c0bffdbecb973f236be",
+    "command": [
+      "npm",
+      "test"
+    ],
+    "exit_code": 0
+  },
+  {
+    "label": "baseline-original-probes",
+    "counts": {
+      "tests": 9,
+      "pass": 5,
+      "fail": 4,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "test_names": [
+      "corrected behavior: rejected second runtime must not delete first runtime pending upload/reservation",
+      "corrected behavior: assistant-generated content must not become a user_supplied source",
+      "pending upload namespace blocks turn without losing reservation or invoking model",
+      "cancelled generation cannot write after a new run completes; original replay cannot redispatch",
+      "a different live session cannot authorize output of the revoked initiating session",
+      "entire provider batch is allowlist/schema validated before first mutation",
+      "corrected behavior: expiry during canonical writer lock wait must roll back mutation and receipt",
+      "receipt insertion failure atomically rolls back canonical revision and outbox; no replay inference",
+      "corrected behavior: singleton connection loss is handled and durably fences in-flight run"
+    ],
+    "log": "baseline-original-probes.log",
+    "log_sha256": "667693c38008b69cdc57dfd78680e8b9ce6a5fbc307f710f0dc1455fe243946b",
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "evidence/agent-review-2/baseline-probes/adversarial.test.ts",
+      "evidence/agent-review-2/baseline-probes/lease-loss.test.ts"
+    ],
+    "exit_code": 1
+  },
+  {
+    "label": "baseline-final-write-probes",
+    "counts": {
+      "tests": 2,
+      "pass": 0,
+      "fail": 2,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "test_names": [
+      "session final validation after actual receipt write wait",
+      "session final validation after actual terminal write wait"
+    ],
+    "log": "baseline-final-write-probes.log",
+    "log_sha256": "4f2026e067c71628737adf687c679def1bd02a367b7c265a47abff2d1c38c12f",
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=session final validation",
+      "evidence/agent-review-2/baseline-probes/agent-runtime.test.ts"
+    ],
+    "exit_code": 1
+  },
+  {
+    "label": "supplemental",
+    "counts": {
+      "tests": 4,
+      "pass": 3,
+      "fail": 1,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "test_names": [
+      "non-agent live upload also excludes agent-enabled replacement",
+      "no-file incumbent excludes file recovery: agent=false",
+      "no-file incumbent excludes file recovery: agent=true",
+      "lease loss during actual file put drains before destructive recovery"
+    ],
+    "log": "supplemental.log",
+    "log_sha256": "cc441203da1eac5ccd032d6f33988fa7ce4752ac4c5d3c946c5b7159233ea4b3",
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "evidence/agent-review-2/supplemental.test.ts"
+    ],
+    "exit_code": 1
+  },
+  {
+    "label": "supplemental-rerun",
+    "counts": {
+      "tests": 4,
+      "pass": 4,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "test_names": [
+      "non-agent live upload also excludes agent-enabled replacement",
+      "no-file incumbent excludes file recovery: agent=false",
+      "no-file incumbent excludes file recovery: agent=true",
+      "lease loss during actual file put drains before destructive recovery"
+    ],
+    "log": "supplemental-rerun.log",
+    "log_sha256": "fe4a24ed63e86f094d5e4e3df72ce254f2780e6adedac74026bb3f5bd4f9891c",
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "evidence/agent-review-2/supplemental.test.ts"
+    ],
+    "exit_code": 0
+  },
+  {
+    "label": "supplemental-rerun-2",
+    "counts": {
+      "tests": 4,
+      "pass": 4,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "test_names": [
+      "non-agent live upload also excludes agent-enabled replacement",
+      "no-file incumbent excludes file recovery: agent=false",
+      "no-file incumbent excludes file recovery: agent=true",
+      "lease loss during actual file put drains before destructive recovery"
+    ],
+    "log": "supplemental-rerun-2.log",
+    "log_sha256": "ec040347da8e08aae64ab669ed1cdc693e9c7d87639e874698a7717b85268f94",
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "evidence/agent-review-2/supplemental.test.ts"
+    ],
+    "exit_code": 0
+  },
+  {
+    "label": "file-put-isolated",
+    "counts": {
+      "tests": 1,
+      "pass": 1,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "test_names": [
+      "lease loss during actual file put drains before destructive recovery"
+    ],
+    "log": "file-put-isolated.log",
+    "log_sha256": "bbb1fe9c3fb63496d21f931b3c436211950a185d08e5c46f57c4f26203be5479",
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=lease loss during actual file put",
+      "evidence/agent-review-2/supplemental.test.ts"
+    ],
+    "exit_code": 0
+  },
+  {
+    "label": "file-put-isolated-2",
+    "counts": {
+      "tests": 1,
+      "pass": 1,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "test_names": [
+      "lease loss during actual file put drains before destructive recovery"
+    ],
+    "log": "file-put-isolated-2.log",
+    "log_sha256": "79c7bf16e6cfed428d2e12e0bf41e2809617fd816b3a6aba07ed75d269a7ec09",
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=lease loss during actual file put",
+      "evidence/agent-review-2/supplemental.test.ts"
+    ],
+    "exit_code": 0
+  },
+  {
+    "label": "queued-lease-error",
+    "counts": {
+      "tests": 1,
+      "pass": 0,
+      "fail": 1,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "test_names": [
+      "lock-observation invalidation before queued lease error must not emit an unhandled pool error"
+    ],
+    "log": "queued-lease-error.log",
+    "log_sha256": "0655873c4c239844056ed20a67b58fa9ecbd594f0908e0108371cca5c839b974",
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "evidence/agent-review-2/queued-lease-error.test.ts"
+    ],
+    "exit_code": 1
+  },
+  {
+    "label": "queued-lease-error-repeat",
+    "counts": {
+      "tests": 1,
+      "pass": 0,
+      "fail": 1,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "test_names": [
+      "lock-observation invalidation before queued lease error must not emit an unhandled pool error"
+    ],
+    "log": "queued-lease-error-repeat.log",
+    "log_sha256": "f2ad6a6b468b302d1ac82cac97f778dc4a8dfc2871bcb9e7266d922a2e6d5146",
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "evidence/agent-review-2/queued-lease-error.test.ts"
+    ],
+    "exit_code": 1
+  },
+  {
+    "label": "file-put-repeat-1",
+    "counts": {
+      "tests": 1,
+      "pass": 1,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "test_names": [
+      "lease loss during actual file put drains before destructive recovery"
+    ],
+    "log": "file-put-repeat-1.log",
+    "log_sha256": "aba23f220614312eff80f29370fdb11a165fa03703e220bbc8b22055cf4d2d3e",
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=lease loss during actual file put",
+      "evidence/agent-review-2/supplemental.test.ts"
+    ],
+    "exit_code": 0
+  },
+  {
+    "label": "file-put-repeat-2",
+    "counts": {
+      "tests": 1,
+      "pass": 1,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "test_names": [
+      "lease loss during actual file put drains before destructive recovery"
+    ],
+    "log": "file-put-repeat-2.log",
+    "log_sha256": "e70d88fb060f151bfc125bce09868813abd64bb3661367177ce8b574621b313a",
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=lease loss during actual file put",
+      "evidence/agent-review-2/supplemental.test.ts"
+    ],
+    "exit_code": 0
+  },
+  {
+    "label": "file-put-repeat-3",
+    "counts": {
+      "tests": 1,
+      "pass": 1,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "test_names": [
+      "lease loss during actual file put drains before destructive recovery"
+    ],
+    "log": "file-put-repeat-3.log",
+    "log_sha256": "6339bb31a140e4a5ffe54fe9773623783e4b46a9bcbd327f4916e7b2f30b8f84",
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=lease loss during actual file put",
+      "evidence/agent-review-2/supplemental.test.ts"
+    ],
+    "exit_code": 0
+  },
+  {
+    "label": "file-put-repeat-4",
+    "counts": {
+      "tests": 1,
+      "pass": 1,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "test_names": [
+      "lease loss during actual file put drains before destructive recovery"
+    ],
+    "log": "file-put-repeat-4.log",
+    "log_sha256": "45f367d9666eab6956a96a2695c958701619987053202ea923301b68d89abf53",
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=lease loss during actual file put",
+      "evidence/agent-review-2/supplemental.test.ts"
+    ],
+    "exit_code": 0
+  },
+  {
+    "label": "file-put-repeat-5",
+    "counts": {
+      "tests": 1,
+      "pass": 1,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "test_names": [
+      "lease loss during actual file put drains before destructive recovery"
+    ],
+    "log": "file-put-repeat-5.log",
+    "log_sha256": "7c319509252c2f58d53050b4c55e737cf68cd44384afc2f02010d4b98cdb98b5",
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=lease loss during actual file put",
+      "evidence/agent-review-2/supplemental.test.ts"
+    ],
+    "exit_code": 0
+  },
+  {
+    "label": "file-put-repeat-6",
+    "counts": {
+      "tests": 1,
+      "pass": 1,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "test_names": [
+      "lease loss during actual file put drains before destructive recovery"
+    ],
+    "log": "file-put-repeat-6.log",
+    "log_sha256": "4fe6ecb88c7bb14ed9c0775e418ed53be5e13774a8382b77e533b18eaac0a2e5",
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=lease loss during actual file put",
+      "evidence/agent-review-2/supplemental.test.ts"
+    ],
+    "exit_code": 0
+  },
+  {
+    "label": "file-put-repeat-7",
+    "counts": {
+      "tests": 1,
+      "pass": 1,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "test_names": [
+      "lease loss during actual file put drains before destructive recovery"
+    ],
+    "log": "file-put-repeat-7.log",
+    "log_sha256": "99a2df7fa57d6c98915cfaef4d642acf3b9bcbaaf980a1685eecba2440f4cc74",
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=lease loss during actual file put",
+      "evidence/agent-review-2/supplemental.test.ts"
+    ],
+    "exit_code": 0
+  },
+  {
+    "label": "file-put-repeat-8",
+    "counts": {
+      "tests": 1,
+      "pass": 1,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "test_names": [
+      "lease loss during actual file put drains before destructive recovery"
+    ],
+    "log": "file-put-repeat-8.log",
+    "log_sha256": "eacff65fda6c481d7a66f76cd842ea2bdb017c3b3c46476eafe73224b693a6bb",
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=lease loss during actual file put",
+      "evidence/agent-review-2/supplemental.test.ts"
+    ],
+    "exit_code": 0
+  },
+  {
+    "label": "file-put-repeat-9",
+    "counts": {
+      "tests": 1,
+      "pass": 1,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "test_names": [
+      "lease loss during actual file put drains before destructive recovery"
+    ],
+    "log": "file-put-repeat-9.log",
+    "log_sha256": "5392a552cce16325ce3565fb0af8b9204f5071d99eab70b3119f4a36d31c15ab",
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=lease loss during actual file put",
+      "evidence/agent-review-2/supplemental.test.ts"
+    ],
+    "exit_code": 0
+  },
+  {
+    "label": "file-put-repeat-10",
+    "counts": {
+      "tests": 1,
+      "pass": 1,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "test_names": [
+      "lease loss during actual file put drains before destructive recovery"
+    ],
+    "log": "file-put-repeat-10.log",
+    "log_sha256": "ae9e5548f33a9913ede7063a42aca3dfcce314795b53250345a451bf2338fadf",
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=lease loss during actual file put",
+      "evidence/agent-review-2/supplemental.test.ts"
+    ],
+    "exit_code": 0
+  },
+  {
+    "label": "typecheck",
+    "command": [
+      "npm",
+      "run",
+      "typecheck"
+    ],
+    "cwd": "/home/azureuser/nova-community-agent",
+    "exit_code": 0,
+    "seconds": 1.218,
+    "counts": {},
+    "log": "typecheck.log",
+    "log_sha256": "7d6a5a1901d117873633e2de4661d1a5453e59775fac6ace1d2d23bf201e77b3"
+  },
+  {
+    "label": "diff-check",
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "cwd": "/home/azureuser/nova-community-agent",
+    "exit_code": 0,
+    "seconds": 0.004,
+    "counts": {},
+    "log": "diff-check.log",
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+]

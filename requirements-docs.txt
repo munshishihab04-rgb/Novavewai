@@ -1,0 +1,14 @@
+# Python worker (document rendering / extraction) — pinned to what runs in production on 2026-10-01.
+# Install (pip may be unavailable inside the venv — use uv):
+#   python3 -m venv .venv-docs && uv pip install --python .venv-docs/bin/python -r requirements-docs.txt
+reportlab==5.0.1
+uharfbuzz==0.56.2
+pypdf==6.19.0
+pypdfium2==5.13.0
+pillow==12.3.0
+python-docx==1.2.0
+openpyxl==3.1.5
+lxml==6.1.3
+et_xmlfile==2.0.0
+charset-normalizer==3.5.1
+typing_extensions==4.16.0

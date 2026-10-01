@@ -1,0 +1,192 @@
+[
+  {
+    "input_language": "it",
+    "audio_seconds": 6.72,
+    "responses": [
+      "Buona idea! Prepara il tuo curriculum aggiornato, qualche lettera di motivazione o note brevi, eventuali certificati o attestati, e se hai lavori da mostrare, un portfolio o una breve presentazione dei progetti. Porta con te anche un documento d’identità e tieni pronti i contatti di eventuali referenze. Vuoi che ti aiuti a preparare una checklist in base al tipo di lavoro che stai cercando?"
+    ],
+    "events": [
+      {
+        "at": 3285.7999999523163,
+        "type": "input_audio_buffer.speech_started",
+        "text": null,
+        "status": null,
+        "error": null
+      },
+      {
+        "at": 10059.799999952316,
+        "type": "input_audio_buffer.speech_stopped",
+        "text": null,
+        "status": null,
+        "error": null
+      },
+      {
+        "at": 13175.700000047684,
+        "type": "response.output_audio_transcript.done",
+        "text": "Buona idea! Prepara il tuo curriculum aggiornato, qualche lettera di motivazione o note brevi, eventuali certificati o attestati, e se hai lavori da mostrare, un portfolio o una breve presentazione dei progetti. Porta con te anche un documento d’identità e tieni pronti i contatti di eventuali referenze. Vuoi che ti aiuti a preparare una checklist in base al tipo di lavoro che stai cercando?",
+        "status": null,
+        "error": null
+      },
+      {
+        "at": 13193,
+        "type": "response.done",
+        "text": null,
+        "status": "completed",
+        "error": null
+      },
+      {
+        "at": 33795.10000002384,
+        "type": "output_audio_buffer.stopped",
+        "text": null,
+        "status": null,
+        "error": null
+      }
+    ]
+  },
+  {
+    "input_language": "bn",
+    "audio_seconds": 7.992,
+    "responses": [
+      "ওয়্যারহাউস কাজের জ",
+      "সালাম, এটা খুব ভালো",
+      "আচ্ছা! সংক্ষেপে বললে, আপনি শুরুতে নিজের কাজের ভূমিকা আর দায়িত্বের কথা বলুন। তারপর উল্লেখ করুন, আপনি কী ধরনের কাজ করেছেন, কেমন পরিবেশে। তারপর বলুন, কী ফলাফল বা সাফল্য এসেছে, আর আপনি কী শিখেছেন। সংক্ষেপে, এই তিনটা মনে রাখলে ভালো হয়—ভূমিকা, কাজ, ফলাফল।"
+    ],
+    "events": [
+      {
+        "at": 34444,
+        "type": "input_audio_buffer.speech_started",
+        "text": null,
+        "status": null,
+        "error": null
+      },
+      {
+        "at": 36697.200000047684,
+        "type": "input_audio_buffer.speech_stopped",
+        "text": null,
+        "status": null,
+        "error": null
+      },
+      {
+        "at": 37168.200000047684,
+        "type": "input_audio_buffer.speech_started",
+        "text": null,
+        "status": null,
+        "error": null
+      },
+      {
+        "at": 37192.10000002384,
+        "type": "response.output_audio_transcript.done",
+        "text": "ওয়্যারহাউস কাজের জ",
+        "status": null,
+        "error": null
+      },
+      {
+        "at": 37193.39999997616,
+        "type": "response.done",
+        "text": null,
+        "status": "cancelled",
+        "error": null
+      },
+      {
+        "at": 40007.10000002384,
+        "type": "input_audio_buffer.speech_stopped",
+        "text": null,
+        "status": null,
+        "error": null
+      },
+      {
+        "at": 40468.200000047684,
+        "type": "input_audio_buffer.speech_started",
+        "text": null,
+        "status": null,
+        "error": null
+      },
+      {
+        "at": 40498.799999952316,
+        "type": "response.output_audio_transcript.done",
+        "text": "সালাম, এটা খুব ভালো",
+        "status": null,
+        "error": null
+      },
+      {
+        "at": 40502.10000002384,
+        "type": "response.done",
+        "text": null,
+        "status": "cancelled",
+        "error": null
+      },
+      {
+        "at": 41901.39999997616,
+        "type": "input_audio_buffer.speech_stopped",
+        "text": null,
+        "status": null,
+        "error": null
+      },
+      {
+        "at": 44465.39999997616,
+        "type": "response.output_audio_transcript.done",
+        "text": "আচ্ছা! সংক্ষেপে বললে, আপনি শুরুতে নিজের কাজের ভূমিকা আর দায়িত্বের কথা বলুন। তারপর উল্লেখ করুন, আপনি কী ধরনের কাজ করেছেন, কেমন পরিবেশে। তারপর বলুন, কী ফলাফল বা সাফল্য এসেছে, আর আপনি কী শিখেছেন। সংক্ষেপে, এই তিনটা মনে রাখলে ভালো হয়—ভূমিকা, কাজ, ফলাফল।",
+        "status": null,
+        "error": null
+      },
+      {
+        "at": 44482.799999952316,
+        "type": "response.done",
+        "text": null,
+        "status": "completed",
+        "error": null
+      },
+      {
+        "at": 62674.200000047684,
+        "type": "output_audio_buffer.stopped",
+        "text": null,
+        "status": null,
+        "error": null
+      }
+    ]
+  },
+  {
+    "input_language": "en",
+    "audio_seconds": 6.816,
+    "responses": [
+      "No worries, you can say something like: “I don’t remember the exact start or end dates, but it was roughly this time frame. I can provide approximate dates and details from my records if needed.” That way you’re being honest, and you still show effort and accuracy."
+    ],
+    "events": [
+      {
+        "at": 63188.200000047684,
+        "type": "input_audio_buffer.speech_started",
+        "text": null,
+        "status": null,
+        "error": null
+      },
+      {
+        "at": 69947.60000002384,
+        "type": "input_audio_buffer.speech_stopped",
+        "text": null,
+        "status": null,
+        "error": null
+      },
+      {
+        "at": 71926.39999997616,
+        "type": "response.output_audio_transcript.done",
+        "text": "No worries, you can say something like: “I don’t remember the exact start or end dates, but it was roughly this time frame. I can provide approximate dates and details from my records if needed.” That way you’re being honest, and you still show effort and accuracy.",
+        "status": null,
+        "error": null
+      },
+      {
+        "at": 71928.79999995232,
+        "type": "response.done",
+        "text": null,
+        "status": "completed",
+        "error": null
+      },
+      {
+        "at": 85994.89999997616,
+        "type": "output_audio_buffer.stopped",
+        "text": null,
+        "status": null,
+        "error": null
+      }
+    ]
+  }
+]

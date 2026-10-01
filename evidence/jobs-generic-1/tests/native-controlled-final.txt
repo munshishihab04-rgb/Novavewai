@@ -1,0 +1,12 @@
+✔ generic discovery revoke fences page reads and receipts after web await (1522.503065ms)
+✔ generic discovery cancel fences page reads and receipts after web await (1713.67046ms)
+✔ permitted imported metadata survives actual native receipt/event persistence (1596.379484ms)
+✔ controlled-provider native generic dispatch persists missing city, corrections, remote and suppresses duplicates (2554.046967ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 8408.004413

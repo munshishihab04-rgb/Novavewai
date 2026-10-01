@@ -1,0 +1,8 @@
+{
+  "resource": "/subscriptions/6220ce8e-fa6e-47a9-93a5-39b8f8d63ae5/resourceGroups/Nuovaopenai/providers/Microsoft.CognitiveServices/accounts/sadesheikh-2809-resource",
+  "managedIdentityContentUnderstanding": "401 missing analyzers/read",
+  "providedFoundrynKeyCatalog": "200",
+  "armResourceKind": "AIServices",
+  "armResourceLocation": "francecentral",
+  "newResourcesCreated": false
+}

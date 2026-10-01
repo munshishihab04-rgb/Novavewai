@@ -1,0 +1,50 @@
+✖ session final validation after actual receipt write wait (5253.830885ms)
+✖ session final validation after actual terminal write wait (3165.931585ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 8935.821952
+
+✖ failing tests:
+
+test at evidence/agent-review-2/baseline-probes/agent-runtime.test.ts:1:3272
+✖ session final validation after actual receipt write wait (5253.830885ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/evidence/agent-review-2/baseline-probes/agent-runtime.test.ts:48:97)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at evidence/agent-review-2/baseline-probes/agent-runtime.test.ts:1:3272
+✖ session final validation after actual terminal write wait (3165.931585ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + null
+  - 'session_revoked'
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/evidence/agent-review-2/baseline-probes/agent-runtime.test.ts:48:50)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: 'session_revoked',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

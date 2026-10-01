@@ -1,0 +1,106 @@
+TAP version 13
+# Subtest: corrected behavior: rejected second runtime must not delete first runtime pending upload/reservation
+ok 1 - corrected behavior: rejected second runtime must not delete first runtime pending upload/reservation
+  ---
+  duration_ms: 1589.172099
+  type: 'test'
+  ...
+# Subtest: corrected behavior: assistant-generated content must not become a user_supplied source
+ok 2 - corrected behavior: assistant-generated content must not become a user_supplied source
+  ---
+  duration_ms: 1700.510642
+  type: 'test'
+  ...
+# Subtest: pending upload namespace blocks turn without losing reservation or invoking model
+ok 3 - pending upload namespace blocks turn without losing reservation or invoking model
+  ---
+  duration_ms: 1667.943124
+  type: 'test'
+  ...
+# Subtest: cancelled generation cannot write after a new run completes; original replay cannot redispatch
+ok 4 - cancelled generation cannot write after a new run completes; original replay cannot redispatch
+  ---
+  duration_ms: 1661.44868
+  type: 'test'
+  ...
+# Subtest: a different live session cannot authorize output of the revoked initiating session
+ok 5 - a different live session cannot authorize output of the revoked initiating session
+  ---
+  duration_ms: 1552.860683
+  type: 'test'
+  ...
+# Subtest: entire provider batch is allowlist/schema validated before first mutation
+ok 6 - entire provider batch is allowlist/schema validated before first mutation
+  ---
+  duration_ms: 1624.488146
+  type: 'test'
+  ...
+# Subtest: corrected behavior: expiry during canonical writer lock wait must roll back mutation and receipt
+ok 7 - corrected behavior: expiry during canonical writer lock wait must roll back mutation and receipt
+  ---
+  duration_ms: 2692.223744
+  type: 'test'
+  ...
+# Subtest: receipt insertion failure atomically rolls back canonical revision and outbox; no replay inference
+ok 8 - receipt insertion failure atomically rolls back canonical revision and outbox; no replay inference
+  ---
+  duration_ms: 1687.776551
+  type: 'test'
+  ...
+# Subtest: lock disappearance observed before delayed dedicated-client error does not escape onto pool
+ok 9 - lock disappearance observed before delayed dedicated-client error does not escape onto pool
+  ---
+  duration_ms: 1809.99121
+  type: 'test'
+  ...
+# Subtest: lock disappearance observed before delayed dedicated-client error does not escape onto pool
+ok 10 - lock disappearance observed before delayed dedicated-client error does not escape onto pool
+  ---
+  duration_ms: 1950.488974
+  type: 'test'
+  ...
+# Subtest: corrected behavior: singleton connection loss is handled and durably fences in-flight run
+ok 11 - corrected behavior: singleton connection loss is handled and durably fences in-flight run
+  ---
+  duration_ms: 3716.029933
+  type: 'test'
+  ...
+# Subtest: lock-observation invalidation before queued lease error must not emit an unhandled pool error
+ok 12 - lock-observation invalidation before queued lease error must not emit an unhandled pool error
+  ---
+  duration_ms: 1900.232403
+  type: 'test'
+  ...
+# Subtest: non-agent live upload also excludes agent-enabled replacement
+ok 13 - non-agent live upload also excludes agent-enabled replacement
+  ---
+  duration_ms: 1853.945756
+  type: 'test'
+  ...
+# Subtest: no-file incumbent excludes file recovery: agent=false
+ok 14 - no-file incumbent excludes file recovery: agent=false
+  ---
+  duration_ms: 1418.465371
+  type: 'test'
+  ...
+# Subtest: no-file incumbent excludes file recovery: agent=true
+ok 15 - no-file incumbent excludes file recovery: agent=true
+  ---
+  duration_ms: 1287.587572
+  type: 'test'
+  ...
+# Subtest: lease loss during actual file put drains before destructive recovery
+ok 16 - lease loss during actual file put drains before destructive recovery
+  ---
+  duration_ms: 1826.362313
+  type: 'test'
+  ...
+1..16
+# tests 16
+# suites 0
+# pass 16
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 32085.443193

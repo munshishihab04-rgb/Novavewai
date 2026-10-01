@@ -1,0 +1,17 @@
+[
+  {
+    "language": "it",
+    "voice": "it-IT-ElsaNeural",
+    "text": "Ciao Nova. Quale documento devo preparare per presentarmi a un colloquio di lavoro? Rispondi brevemente."
+  },
+  {
+    "language": "bn",
+    "voice": "bn-BD-NabanitaNeural",
+    "text": "আমি একটি গুদামে কাজ করতে চাই। সাক্ষাৎকারে নিজের অভিজ্ঞতা কীভাবে বলব? সংক্ষেপে বলুন।"
+  },
+  {
+    "language": "en",
+    "voice": "en-GB-SoniaNeural",
+    "text": "What should I say if I do not remember the exact dates of my previous job? Please keep your answer short."
+  }
+]

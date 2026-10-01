@@ -1,0 +1,29 @@
+{
+ "query": "cameriere Bologna offerta di lavoro attiva settembre 2026 catena ristorazione sito ufficiale careers (es. Eataly, Signorvino, Roadhouse, Old Wild West, La Piadineria, Cigierre, Autogrill, Miscusi): URL della singola posizione aperta",
+ "startedAt": "2026-09-30T17:37:40.174Z",
+ "text": "Ho trovato solo alcune pagine ufficiali di **careers/job board**, ma **non sono riuscito a verificare una singola posizione “cameriere Bologna” attiva a settembre 2026** per tutte le catene che hai elencato, perché diversi portali non sono accessibili via crawler o non mostrano una vacancy Bologna direttamente nei risultati trovati. ([roadhouse.it](https://www.roadhouse.it/jobs/))\n\nQuello che riesco a confermare con fonti ufficiali è:\n\n- **Eataly** ha lo store di Bologna e una sezione lavori/ristorazione, ma nei risultati trovati non compare una vacancy Bologna per cameriere con URL diretto della singola posizione. ([eataly.net](https://www.eataly.net/it_it/negozi/bologna))\n- **Roadhouse** ha la pagina ufficiale “Jobs”, ma non ho trovato una posizione Bologna specifica per cameriere con URL diretto. ([roadhouse.it](https://www.roadhouse.it/jobs/))\n- **Miscusi** mostra posizioni attive in altre città, ma nei risultati trovati non compare Bologna per cameriere. ([miscusi.com](https://miscusi.com/lavora-con-noi))\n- **Autogrill** ha il career center ufficiale, ma non ho trovato una singola offerta Bologna/cameriere verificabile nei risultati accessibili. ([autogrill.com](https://www.autogrill.com/en/people/career-center))\n\nSe vuoi, posso fare un secondo passaggio più mirato e restituirti una tabella con:\n1. **catena**,  \n2. **città**,  \n3. **titolo esatto**,  \n4. **URL della singola posizione**  \nper le offerte effettivamente attive a Bologna.",
+ "sources": [
+  {
+   "title": "Jobs | Roadhouse Restaurant",
+   "url": "https://www.roadhouse.it/jobs/"
+  },
+  {
+   "title": "Eataly Bologna Ambasciatori: ristoranti, mercato, corsi ed eventi",
+   "url": "https://www.eataly.net/it_it/negozi/bologna"
+  },
+  {
+   "title": "Jobs | Roadhouse Restaurant",
+   "url": "https://www.roadhouse.it/jobs/"
+  },
+  {
+   "title": "Lavora con noi | Opportunità di lavoro - Miscusi Italia",
+   "url": "https://miscusi.com/lavora-con-noi"
+  },
+  {
+   "title": "Career center - Autogrill",
+   "url": "https://www.autogrill.com/en/people/career-center"
+  }
+ ],
+ "checkedAt": "2026-09-30T17:37:49.883Z",
+ "kind": "web_search"
+}

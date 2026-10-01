@@ -1,0 +1,29 @@
+✖ native generated file tool commits revision and owner-scoped exact code download (1618.778988ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2370.626611
+
+✖ failing tests:
+
+test at tests/generated-files.test.ts:8:1
+✖ native generated file tool commits revision and owner-scoped exact code download (1618.778988ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  201 !== 400
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/generated-files.test.ts:18:137)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 201,
+    expected: 400,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

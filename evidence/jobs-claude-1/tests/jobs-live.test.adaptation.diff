@@ -1,0 +1,11 @@
+--- evidence/jobs-claude-1/before/jobs-live.test.ts	2026-09-30 17:40:26.771328821 +0000
++++ tests/jobs-live.test.ts	2026-09-30 17:40:39.824854238 +0000
+@@ -3,7 +3,7 @@
+ 
+ test('allowlisted live adapter returns only current listing body evidence',async()=>{
+  const fetched:string[]=[];const pages:any={
+-  'https://www.adecco.com/it-it/cerca-lavoro/camerierea-bologna-bologna/id':`<html><title>Cameriere/a | Bologna</title><body><h1>Cameriere/a</h1><p>Bologna, Bologna</p><p>Job offer expired</p></body></html>`,
++  'https://www.adecco.com/it-it/cerca-lavoro/camerierea-bologna-bologna/cfddefa7-8135-4e3c-b969-8a8f66602c82':`<html><title>Cameriere/a | Bologna</title><body><h1>Cameriere/a</h1><p>Bologna, Bologna</p><p>Job offer expired</p></body></html>`,
+   'https://www.lavoropiu.it/offerta/cameriere-a-colazioni-hotel-107229':`<html><title>Cameriere/a Colazioni - Hotel | Lavoropiù</title><body><h1>Cameriere/a Colazioni - Hotel</h1><p>Bologna</p><p>Lavoropiù S.p.a. Agenzia per il lavoro</p></body></html>`};
+  const fetcher=async(input:any)=>{const u=String(input);fetched.push(u);return new Response(pages[u],{status:200,headers:{'content-type':'text/html'}})};
+  const r=await verifiedJobPages([{title:'lead',url:Object.keys(pages)[0]},{title:'lead',url:Object.keys(pages)[1]},{title:'evil',url:'https://example.org/job'}],{occupation:'cameriere',city:'Bologna',noAgencies:false},AbortSignal.timeout(1000),fetcher as any);

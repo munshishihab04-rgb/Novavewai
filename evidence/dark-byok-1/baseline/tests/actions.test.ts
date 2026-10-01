@@ -1,0 +1,50 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { randomUUID } from 'node:crypto';
+import { database, foundation, request } from './helpers.ts';
+
+test('Approval binds exact revision/account/recipient; concurrent consumption yields one durable synthetic effect', async () => {
+  const db = await database(); let app: any;
+  try {
+    const api = (await foundation())!; await api.migrate(db.pool);
+    const a = await api.bootstrap(db.pool), b = await api.bootstrap(db.pool);
+    app = api.buildApp(db.pool); let base = await app.listen({ host: '127.0.0.1', port: 0 });
+    const post = (path: string, body: unknown, token = a.token, key = randomUUID()) => request(base, path, token, body, 'POST', key);
+    const c = (await post('/conversations', { title: 'Synthetic' })).body;
+    const t = (await post('/tasks', { conversationId: c.id, goal: 'Synthetic action' })).body;
+    const artifact = (await post('/artifacts', { taskId: t.id, title: 'Draft', content: { text: 'Private synthetic payload', language: 'bn' } })).body;
+    const body = { artifactId: artifact.id, revision: 1, operation: 'simulate.send', account: 'synthetic-account', recipient: 'fixture@example.invalid', expiresInSeconds: 300 };
+    const intentResponse = await post('/intents', body);
+    assert.equal(intentResponse.status, 201);
+    const intent = intentResponse.body;
+    assert.equal(intent.payload.text, 'Private synthetic payload');
+    assert.equal((await post('/intents', { ...body, account: 'real-account' })).status, 400);
+    assert.equal((await post(`/intents/${intent.id}/approve`, { bindingHash: '0'.repeat(64) })).status, 409);
+    assert.equal((await post(`/intents/${intent.id}/approve`, { bindingHash: intent.bindingHash }, b.token)).status, 404);
+    const approval = (await post(`/intents/${intent.id}/approve`, { bindingHash: intent.bindingHash })).body;
+    const different = (await post('/intents', { ...body, recipient: 'other@example.invalid' })).body;
+    assert.notEqual(different.bindingHash, intent.bindingHash);
+    assert.equal((await post(`/intents/${different.id}/execute`, { approvalId: approval.id, bindingHash: different.bindingHash })).status, 409);
+    const executeBody = { approvalId: approval.id, bindingHash: intent.bindingHash };
+    const results = await Promise.all([post(`/intents/${intent.id}/execute`, executeBody), post(`/intents/${intent.id}/execute`, executeBody)]);
+    assert.deepEqual(results.map(r => r.status).sort(), [201, 409]);
+    const receipt = results.find(r => r.status === 201)!.body;
+    assert.equal(receipt.status, 'queued');
+    await app.close(); await db.restart();
+    app = api.buildApp(db.pool); base = await app.listen({ host: '127.0.0.1', port: 0 });
+    const worker = await import('../src/worker.ts');
+    let calls = 0;
+    const adapter = { kind: 'synthetic' as const, async send(input: any) { calls++; assert.equal(input.recipient, body.recipient); return { outcome: 'succeeded' as const, reference: 'synthetic-confirmed' }; } };
+    await Promise.all([worker.drain(db.pool, adapter), worker.drain(db.pool, adapter)]);
+    assert.equal(calls, 1);
+    const done = await request(base, `/receipts/${receipt.id}`, a.token);
+    assert.equal(done.body.status, 'succeeded'); assert.equal(done.body.reference, 'synthetic-confirmed');
+    assert.equal((await request(base, `/receipts/${receipt.id}`, b.token)).status, 404);
+    await worker.drain(db.pool, adapter); assert.equal(calls, 1);
+    assert.equal((await db.pool.query('SELECT count(*)::int n FROM receipts')).rows[0].n, 1);
+    const stale = (await post('/intents', body)).body;
+    const staleApproval = (await post(`/intents/${stale.id}/approve`, { bindingHash: stale.bindingHash })).body;
+    await post(`/artifacts/${artifact.id}/revisions`, { baseRevision: 1, content: { text: 'Changed', language: 'bn' } });
+    assert.equal((await post(`/intents/${stale.id}/execute`, { approvalId: staleApproval.id, bindingHash: stale.bindingHash })).status, 409);
+  } finally { await app?.close(); await db.close(); }
+});

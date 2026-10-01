@@ -1,0 +1,53 @@
+✔ session final validation after actual receipt write wait (2637.473582ms)
+✔ session final validation after actual terminal write wait (2723.723417ms)
+✔ lease loss during writer wait rolls back; replacement drains the old transaction before recovery (1847.355451ms)
+✖ failed storage initialization releases singleton before close and removes client listeners (1572.124067ms)
+✖ dedicated client end alone invalidates runtime and cleans listeners (1664.326417ms)
+✔ startup reservation also excludes non-agent file runtime: false (1612.956645ms)
+✔ startup reservation also excludes non-agent file runtime: true (1744.132942ms)
+✔ lease loss fences held inference, late output and replacement (1973.072912ms)
+✔ lease loss fences held inference, late output and cancel (2855.826113ms)
+✔ lease loss fences held inference, late output and purge (1883.371304ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 8
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 20891.042007
+
+✖ failing tests:
+
+test at tests/agent-runtime.test.ts:1:7501
+✖ failed storage initialization releases singleton before close and removes client listeners (1572.124067ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/agent-runtime.test.ts:82:36)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: undefined,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests/agent-runtime.test.ts:1:8508
+✖ dedicated client end alone invalidates runtime and cleans listeners (1664.326417ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(lease)
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/agent-runtime.test.ts:96:57)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

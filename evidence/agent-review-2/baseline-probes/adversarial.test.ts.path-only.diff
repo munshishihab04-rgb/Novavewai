@@ -1,0 +1,13 @@
+--- original
++++ baseline-path-adapted
+@@ -5,8 +5,8 @@
+ import { mkdtemp, rm, writeFile } from 'node:fs/promises';
+ import { tmpdir } from 'node:os';
+ import { join } from 'node:path';
+-import { buildApp, bootstrap, migrate, hash } from '../../src/app.ts';
+-import { database, request } from '../../tests/helpers.ts';
++import { buildApp, bootstrap, migrate, hash } from '../../agent-fix-1/baseline/src/app.ts';
++import { database, request } from '../../agent-fix-1/baseline/tests/helpers.ts';
+ 
+ const dir = new URL('./',import.meta.url);
+ const call = (name:string,args:any,id=randomUUID()) => ({id,type:'function',function:{name,arguments:JSON.stringify(args)}});

@@ -1,0 +1,84 @@
+{
+  "files": [
+    {
+      "path": ".gitignore",
+      "sha256": "8d53638a13d2d0d84da22bc0faccc6870e5b443565003865dc3586d55a9fe318"
+    },
+    {
+      "path": "docs/job-discovery/nova-jobs-warm.service.example",
+      "sha256": "47717bf626c025715e76fa5e19d7fdcf9f378627d033fed59c8935ca35c88ddf"
+    },
+    {
+      "path": "docs/job-discovery/nova-jobs-warm.timer.example",
+      "sha256": "cb384a8610909d4a41a7abaced0974609e2ea0687fe2954f41297ada52a94ec2"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "d90336b24e8ab731504b9a95ce490ace317ae56697497b55e5c11043cadc50e2"
+    },
+    {
+      "path": "package.json",
+      "sha256": "d1b2a8518291baf5878820655ff6ecc3fd69e02bd80de88f2b55b70b2ddf3ce4"
+    },
+    {
+      "path": "public/app.js",
+      "sha256": "51d09b739c8d59e2d50ce0f585ca2c5df57d781c2708b7650ef678db9e46b2de"
+    },
+    {
+      "path": "scripts/jobs-warm.ts",
+      "sha256": "838f3f4121f0dca860484784ef96a43e8b9e49d6dd8151142c37bddcc830e515"
+    },
+    {
+      "path": "src/agent-tools.ts",
+      "sha256": "290b64cce33c1ad9c190218507418b9ffc47aa2ef5044a8481e9cbf0ae0bf19a"
+    },
+    {
+      "path": "src/agent.ts",
+      "sha256": "46a0951e69ec74d5c6b7a56aa3c31162711c96b9259be9486a29c8ba4051ddc3"
+    },
+    {
+      "path": "src/jobs-discovery.ts",
+      "sha256": "1bef74ba345ae8d06a86c9e462bc27f0e87ab08cdfa7710b020fdc2629279491"
+    },
+    {
+      "path": "src/jobs-subito.ts",
+      "sha256": "fbbe67cee563eb353ca1f9fc72cd9077cf61c39859eb69ab48fc6c572c500db2"
+    },
+    {
+      "path": "src/jobs-warm.ts",
+      "sha256": "1c9588e4e1bea3b713ce98bcb25cbec6efde78e1c4538cfc398180921d28c9a2"
+    },
+    {
+      "path": "src/jobs.ts",
+      "sha256": "e4f8d50fdcd67af79dd7ead2f23779d25818a8501731010ff6bd05c647888ac3"
+    },
+    {
+      "path": "tests/jobs-agent.test.ts",
+      "sha256": "bada26a6472df78ad1b4d1f3bd5cfa86cfc5e065bdc729097b0f28ef8c779f46"
+    },
+    {
+      "path": "tests/jobs-browser.test.ts",
+      "sha256": "9f57cf8f2491d21009dfa221bf7d1e8aca2e9e42d88f1e1bdf0249b0c178002e"
+    },
+    {
+      "path": "tests/jobs-discovery.test.ts",
+      "sha256": "9904a0ce520240e06c2904a4561b7c201141ab76f42460eb4b58d55f9dda7fe6"
+    },
+    {
+      "path": "tests/jobs-progressive.test.ts",
+      "sha256": "a2f8ba274b9d730e717f2937cb782c435fe611c224d1e3215a4451d69ca55054"
+    },
+    {
+      "path": "tests/jobs-search.test.ts",
+      "sha256": "cdf6d027597724da52a92c725205218d4c9b9a5630867c57e44c9184021f9ce0"
+    },
+    {
+      "path": "tests/jobs-ui.test.ts",
+      "sha256": "0410403d81b38efe91ea5c1280eb4e66cc0b89400aedd4cab0100f154ece6566"
+    },
+    {
+      "path": "tests/jobs-warm.test.ts",
+      "sha256": "8a04ca6a1aa21e8f6f2f91989e5967c58ffa5058609996858314aae69c832c2c"
+    }
+  ]
+}

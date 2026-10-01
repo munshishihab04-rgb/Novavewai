@@ -1,0 +1,88 @@
+{
+  "probedAt": "2026-09-30T22:08:36.955Z",
+  "elapsedMs": 1720,
+  "note": "Sanitized: only structured JobPosting fields; no description/phone/email. gigroup included to record honest access outcome.",
+  "reads": [
+    {
+      "url": "https://www.helplavoro.it/offerta-di-lavoro-in-provincia-di-modena-cercasi-operaio-a-con-esperienza-in-produzione-metalmeccanica-per-ruolo-di-saldatore/6903100.html",
+      "outcome": "JSONLD_VERIFIED",
+      "reason": "JobPosting JSON-LD extracted",
+      "observedAt": "2026-09-30T22:08:35.421Z",
+      "permitted": true
+    },
+    {
+      "url": "https://www.helplavoro.it/offerta-di-lavoro-in-provincia-di-modena-cercasi-ascensorista/6927555.html",
+      "outcome": "JSONLD_VERIFIED",
+      "reason": "JobPosting JSON-LD extracted",
+      "observedAt": "2026-09-30T22:08:35.574Z",
+      "permitted": true
+    },
+    {
+      "url": "https://lavoroperte.regione.emilia-romagna.it/offerte-lavoro/modena/saldatore-vignola/521226",
+      "outcome": "JSONLD_VERIFIED",
+      "reason": "JobPosting JSON-LD extracted",
+      "observedAt": "2026-09-30T22:08:36.685Z",
+      "permitted": true
+    },
+    {
+      "url": "https://www.gigroup.it/offerte-lavoro-dettaglio/modena-saldatore-a-filo/1247685/",
+      "outcome": "REDIRECTED",
+      "reason": "http 301; redirect not followed",
+      "observedAt": "2026-09-30T22:08:36.951Z",
+      "permitted": true
+    }
+  ],
+  "opportunities": [
+    {
+      "title": "OPERAIO/A CON ESPERIENZA IN PRODUZIONE METALMECCANICA PER RUOLO DI SALDATORE",
+      "company": "Gi Group SpA Filiale di Modena Lamborghini",
+      "observedLocality": null,
+      "observedRegion": "provincia di Modena",
+      "locationMatch": "PROVINCE_OR_REGION",
+      "datePosted": "2026-09-17T00:00:00.000Z",
+      "validThrough": "2026-10-16T00:00:00.000Z",
+      "validity": "CURRENT",
+      "status": "OBSERVED",
+      "publisher_type": "STAFFING_AGENCY",
+      "employmentType": "FULL_TIME",
+      "directApply": null,
+      "verification_status": "JSONLD_VERIFIED",
+      "source_url": "https://www.helplavoro.it/offerta-di-lavoro-in-provincia-di-modena-cercasi-operaio-a-con-esperienza-in-produzione-metalmeccanica-per-ruolo-di-saldatore/6903100.html",
+      "observed_at": "2026-09-30T22:08:35.421Z"
+    },
+    {
+      "title": "ASCENSORISTA",
+      "company": "Gi Group SpA Filiale di Modena Lamborghini",
+      "observedLocality": null,
+      "observedRegion": "provincia di Modena",
+      "locationMatch": "PROVINCE_OR_REGION",
+      "datePosted": "2026-09-30T00:00:00.000Z",
+      "validThrough": "2026-10-26T00:00:00.000Z",
+      "validity": "CURRENT",
+      "status": "OBSERVED",
+      "publisher_type": "STAFFING_AGENCY",
+      "employmentType": "FULL_TIME",
+      "directApply": null,
+      "verification_status": "JSONLD_VERIFIED",
+      "source_url": "https://www.helplavoro.it/offerta-di-lavoro-in-provincia-di-modena-cercasi-ascensorista/6927555.html",
+      "observed_at": "2026-09-30T22:08:35.574Z"
+    },
+    {
+      "title": "SALDATORE O SALDATRICE",
+      "company": "IN JOB SPA",
+      "observedLocality": "Vignola",
+      "observedRegion": "EMILIA-ROMAGNA",
+      "locationMatch": "MISMATCH",
+      "datePosted": "2026-06-19T00:00:00.000Z",
+      "validThrough": "2026-08-01T00:00:00.000Z",
+      "validity": "EXPIRED",
+      "status": "EXPIRED",
+      "publisher_type": "STAFFING_AGENCY",
+      "employmentType": "FULL_TIME",
+      "directApply": null,
+      "verification_status": "JSONLD_VERIFIED",
+      "source_url": "https://lavoroperte.regione.emilia-romagna.it/offerte-lavoro/modena/saldatore-vignola/521226",
+      "observed_at": "2026-09-30T22:08:36.685Z"
+    }
+  ]
+}

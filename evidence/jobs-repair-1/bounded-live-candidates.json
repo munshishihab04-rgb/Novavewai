@@ -1,0 +1,90 @@
+{
+  "queriedAt": "2026-09-30T17:13:25.746Z",
+  "queryCount": 1,
+  "maxCitationsRead": 6,
+  "result": {
+    "status": "candidates_unverified",
+    "occupation": "cameriere",
+    "city": "Bologna",
+    "opportunities": [
+      {
+        "opportunity_kind": "VACANCY",
+        "title": "Offerte di lavoro cameriera - Bologna, Emilia-Romagna",
+        "city": "Bologna",
+        "source_url": "https://it.indeed.com/q-cameriera-l-bologna%2C-emilia-romagna-offerte-lavoro.html?vjk=30938595342e2ebd",
+        "source_type": "UNKNOWN",
+        "publisher_type": "UNKNOWN",
+        "verification_status": "UNVERIFIED",
+        "discovered_at": "2026-09-30T17:13:25.746Z",
+        "last_verified_at": null,
+        "status": "UNKNOWN",
+        "evidence": [
+          {
+            "url": "https://it.indeed.com/q-cameriera-l-bologna%2C-emilia-romagna-offerte-lavoro.html?vjk=30938595342e2ebd",
+            "observed_at": "2026-09-30T17:13:25.746Z",
+            "claim": "Candidate link returned by bounded web search; vacancy, location, publisher identity and availability are not verified."
+          }
+        ]
+      },
+      {
+        "opportunity_kind": "VACANCY",
+        "title": "Offerte di lavoro Cameriere - Bologna, Emilia-Romagna",
+        "city": "Bologna",
+        "source_url": "https://it.indeed.com/offerte-lavoro?l=Bologna%2C+Emilia-Romagna&q=Cameriere",
+        "source_type": "UNKNOWN",
+        "publisher_type": "UNKNOWN",
+        "verification_status": "UNVERIFIED",
+        "discovered_at": "2026-09-30T17:13:25.746Z",
+        "last_verified_at": null,
+        "status": "UNKNOWN",
+        "evidence": [
+          {
+            "url": "https://it.indeed.com/offerte-lavoro?l=Bologna%2C+Emilia-Romagna&q=Cameriere",
+            "observed_at": "2026-09-30T17:13:25.746Z",
+            "claim": "Candidate link returned by bounded web search; vacancy, location, publisher identity and availability are not verified."
+          }
+        ]
+      },
+      {
+        "opportunity_kind": "VACANCY",
+        "title": "Subito.it Cameriere - Offerte di lavoro a Bologna e provincia",
+        "city": "Bologna",
+        "source_url": "https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere",
+        "source_type": "UNKNOWN",
+        "publisher_type": "UNKNOWN",
+        "verification_status": "UNVERIFIED",
+        "discovered_at": "2026-09-30T17:13:25.746Z",
+        "last_verified_at": null,
+        "status": "UNKNOWN",
+        "evidence": [
+          {
+            "url": "https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere",
+            "observed_at": "2026-09-30T17:13:25.746Z",
+            "claim": "Candidate link returned by bounded web search; vacancy, location, publisher identity and availability are not verified."
+          }
+        ]
+      },
+      {
+        "opportunity_kind": "VACANCY",
+        "title": "Lavoro Cameriere a Bologna - Turismo, ristorazione - InfoJobs",
+        "city": "Bologna",
+        "source_url": "https://www.infojobs.it/offerte-lavoro/turismo-ristorazione/emilia-romagna-bologna/bologna/cameriere",
+        "source_type": "UNKNOWN",
+        "publisher_type": "UNKNOWN",
+        "verification_status": "UNVERIFIED",
+        "discovered_at": "2026-09-30T17:13:25.746Z",
+        "last_verified_at": null,
+        "status": "UNKNOWN",
+        "evidence": [
+          {
+            "url": "https://www.infojobs.it/offerte-lavoro/turismo-ristorazione/emilia-romagna-bologna/bologna/cameriere",
+            "observed_at": "2026-09-30T17:13:25.746Z",
+            "claim": "Candidate link returned by bounded web search; vacancy, location, publisher identity and availability are not verified."
+          }
+        ]
+      }
+    ],
+    "retryable": false,
+    "trust": "untrusted_public_metadata"
+  }
+}

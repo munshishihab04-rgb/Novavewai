@@ -1,0 +1,34 @@
+✔ unsafe source search URLs never reach generic browsing receipts (8.640592ms)
+✔ legacy injected source no longer crashes after nonwhitelist city normalization (43.957837ms)
+✔ a legacy policy reference cannot authorize Subito automation (0.750002ms)
+✖ generic default gates automation and returns named original-source searches, not vacancies (1.985407ms)
+✔ permitted imports are dated observations, unknown publisher allowed, never relabelled live or city (1.179036ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 4
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 708.056605
+
+✖ failing tests:
+
+test at tests/jobs-generic-service.test.ts:15:1
+✖ generic default gates automation and returns named original-source searches, not vacancies (1.985407ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + undefined
+  - 'UNKNOWN'
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/jobs-generic-service.test.ts:19:44)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 'UNKNOWN',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

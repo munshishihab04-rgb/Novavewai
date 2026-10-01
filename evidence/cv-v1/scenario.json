@@ -1,0 +1,283 @@
+{
+  "transcript": [
+    {
+      "user": "Voglio fare il mio CV",
+      "run": {
+        "status": "waiting_user",
+        "error": null
+      },
+      "assistant": [
+        "Volentieri. Come ti chiami? (nome e cognome come vuoi che compaiano sul CV)"
+      ],
+      "tools": [
+        {
+          "tool": "ask_question",
+          "result": {}
+        }
+      ]
+    },
+    {
+      "user": "Mi chiamo Amina Rahman",
+      "run": {
+        "status": "waiting_user",
+        "error": null
+      },
+      "assistant": [
+        "Qual è il ruolo o titolo professionale che vuoi mettere in alto nel CV?"
+      ],
+      "tools": [
+        {
+          "tool": "cv_upsert",
+          "result": {
+            "artifactId": "c53213fd-bb8b-41c1-981e-ee0c4711fd56",
+            "revision": 1,
+            "completeness": {
+              "done": 0,
+              "total": 8,
+              "sections": {
+                "skills": false,
+                "summary": false,
+                "identity": false,
+                "education": false,
+                "languages": false,
+                "experiences": false,
+                "consent_line": false,
+                "certifications": false
+              }
+            },
+            "verification": {
+              "identity.full_name": "raccolto"
+            },
+            "next_question": "Qual è il ruolo o titolo professionale che vuoi mettere in alto nel CV?"
+          }
+        },
+        {
+          "tool": "ask_question",
+          "result": {}
+        }
+      ]
+    },
+    {
+      "user": "Faccio la magazziniera a Bologna",
+      "run": {
+        "status": "waiting_user",
+        "error": null
+      },
+      "assistant": [
+        "Parliamo delle esperienze di lavoro: qual è l’ultima (ruolo, datore di lavoro, città, da quando a quando)?"
+      ],
+      "tools": [
+        {
+          "tool": "cv_upsert",
+          "result": {
+            "artifactId": "c53213fd-bb8b-41c1-981e-ee0c4711fd56",
+            "revision": 2,
+            "completeness": {
+              "done": 1,
+              "total": 8,
+              "sections": {
+                "skills": false,
+                "summary": false,
+                "identity": true,
+                "education": false,
+                "languages": false,
+                "experiences": false,
+                "consent_line": false,
+                "certifications": false
+              }
+            },
+            "verification": {
+              "identity.city": "raccolto",
+              "identity.headline": "raccolto",
+              "identity.full_name": "raccolto"
+            },
+            "next_question": "Parliamo delle esperienze di lavoro: qual è l’ultima (ruolo, datore di lavoro, città, da quando a quando)?"
+          }
+        },
+        {
+          "tool": "ask_question",
+          "result": {}
+        }
+      ]
+    },
+    {
+      "user": "Lavoro dal marzo 2022 alla Logistica Emilia Srl di Bologna: gestione inventario, controllo merci in ingresso e preparazione ordini con lettore barcode. Ho il diploma all’Istituto Aldini Valeriani (2018), patentino del muletto, Excel base. Parlo italiano B2, bengalese madrelingua, inglese A2. Aggiungi la frase sul consenso privacy.",
+      "run": {
+        "status": "waiting_user",
+        "error": null
+      },
+      "assistant": [
+        "Ho salvato tutto. Confermi i dati? Che modello preferisci: moderno, classico o professionale?"
+      ],
+      "tools": [
+        {
+          "tool": "cv_upsert",
+          "result": {
+            "artifactId": "c53213fd-bb8b-41c1-981e-ee0c4711fd56",
+            "revision": 3,
+            "completeness": {
+              "done": 6,
+              "total": 8,
+              "sections": {
+                "skills": true,
+                "summary": false,
+                "identity": true,
+                "education": true,
+                "languages": true,
+                "experiences": true,
+                "consent_line": true,
+                "certifications": false
+              }
+            },
+            "verification": {
+              "skills[0]": "proposto",
+              "skills[1]": "raccolto",
+              "consent_line": "proposto",
+              "education[0]": "proposto",
+              "languages[0]": "raccolto",
+              "languages[1]": "raccolto",
+              "languages[2]": "raccolto",
+              "identity.city": "raccolto",
+              "experiences[0]": "proposto",
+              "identity.headline": "raccolto",
+              "identity.full_name": "raccolto"
+            },
+            "next_question": null
+          }
+        },
+        {
+          "tool": "ask_question",
+          "result": {}
+        }
+      ]
+    },
+    {
+      "user": "Confermo tutto, va bene così. Scegli il modello moderno.",
+      "run": {
+        "status": "completed",
+        "error": null
+      },
+      "assistant": [
+        "Il tuo CV in PDF (modello modern, it) è pronto: cv-Amina-Rahman-v3-modern-it.pdf. È la versione 3 del CV; se cambi qualcosa lo rigeneriamo."
+      ],
+      "tools": [
+        {
+          "tool": "cv_export",
+          "result": {
+            "name": "cv-Amina-Rahman-v3-modern-it.pdf",
+            "bytes": 44427,
+            "format": "pdf",
+            "origin": "assistant_generated",
+            "sha256": "add697c2c64250838e03e3023d95308d97cea68c3a5e9b0974b5af01110defa2",
+            "download": "/artifacts/5b49cff0-f0f8-429f-a1b3-d84d36e04e2a/revisions/1/download",
+            "executed": false,
+            "language": "it",
+            "revision": 3,
+            "template": "modern",
+            "artifactId": "c53213fd-bb8b-41c1-981e-ee0c4711fd56",
+            "fileArtifactId": "5b49cff0-f0f8-429f-a1b3-d84d36e04e2a"
+          }
+        }
+      ]
+    },
+    {
+      "user": "Confermo tutto, va bene così. Scegli il modello classico.",
+      "run": {
+        "status": "completed",
+        "error": null
+      },
+      "assistant": [
+        "Il tuo CV in PDF (modello classic, it) è pronto: cv-Amina-Rahman-v3-classic-it.pdf. È la versione 3 del CV; se cambi qualcosa lo rigeneriamo."
+      ],
+      "tools": [
+        {
+          "tool": "cv_export",
+          "result": {
+            "name": "cv-Amina-Rahman-v3-classic-it.pdf",
+            "bytes": 65828,
+            "format": "pdf",
+            "origin": "assistant_generated",
+            "sha256": "b452fdb78d78745099764254e2be3a37881f5b4bf432baaa59a316b9c5c23a29",
+            "download": "/artifacts/d74f6de3-c6e3-4673-9807-6b62a6cd805e/revisions/1/download",
+            "executed": false,
+            "language": "it",
+            "revision": 3,
+            "template": "classic",
+            "artifactId": "c53213fd-bb8b-41c1-981e-ee0c4711fd56",
+            "fileArtifactId": "d74f6de3-c6e3-4673-9807-6b62a6cd805e"
+          }
+        }
+      ]
+    },
+    {
+      "user": "Confermo tutto, va bene così. Scegli il modello professionale.",
+      "run": {
+        "status": "completed",
+        "error": null
+      },
+      "assistant": [
+        "Il tuo CV in PDF (modello professional, it) è pronto: cv-Amina-Rahman-v3-professional-it.pdf. È la versione 3 del CV; se cambi qualcosa lo rigeneriamo."
+      ],
+      "tools": [
+        {
+          "tool": "cv_export",
+          "result": {
+            "name": "cv-Amina-Rahman-v3-professional-it.pdf",
+            "bytes": 44515,
+            "format": "pdf",
+            "origin": "assistant_generated",
+            "sha256": "f34de8d3026e12fb55a5e5a8bb1fb0c389eedec06fa1a90c6457417bcb278e3d",
+            "download": "/artifacts/56975efd-f9fb-4583-bd35-8bfeb2dc70e2/revisions/1/download",
+            "executed": false,
+            "language": "it",
+            "revision": 3,
+            "template": "professional",
+            "artifactId": "c53213fd-bb8b-41c1-981e-ee0c4711fd56",
+            "fileArtifactId": "56975efd-f9fb-4583-bd35-8bfeb2dc70e2"
+          }
+        }
+      ]
+    }
+  ],
+  "samples": [
+    {
+      "template": "modern",
+      "file": "evidence/cv-v1/samples/cv-sample-modern.pdf",
+      "bytes": 44427,
+      "sha256": "add697c2c64250838e03e3023d95308d97cea68c3a5e9b0974b5af01110defa2",
+      "pages": 1,
+      "containsName": true,
+      "revision": 3,
+      "download": "/artifacts/5b49cff0-f0f8-429f-a1b3-d84d36e04e2a/revisions/1/download"
+    },
+    {
+      "template": "classic",
+      "file": "evidence/cv-v1/samples/cv-sample-classic.pdf",
+      "bytes": 65828,
+      "sha256": "b452fdb78d78745099764254e2be3a37881f5b4bf432baaa59a316b9c5c23a29",
+      "pages": 1,
+      "containsName": true,
+      "revision": 3,
+      "download": "/artifacts/d74f6de3-c6e3-4673-9807-6b62a6cd805e/revisions/1/download"
+    },
+    {
+      "template": "professional",
+      "file": "evidence/cv-v1/samples/cv-sample-professional.pdf",
+      "bytes": 44515,
+      "sha256": "f34de8d3026e12fb55a5e5a8bb1fb0c389eedec06fa1a90c6457417bcb278e3d",
+      "pages": 1,
+      "containsName": true,
+      "revision": 3,
+      "download": "/artifacts/56975efd-f9fb-4583-bd35-8bfeb2dc70e2/revisions/1/download"
+    }
+  ],
+  "workspaceCvCard": {
+    "full_name": "Amina Rahman",
+    "headline": "Magazziniera",
+    "template_id": "modern",
+    "language": "it",
+    "sections_done": 6,
+    "sections_total": 8
+  },
+  "generatedAt": "2026-10-01T01:07:52.903Z"
+}

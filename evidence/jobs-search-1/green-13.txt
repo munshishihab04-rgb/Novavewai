@@ -1,0 +1,10 @@
+✔ job receipt cards expose only original HTTPS listing links and escaped labels (259.112816ms)
+✔ daily warm cache is bounded to five cities, one role; duplicate daily run does no work (69.738283ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1021.745771

@@ -1,0 +1,19 @@
+{
+  "boundary": "Isolated real PostgreSQL + native staged UI + actual managed chat and WebRTC synthetic microphone. No trial data.",
+  "errors": [],
+  "run": {
+    "id": "c7cd26a2-5517-4094-b046-3b038d430658",
+    "status": "failed",
+    "error_code": "invalid_generated_file"
+  },
+  "messages": [
+    {
+      "role": "user",
+      "channel": "voice",
+      "provenance": "provider_transcribed_audio",
+      "text": "Create a downloadable JavaScript file named hello.js containing console.log with the text Hello Nova. Do not execute it."
+    }
+  ],
+  "receipts": [],
+  "error": "page.waitForFunction: Timeout 30000ms exceeded."
+}

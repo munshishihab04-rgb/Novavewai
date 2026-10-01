@@ -1,0 +1,9 @@
+✔ citation-only discovery never creates vacancies or observed job locations, even for detail-shaped URLs (1.259393ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 180.9396

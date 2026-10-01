@@ -1,0 +1,30 @@
+{
+  "slice": "public-access-1",
+  "date": "2026-09-30",
+  "status": "implemented_verified_not_deployed",
+  "tests": {"total": 217, "pass": 217, "fail": 0, "previous_total": 211, "new_tests": 6, "typecheck": "clean"},
+  "delivered": [
+    "POST /auth/register (scrypt, 7-day __Host-nova cookie, 5/IP/h + 20/min, NOVA_PUBLIC_REGISTRATION=off -> 403)",
+    "POST /auth/login (constant-time dummy scrypt path, 10 failures/15min per IP+username -> 429 retry_after, last_login_at)",
+    "CSRF origin/x-nova-request on new routes",
+    "account_usage daily cost guard in turn path (NOVA_DAILY_RUNS_PER_ACCOUNT default 60, NOVA_UNLIMITED_OWNERS exempt) -> 429 daily_limit_reached",
+    "Auth card UI (tabs Accedi/Crea account, show/hide password, Italian error mapping, trial privacy note), invite flow unchanged",
+    "scripts/trial.ts reads env options at startup"
+  ],
+  "files": {
+    "new": ["migrations/017_accounts.sql", "src/accounts.ts", "tests/accounts.test.ts", "tests/account-limits.test.ts", "tests/auth-ui.test.ts"],
+    "modified": ["src/web.ts", "src/agent.ts", "src/app.ts", "scripts/trial.ts", "public/index.html", "public/app.js", "public/dark.css"]
+  },
+  "deploy_prerequisites": [
+    "Add NOVA_UNLIMITED_OWNERS=<owner-id file>,<ricky owner> to ~/.local/share/nova-community-trial/trial.env",
+    "Optional NOVA_DAILY_RUNS_PER_ACCOUNT, NOVA_PUBLIC_REGISTRATION",
+    "Restart transient unit (stop + reset-failed + systemd-run) so migration 017 applies and env is read"
+  ],
+  "remaining_risks": [
+    "no email verification / password reset",
+    "cost exposure: per-account cap only, no global daily cap or euro budget; multi-IP account farming possible",
+    "in-memory rate limiters reset on restart, not shared across instances",
+    "cap counts runs not tokens",
+    "staging/jobs-generic-1/app.js no longer byte-identical to public/app.js (out of scope, renderer unchanged)"
+  ]
+}

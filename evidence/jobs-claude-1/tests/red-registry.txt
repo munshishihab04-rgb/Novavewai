@@ -1,0 +1,25 @@
+/home/azureuser/nova-community-agent/tests/jobs-live-registry.test.ts:2
+import {verifiedJobPages,discoveryQuery,JOB_SOURCE_REGISTRY} from '../src/jobs-live.ts';
+                                        ^
+SyntaxError: The requested module '../src/jobs-live.ts' does not provide an export named 'JOB_SOURCE_REGISTRY'
+    at #asyncInstantiate (node:internal/modules/esm/module_job:463:21)
+    at async ModuleJob.run (node:internal/modules/esm/module_job:561:5)
+    at async node:internal/modules/esm/loader:650:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v26.8.2
+✖ tests/jobs-live-registry.test.ts (161.995314ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 170.699853
+
+✖ failing tests:
+
+test at tests/jobs-live-registry.test.ts:1:1
+✖ tests/jobs-live-registry.test.ts (161.995314ms)
+  'test failed'

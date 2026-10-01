@@ -1,0 +1,43 @@
+✔ native jobs_search: primary unavailable → one registry-targeted discovery query → only registry detail pages are read; result persists provenance for current, expired and off-registry leads (1682.645216ms)
+✔ native unavailable source uses one bounded web candidate search and suppresses repeated jobs call (2020.669474ms)
+✔ native fallback preserves direct-only constraint as unmet browsing suggestions, never UNKNOWN opportunities (1855.24897ms)
+✔ native agent asks city from jobs receipt without browsing and includes discovery safety instructions (1603.860587ms)
+✔ jobs source receipt cannot persist after session revocation (1582.355207ms)
+✔ cancellation fences uncooperative job providers and does not hang app shutdown (1530.269457ms)
+✔ native jobs dispatch completes with original link receipt and no preference interview (1595.802583ms)
+✔ Subito adapter is deny-by-default until explicit source-policy review (7.423755ms)
+✔ Playwright parser reads only compact listing cards, distinguishes blocks from no matches (282.530715ms)
+✔ fixed search URLs and robots policy do not allow login, third parties or forbidden paths (1.729321ms)
+✔ portal vacancy carries evidence, UNKNOWN publisher and no-agencies excludes unknown even on cache hit (11.317159ms)
+✔ registry is provider-neutral, fixed and reviewed: only https detail-shaped paths on listed origins are fetched (2.319979ms)
+✔ expired, redirected, epoch-dated and off-city pages never become vacancies; reasons are kept (27.681926ms)
+✔ a current listing with role, exact city and plausible date becomes a vacancy with provenance; publisher is classified not assumed (4.669586ms)
+✔ bounded: at most six leads, 2.5MB body, one request per lead, fetch failure is UNAVAILABLE not silent (8.846639ms)
+✔ discovery query targets single listing pages on reviewed sources, not generic indexes, and carries no user text (0.288103ms)
+✔ allowlisted live adapter returns only current listing body evidence (29.875267ms)
+✔ current explicit city wins and unsupported correction never falls back (1.344843ms)
+✔ progressive discovery runs search before companies and browser, preserves kinds and exact-URL dedupe (4.991648ms)
+✔ sufficient search avoids expensive stages; missing city starts nothing; strict mode excludes unknown (1.60942ms)
+{"first":{"status":"unavailable","occupation":"cameriere","city":"Bologna","code":"jobs_policy_unreviewed","originalSearchUrl":"https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/bologna/?q=cameriere","retryable":false},"second":{"status":"unavailable","occupation":"cameriere","city":"Bologna","code":"jobs_policy_unreviewed","limitReason":"jobs_rate_limited","retryAfterSeconds":15,"originalSearchUrl":"https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/bologna/?q=cameriere","retryable":false},"calls":1}
+✔ failed source cause survives immediate retry without spending another request (10.298523ms)
+✔ search-link receipts render no opportunity cards in the unchanged public renderer (285.343872ms)
+✔ historical search citations exclude closed InfoJobs Italia, preserving only browsing suggestions (1.923428ms)
+✔ discovery examines at most six citations, rejects unsafe links and deduplicates fragments (0.588418ms)
+✔ citation-only discovery never creates vacancies or observed job locations, even for detail-shaped URLs (0.362472ms)
+✔ native jobs_search accepts intent and an empty city, not arbitrary browser options (1.196687ms)
+✔ missing city asks before any source or cache access and cooking infers cuoco (1.187374ms)
+✔ natural role/city search shares only canonical metadata with TTL across service instances (37.560939ms)
+✔ live searches have one shared lock, fail fast on overlap and rate limit across instances (23.940321ms)
+✔ source failure is explicit, never stale/simulated data; privacy and origin filter are strict (2.836074ms)
+✔ ambiguous cities do not start a search and invalid budgets fail at construction (0.376553ms)
+✔ job receipt cards expose only original HTTPS listing links and escaped labels (263.950396ms)
+✔ daily warm cache is bounded to five cities, one role; duplicate daily run does no work (9.707095ms)
+✔ web discovery returns bounded unverified candidate links, never working jobs (1.241736ms)
+ℹ tests 34
+ℹ suites 0
+ℹ pass 34
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 19534.388174

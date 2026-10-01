@@ -1,0 +1,30 @@
+✖ citation-only discovery never creates vacancies or observed job locations, even for detail-shaped URLs (2.718361ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 182.096872
+
+✖ failing tests:
+
+test at tests/jobs-search-links.test.ts:1:156
+✖ citation-only discovery never creates vacancies or observed job locations, even for detail-shaped URLs (2.718361ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  2 !== 0
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/jobs-search-links.test.ts:11:9)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 2,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

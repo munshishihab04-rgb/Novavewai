@@ -1,0 +1,15 @@
+✖ staged native renderer presents dated records and search links separately with safe metadata (4.401458ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 648.433255
+
+✖ failing tests:
+
+test at tests/jobs-generic-ui.test.ts:2:1
+✖ staged native renderer presents dated records and search links separately with safe metadata (4.401458ms)
+  [Error: ENOENT: no such file or directory, open '/home/azureuser/nova-community-agent/staging/jobs-generic-1/app.js'] { errno: -2, code: 'ENOENT', syscall: 'open', path: '/home/azureuser/nova-community-agent/staging/jobs-generic-1/app.js' }

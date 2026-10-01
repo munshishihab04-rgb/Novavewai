@@ -1,0 +1,23 @@
+{
+ "base": "https://overnight-businesses-fun-fred.trycloudflare.com",
+ "username": "smoke_d397ccc2",
+ "firstVisitFlag": true,
+ "onboardingSaved": true,
+ "turn1": {
+  "pref": "bn",
+  "userLanguage": "it",
+  "status": "completed",
+  "reply": "আমি তোমার দৈনন্দিন কাজে সাহায্য করতে পারি—দ্রুত ও পরিষ্কারভাবে ফাইল বানানো ও সংরক্ষণ, সিভি ধাপে ধাপে তৈরি ও আপডেট করা, আর বর্তমান তথ্য বা চাকরির খোঁজে সহায়তা করা।  \nআমি সবসময় সৎ থাকি: যা পারি না তা স্পষ্ট বলে দিই, আর যেটা দরকার সেটা এক প্রশ্ন করে জেনে নিই।",
+  "bengaliChars": 201,
+  "latinChars": 0
+ },
+ "turn2": {
+  "pref": "en",
+  "userLanguage": "banglish+it+en mixed",
+  "status": "completed",
+  "reply": "Yes — I can help you build your CV step by step, one question at a time, and save it as we go.  \nFirst question: what is your full name as you want it to appear on the CV?",
+  "bengaliChars": 0,
+  "latinChars": 125
+ },
+ "result": "ok"
+}

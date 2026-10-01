@@ -1,0 +1,14 @@
+[Unit]
+Description=NOVA public tunnel (Cloudflare quick tunnel, auto-restarting)
+After=nova-community-trial.service
+Wants=nova-community-trial.service
+
+[Service]
+ExecStart=%h/.local/bin/cloudflared-nova-trial tunnel --no-autoupdate --url http://127.0.0.1:4187
+ExecStartPost=%h/nova-community-agent/scripts/nova-public-url.sh record
+Restart=always
+RestartSec=10
+NoNewPrivileges=yes
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,25 @@
+[
+  {
+    "type": "realtime",
+    "model": "gpt-realtime-2.1-mini",
+    "status": 200,
+    "created": true
+  },
+  {
+    "type": "realtime",
+    "model": "gpt-realtime-mini",
+    "status": 400,
+    "error": {
+      "code": "OpperationNotSupported",
+      "message": "The realtime operation does not work with the specified model. Please choose different model and try again."
+    }
+  },
+  {
+    "type": "audio",
+    "status": 404,
+    "error": {
+      "code": "DeploymentNotFound",
+      "message": "The API deployment for this resource does not exist. If you created the deployment within the last 5 minutes, please wait a moment and try again."
+    }
+  }
+]

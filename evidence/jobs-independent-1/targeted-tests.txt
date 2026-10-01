@@ -1,0 +1,26 @@
+✔ native agent asks city from jobs receipt without browsing and includes discovery safety instructions (1438.394792ms)
+✔ jobs source receipt cannot persist after session revocation (1738.01416ms)
+✔ cancellation fences uncooperative job providers and does not hang app shutdown (1526.701903ms)
+✔ native jobs dispatch completes with original link receipt and no preference interview (1288.757542ms)
+✔ Subito adapter is deny-by-default until explicit source-policy review (6.776053ms)
+✔ Playwright parser reads only compact listing cards, distinguishes blocks from no matches (298.135903ms)
+✔ fixed search URLs and robots policy do not allow login, third parties or forbidden paths (1.541112ms)
+✔ portal vacancy carries evidence, UNKNOWN publisher and no-agencies excludes unknown even on cache hit (13.815959ms)
+✔ progressive discovery runs search before companies and browser, preserves kinds and exact-URL dedupe (3.493681ms)
+✔ sufficient search avoids expensive stages; missing city starts nothing; strict mode excludes unknown (1.376967ms)
+✔ native jobs_search accepts intent and an empty city, not arbitrary browser options (1.166443ms)
+✔ missing city asks before any source or cache access and cooking infers cuoco (1.06732ms)
+✔ natural role/city search shares only canonical metadata with TTL across service instances (22.277774ms)
+✔ live searches have one shared lock, fail fast on overlap and rate limit across instances (3.75818ms)
+✔ source failure is explicit, never stale/simulated data; privacy and origin filter are strict (2.901961ms)
+✔ ambiguous cities do not start a search and invalid budgets fail at construction (0.424243ms)
+✔ job receipt cards expose only original HTTPS listing links and escaped labels (272.039801ms)
+✔ daily warm cache is bounded to five cities, one role; duplicate daily run does no work (16.693661ms)
+ℹ tests 18
+ℹ suites 0
+ℹ pass 18
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 10622.690011

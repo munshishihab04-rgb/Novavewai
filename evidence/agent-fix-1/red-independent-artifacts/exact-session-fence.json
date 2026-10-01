@@ -1,0 +1,44 @@
+{
+  "run": {
+    "id": "167e9d73-4cb9-4b0e-97c1-6a4b912e43a7",
+    "status": "failed",
+    "error_code": "session_revoked",
+    "model_calls": 1,
+    "tool_calls": 0
+  },
+  "replacementRead": {
+    "status": 200,
+    "body": {
+      "id": "167e9d73-4cb9-4b0e-97c1-6a4b912e43a7",
+      "conversationId": "031a8369-1f88-4471-84d9-3b2b9e393ff3",
+      "taskId": "e37de109-fbbb-4bc8-a7d4-3d463a380b33",
+      "status": "failed",
+      "modelCalls": 1,
+      "toolCalls": 0,
+      "error": "session_revoked",
+      "createdAt": "2026-09-25T10:30:29.285Z",
+      "updatedAt": "2026-09-25T10:30:29.313Z"
+    }
+  },
+  "persisted": {
+    "runs": [
+      {
+        "id": "167e9d73-4cb9-4b0e-97c1-6a4b912e43a7",
+        "status": "failed",
+        "error_code": "session_revoked",
+        "model_calls": 1,
+        "tool_calls": 0
+      }
+    ],
+    "messages": [
+      {
+        "sequence": 1,
+        "role": "user",
+        "text": "session fence"
+      }
+    ],
+    "artifacts": [],
+    "receipts": [],
+    "providerCalls": 1
+  }
+}

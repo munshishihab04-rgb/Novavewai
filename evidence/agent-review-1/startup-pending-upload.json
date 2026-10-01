@@ -1,0 +1,64 @@
+{
+  "startupError": "Agent runtime already active",
+  "before": [
+    {
+      "id": "2ea2f01b-a8c6-49f8-9ea6-18e0e1dbfcfe",
+      "state": "pending",
+      "request_key": "shared-pending"
+    }
+  ],
+  "after": [],
+  "stolen": {
+    "status": 201,
+    "body": {
+      "id": "5f02c9b3-a846-4600-98ea-7647bd1d9e69",
+      "conversationId": "65a4467d-1972-45a4-8d0a-056459701965",
+      "taskId": "c49c4896-1f11-4327-8c9b-12d94e110da5",
+      "status": "queued"
+    }
+  },
+  "upload": {
+    "status": 409,
+    "body": {
+      "error": "upload_cancelled"
+    }
+  },
+  "persisted": {
+    "runs": [
+      {
+        "id": "5f02c9b3-a846-4600-98ea-7647bd1d9e69",
+        "status": "completed",
+        "error_code": null,
+        "model_calls": 1,
+        "tool_calls": 0
+      }
+    ],
+    "messages": [
+      {
+        "sequence": 1,
+        "role": "user",
+        "text": "reuse reserved upload key"
+      },
+      {
+        "sequence": 2,
+        "role": "assistant",
+        "text": "controlled output"
+      }
+    ],
+    "artifacts": [],
+    "receipts": [],
+    "providerCalls": 1
+  },
+  "idempotency": [
+    {
+      "key": "shared-pending",
+      "status": 201,
+      "response": {
+        "id": "5f02c9b3-a846-4600-98ea-7647bd1d9e69",
+        "status": "queued",
+        "taskId": "c49c4896-1f11-4327-8c9b-12d94e110da5",
+        "conversationId": "65a4467d-1972-45a4-8d0a-056459701965"
+      }
+    }
+  ]
+}

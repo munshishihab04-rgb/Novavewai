@@ -1,0 +1,18 @@
+✔ session final validation after actual receipt write wait (2687.910657ms)
+✔ session final validation after actual terminal write wait (2730.135612ms)
+✔ lease loss during writer wait rolls back; replacement drains the old transaction before recovery (1805.650969ms)
+✔ failed storage initialization releases singleton before close and removes client listeners (1708.356336ms)
+✔ dedicated client end alone invalidates runtime and cleans listeners (1696.248447ms)
+✔ startup reservation also excludes non-agent file runtime: false (1624.056373ms)
+✔ startup reservation also excludes non-agent file runtime: true (1588.552323ms)
+✔ lease loss fences held inference, late output and replacement (1871.336548ms)
+✔ lease loss fences held inference, late output and cancel (1979.722494ms)
+✔ lease loss fences held inference, late output and purge (1839.239031ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 19905.29497

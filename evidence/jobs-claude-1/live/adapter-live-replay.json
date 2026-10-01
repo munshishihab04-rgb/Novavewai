@@ -1,0 +1,51 @@
+{
+ "query": "cameriere Bologna offerta di lavoro pagina singola annuncio site:lavoroturismo.it OR site:restworld.it OR site:jobintourism.it OR site:job.hnh.it",
+ "startedAt": "2026-09-30T17:42:28.287Z",
+ "search": {
+  "sources": [],
+  "error": "Error: search_without_sources"
+ },
+ "leads": [
+  {
+   "title": "Cameriere/a di sala - LavoroTurismo",
+   "url": "https://www.lavoroturismo.it/offerte-lavoro/offerta-cameriere-sala-bologna-smy-hotels"
+  },
+  {
+   "title": "Cameriere di sala | Bologna | HNH",
+   "url": "https://job.hnh.it/jobs/Cameriere-di-sala-full-time-o-part-time-Sala-Italia-Bologna-558045909.htm"
+  }
+ ],
+ "verified": {
+  "opportunities": [],
+  "unavailable": [
+   {
+    "url": "https://www.lavoroturismo.it/offerte-lavoro/offerta-cameriere-sala-bologna-smy-hotels",
+    "title": "Cameriere/a di sala - LavoroTurismo",
+    "status": "UNAVAILABLE",
+    "reason": "body over 1MB",
+    "observedAt": "2026-09-30T17:42:30.733Z"
+   },
+   {
+    "url": "https://job.hnh.it/jobs/Cameriere-di-sala-full-time-o-part-time-Sala-Italia-Bologna-558045909.htm",
+    "title": "Cameriere di sala | Bologna | HNH",
+    "status": "EXPIRED",
+    "reason": "source reports vacancy no longer published",
+    "observedAt": "2026-09-30T17:42:30.868Z"
+   }
+  ],
+  "skipped": 0,
+  "excludedNonDirect": 0,
+  "fetchedAt": "2026-09-30T17:42:31.188Z",
+  "testedScope": {
+   "leads": 2,
+   "allowedOrigins": [
+    "https://www.lavoroturismo.it",
+    "https://www.restworld.it",
+    "https://www.jobintourism.it",
+    "https://job.hnh.it",
+    "https://www.adecco.com",
+    "https://www.lavoropiu.it"
+   ]
+  }
+ }
+}

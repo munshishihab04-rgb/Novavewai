@@ -1,0 +1,9 @@
+
+> nova-community-agent@0.1.0 typecheck
+> tsc --noEmit
+
+tests/generated-files.test.ts(11,119): error TS2322: Type 'Promise<{ role: string; content: null; tool_calls: { id: `${string}-${string}-${string}-${string}-${string}`; type: string; function: { name: string; arguments: string; }; }[]; } | { role: "assistant"; content: string; }>' is not assignable to type 'Promise<ProviderMessage>'.
+  Type '{ role: string; content: null; tool_calls: { id: `${string}-${string}-${string}-${string}-${string}`; type: string; function: { name: string; arguments: string; }; }[]; } | { role: "assistant"; content: string; }' is not assignable to type 'ProviderMessage'.
+    Type '{ role: string; content: null; tool_calls: { id: `${string}-${string}-${string}-${string}-${string}`; type: string; function: { name: string; arguments: string; }; }[]; }' is not assignable to type 'ProviderMessage'.
+      Types of property 'role' are incompatible.
+        Type 'string' is not assignable to type '"assistant"'.

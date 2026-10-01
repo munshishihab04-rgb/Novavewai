@@ -1,0 +1,37 @@
+✔ native unavailable source uses one bounded web candidate search and suppresses repeated jobs call (1525.170941ms)
+✔ native fallback preserves direct-only constraint as unmet browsing suggestions, never UNKNOWN opportunities (1833.324195ms)
+✔ native agent asks city from jobs receipt without browsing and includes discovery safety instructions (1993.678078ms)
+✔ jobs source receipt cannot persist after session revocation (1690.326339ms)
+✔ cancellation fences uncooperative job providers and does not hang app shutdown (1840.14433ms)
+✔ native jobs dispatch completes with original link receipt and no preference interview (1676.456581ms)
+✔ Subito adapter is deny-by-default until explicit source-policy review (6.903049ms)
+✔ Playwright parser reads only compact listing cards, distinguishes blocks from no matches (289.144835ms)
+✔ fixed search URLs and robots policy do not allow login, third parties or forbidden paths (1.668655ms)
+✔ portal vacancy carries evidence, UNKNOWN publisher and no-agencies excludes unknown even on cache hit (11.391638ms)
+✔ allowlisted live adapter returns only current listing body evidence (26.93243ms)
+✔ current explicit city wins and unsupported correction never falls back (1.407791ms)
+✔ progressive discovery runs search before companies and browser, preserves kinds and exact-URL dedupe (5.019064ms)
+✔ sufficient search avoids expensive stages; missing city starts nothing; strict mode excludes unknown (1.573065ms)
+{"first":{"status":"unavailable","occupation":"cameriere","city":"Bologna","code":"jobs_policy_unreviewed","originalSearchUrl":"https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/bologna/?q=cameriere","retryable":false},"second":{"status":"unavailable","occupation":"cameriere","city":"Bologna","code":"jobs_policy_unreviewed","limitReason":"jobs_rate_limited","retryAfterSeconds":15,"originalSearchUrl":"https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/bologna/?q=cameriere","retryable":false},"calls":1}
+✔ failed source cause survives immediate retry without spending another request (9.984476ms)
+✔ search-link receipts render no opportunity cards in the unchanged public renderer (278.572407ms)
+✔ historical search citations exclude closed InfoJobs Italia, preserving only browsing suggestions (1.8898ms)
+✔ discovery examines at most six citations, rejects unsafe links and deduplicates fragments (0.577393ms)
+✔ citation-only discovery never creates vacancies or observed job locations, even for detail-shaped URLs (0.515189ms)
+✔ native jobs_search accepts intent and an empty city, not arbitrary browser options (1.349833ms)
+✔ missing city asks before any source or cache access and cooking infers cuoco (1.199623ms)
+✔ natural role/city search shares only canonical metadata with TTL across service instances (36.373551ms)
+✔ live searches have one shared lock, fail fast on overlap and rate limit across instances (19.127675ms)
+✔ source failure is explicit, never stale/simulated data; privacy and origin filter are strict (5.186879ms)
+✔ ambiguous cities do not start a search and invalid budgets fail at construction (0.402462ms)
+✔ job receipt cards expose only original HTTPS listing links and escaped labels (259.786865ms)
+✔ daily warm cache is bounded to five cities, one role; duplicate daily run does no work (11.22457ms)
+✔ web discovery returns bounded unverified candidate links, never working jobs (1.278464ms)
+ℹ tests 28
+ℹ suites 0
+ℹ pass 28
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 17182.822149

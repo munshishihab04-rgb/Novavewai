@@ -1,0 +1,12 @@
+# Example only. NOT installed or enabled by this change.
+[Unit]
+Description=Bounded daily Nova jobs warm-cache schedule
+
+[Timer]
+OnCalendar=*-*-* 05:30:00 UTC
+RandomizedDelaySec=900
+Persistent=false
+Unit=nova-jobs-warm.service
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,51 @@
+✔ native jobs_search: primary unavailable → one registry-targeted discovery query → only registry detail pages are read; result persists provenance for current, expired and off-registry leads (1641.183571ms)
+✔ native unavailable source uses one bounded web candidate search and suppresses repeated jobs call (1863.95698ms)
+✔ native fallback preserves direct-only constraint as unmet browsing suggestions, never UNKNOWN opportunities (2261.544871ms)
+✔ native agent asks city from jobs receipt without browsing and includes discovery safety instructions (1890.442773ms)
+✔ jobs source receipt cannot persist after session revocation (1688.147747ms)
+✔ cancellation fences uncooperative job providers and does not hang app shutdown (1327.792713ms)
+✔ native jobs dispatch completes with original link receipt and no preference interview (1572.759297ms)
+✔ Subito adapter is deny-by-default until explicit source-policy review (8.51193ms)
+✔ Playwright parser reads only compact listing cards, distinguishes blocks from no matches (284.784885ms)
+✔ fixed search URLs and robots policy do not allow login, third parties or forbidden paths (3.615936ms)
+✔ portal vacancy carries evidence, UNKNOWN publisher and no-agencies excludes unknown even on cache hit (13.271466ms)
+✔ controlled-provider native generic dispatch persists missing city, corrections, remote and suppresses duplicates (1883.885856ms)
+✔ generic page path requires explicit authorized origin and never expires by age alone (30.752069ms)
+✔ generic role evidence is in listing title, sala is not ai piani, footer is not city evidence (2.4964ms)
+✔ generic default gates automation and returns named original-source searches, not vacancies (7.986922ms)
+✔ permitted imports are dated observations, unknown publisher allowed, never relabelled live or city (6.500903ms)
+✔ staged native renderer presents dated records and search links separately with safe metadata (372.899302ms)
+✔ generic occupation and municipality are not limited to a dictionary (5.469307ms)
+✔ current user provenance wins over model cities, negation and old preferences (2.100197ms)
+✔ registry is provider-neutral, fixed and reviewed: only https detail-shaped paths on listed origins are fetched (2.314646ms)
+✔ expired, redirected, epoch-dated and off-city pages never become vacancies; reasons are kept (27.688972ms)
+✔ a current listing with role, exact city and plausible date becomes a vacancy with provenance; publisher is classified not assumed (3.039486ms)
+✔ bounded: at most six leads, 2.5MB body, one request per lead, fetch failure is UNAVAILABLE not silent (9.55267ms)
+✔ discovery query targets single listing pages on reviewed sources, not generic indexes, and carries no user text (1.392652ms)
+✔ allowlisted live adapter returns only current listing body evidence (27.802734ms)
+✔ current explicit city wins and unsupported correction never falls back (5.213373ms)
+✔ progressive discovery runs search before companies and browser, preserves kinds and exact-URL dedupe (3.772927ms)
+✔ sufficient search avoids expensive stages; missing city starts nothing; strict mode excludes unknown (1.378974ms)
+{"first":{"status":"unavailable","occupation":"cameriere","city":"Bologna","code":"jobs_policy_unreviewed","originalSearchUrl":"https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/bologna/?q=cameriere","retryable":false},"second":{"status":"unavailable","occupation":"cameriere","city":"Bologna","code":"jobs_policy_unreviewed","limitReason":"jobs_rate_limited","retryAfterSeconds":15,"originalSearchUrl":"https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/bologna/?q=cameriere","retryable":false},"calls":1}
+✔ failed source cause survives immediate retry without spending another request (11.784698ms)
+✔ search-link receipts render no opportunity cards in the unchanged public renderer (257.761072ms)
+✔ historical search citations exclude closed InfoJobs Italia, preserving only browsing suggestions (1.852698ms)
+✔ discovery examines at most six citations, rejects unsafe links and deduplicates fragments (0.767648ms)
+✔ citation-only discovery never creates vacancies or observed job locations, even for detail-shaped URLs (0.426644ms)
+✔ native jobs_search accepts intent and an empty city, not arbitrary browser options (1.147564ms)
+✔ missing city asks before any source or cache access and cooking infers cuoco (2.032996ms)
+✔ natural role/city search shares only canonical metadata with TTL across service instances (26.773234ms)
+✔ live searches have one shared lock, fail fast on overlap and rate limit across instances (3.737384ms)
+✔ source failure is explicit, never stale/simulated data; privacy and origin filter are strict (2.360169ms)
+✔ ambiguous cities do not start a search and invalid budgets fail at construction (0.410613ms)
+✔ job receipt cards expose only original HTTPS listing links and escaped labels (255.757959ms)
+✔ daily warm cache is bounded to five cities, one role; duplicate daily run does no work (11.471105ms)
+✔ web discovery returns bounded unverified candidate links, never working jobs (1.060112ms)
+ℹ tests 42
+ℹ suites 0
+ℹ pass 42
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 21379.069066

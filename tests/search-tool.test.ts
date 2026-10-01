@@ -1,0 +1,2 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {validateTools} from '../src/agent-tools.ts';
+test('web_search tool accepts a bounded query and denies injected options',()=>{assert.equal(validateTools([{id:'s',type:'function',function:{name:'web_search',arguments:JSON.stringify({query:'INPS ufficiale'})}}])[0].name,'web_search');assert.throws(()=>validateTools([{id:'s',type:'function',function:{name:'web_search',arguments:JSON.stringify({query:'INPS',url:'http://169.254.169.254/'})}}]));});

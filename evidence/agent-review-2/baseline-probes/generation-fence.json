@@ -1,0 +1,75 @@
+{
+  "old": {
+    "status": 201,
+    "body": {
+      "id": "9587659a-8378-4db0-b6a4-5931f625b1b4",
+      "conversationId": "3191334c-1a79-4ee1-a736-dab79f6e1be6",
+      "taskId": "41bc2974-f6b9-4490-8e9c-7e9fc7ca81d7",
+      "status": "queued"
+    }
+  },
+  "fresh": {
+    "status": 201,
+    "body": {
+      "id": "f5e2c342-1724-43d1-9b74-eca4c34df6c0",
+      "conversationId": "3191334c-1a79-4ee1-a736-dab79f6e1be6",
+      "taskId": "41bc2974-f6b9-4490-8e9c-7e9fc7ca81d7",
+      "status": "queued"
+    }
+  },
+  "replay": {
+    "status": 201,
+    "body": {
+      "id": "9587659a-8378-4db0-b6a4-5931f625b1b4",
+      "status": "queued",
+      "taskId": "41bc2974-f6b9-4490-8e9c-7e9fc7ca81d7",
+      "conversationId": "3191334c-1a79-4ee1-a736-dab79f6e1be6"
+    }
+  },
+  "persisted": {
+    "runs": [
+      {
+        "id": "9587659a-8378-4db0-b6a4-5931f625b1b4",
+        "status": "cancelled",
+        "error_code": null,
+        "model_calls": 1,
+        "tool_calls": 0
+      },
+      {
+        "id": "f5e2c342-1724-43d1-9b74-eca4c34df6c0",
+        "status": "completed",
+        "error_code": null,
+        "model_calls": 1,
+        "tool_calls": 1
+      }
+    ],
+    "messages": [
+      {
+        "sequence": 1,
+        "role": "user",
+        "text": "old generation"
+      },
+      {
+        "sequence": 2,
+        "role": "user",
+        "text": "new generation"
+      },
+      {
+        "sequence": 3,
+        "role": "assistant",
+        "text": "NEW_GENERATION"
+      }
+    ],
+    "artifacts": [],
+    "receipts": [
+      {
+        "call_id": "25b6d8d2-d427-4280-bd1d-d27d298c77c0",
+        "tool": "complete",
+        "result": {
+          "status": "completed"
+        }
+      }
+    ],
+    "providerCalls": 2
+  }
+}

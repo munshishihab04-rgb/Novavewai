@@ -1,0 +1,69 @@
+{
+ "startedAt": "2026-09-30T17:43:45.942Z",
+ "leads": [
+  {
+   "title": "Cameriere/a di sala - LavoroTurismo",
+   "url": "https://www.lavoroturismo.it/offerte-lavoro/offerta-cameriere-sala-bologna-smy-hotels"
+  },
+  {
+   "title": "Cameriere di sala | Bologna | HNH",
+   "url": "https://job.hnh.it/jobs/Cameriere-di-sala-full-time-o-part-time-Sala-Italia-Bologna-558045909.htm"
+  },
+  {
+   "title": "Aiuto cuoco Bologna CRASHIT",
+   "url": "https://www.restworld.it/posizione/offerta-di-lavoro-aiuto-cuoco-bologna-krf"
+  },
+  {
+   "title": "Lavapiatti Monte San Pietro",
+   "url": "https://www.restworld.it/posizione/offerta-di-lavoro-lavapiatti-monte_san_pietro-ldu"
+  }
+ ],
+ "verified": {
+  "opportunities": [],
+  "unavailable": [
+   {
+    "url": "https://www.lavoroturismo.it/offerte-lavoro/offerta-cameriere-sala-bologna-smy-hotels",
+    "title": "Cameriere/a di sala",
+    "status": "EXPIRED",
+    "reason": "expired notice in listing body",
+    "observedAt": "2026-09-30T17:43:45.213Z"
+   },
+   {
+    "url": "https://job.hnh.it/jobs/Cameriere-di-sala-full-time-o-part-time-Sala-Italia-Bologna-558045909.htm",
+    "title": "Cameriere di sala | Bologna | HNH",
+    "status": "EXPIRED",
+    "reason": "source reports vacancy no longer published",
+    "observedAt": "2026-09-30T17:43:45.371Z"
+   },
+   {
+    "url": "https://www.restworld.it/posizione/offerta-di-lavoro-aiuto-cuoco-bologna-krf",
+    "title": "Aiuto cuoco/a per fast food",
+    "status": "MISMATCH",
+    "reason": "role not found in listing body",
+    "observedAt": "2026-09-30T17:43:45.519Z"
+   },
+   {
+    "url": "https://www.restworld.it/posizione/offerta-di-lavoro-lavapiatti-monte_san_pietro-ldu",
+    "title": "Lavapiatti per agriturismo",
+    "status": "MISMATCH",
+    "reason": "role not found in listing body",
+    "observedAt": "2026-09-30T17:43:45.869Z"
+   }
+  ],
+  "skipped": 0,
+  "excludedNonDirect": 0,
+  "fetchedAt": "2026-09-30T17:43:45.942Z",
+  "testedScope": {
+   "leads": 4,
+   "allowedOrigins": [
+    "https://www.lavoroturismo.it",
+    "https://www.restworld.it",
+    "https://www.jobintourism.it",
+    "https://job.hnh.it",
+    "https://www.adecco.com",
+    "https://www.lavoropiu.it"
+   ]
+  }
+ },
+ "note": "no searchWeb call; budget already 4/4"
+}

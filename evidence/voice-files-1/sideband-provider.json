@@ -1,0 +1,8 @@
+{
+  "boundary": "Direct managed-access provider protocol; no application or user data",
+  "events": [],
+  "secretStatus": 200,
+  "callStatus": 201,
+  "locationPresent": true,
+  "error": "sideband_timeout"
+}

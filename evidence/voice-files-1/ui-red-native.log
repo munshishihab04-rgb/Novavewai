@@ -1,0 +1,55 @@
+nova
+PROVA PRIVATA
+
+IL TUO SPAZIO PERSONALE
+
+Come posso aiutarti oggi?
+
+Scegli un’attività oppure scrivi direttamente a Nova.
+
+Modello attivo
+Scorri →
+Nova · controlled
+Servizio gestito
+Strumenti Nova
+Scorri →
+Curriculum professionale
+Crea, correggi ed esporta il tuo CV
+Capire documenti
+Carica un PDF e ricevi una spiegazione
+Ricerca con fonti
+Trova informazioni attuali e citate
+Chat vocale
+Parla in italiano, বাংলা o English
+Assistenti
+Scorri →
+Studio e lingua
+Impara, traduci e fai pratica
+Lettere e pratiche
+Prepara testi senza inventare dati
+ Ricerca Web
+✖ staged native voice UI binds conversation, stops late connection and provides authenticated file downloads (1261.043279ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2018.377187
+
+✖ failing tests:
+
+test at tests/voice-files-ui.test.ts:2:1
+✖ staged native voice UI binds conversation, stops late connection and provides authenticated file downloads (1261.043279ms)
+  AssertionError [ERR_ASSERTION]: must use bound native session route, not legacy /voice/connect
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/voice-files-ui.test.ts:8:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

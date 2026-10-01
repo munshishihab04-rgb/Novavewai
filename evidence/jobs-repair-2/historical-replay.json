@@ -1,0 +1,39 @@
+{
+  "mode": "offline_historical_citations",
+  "source": "evidence/jobs-repair-1/bounded-live-candidates.json",
+  "liveRequests": 0,
+  "inputCitations": 4,
+  "result": {
+    "status": "search_links_only",
+    "occupation": "cameriere",
+    "requestedCity": "Bologna",
+    "searchLinks": [
+      {
+        "kind": "BROWSING_SUGGESTION",
+        "title": "Offerte di lavoro cameriera - Bologna, Emilia-Romagna",
+        "url": "https://it.indeed.com/q-cameriera-l-bologna%2C-emilia-romagna-offerte-lavoro.html?vjk=30938595342e2ebd",
+        "discoveredAt": "2026-09-30T17:13:25.746Z",
+        "observedLocation": null
+      },
+      {
+        "kind": "BROWSING_SUGGESTION",
+        "title": "Offerte di lavoro Cameriere - Bologna, Emilia-Romagna",
+        "url": "https://it.indeed.com/offerte-lavoro?l=Bologna%2C+Emilia-Romagna&q=Cameriere",
+        "discoveredAt": "2026-09-30T17:13:25.746Z",
+        "observedLocation": null
+      },
+      {
+        "kind": "BROWSING_SUGGESTION",
+        "title": "Subito.it Cameriere - Offerte di lavoro a Bologna e provincia",
+        "url": "https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere",
+        "discoveredAt": "2026-09-30T17:13:25.746Z",
+        "observedLocation": null
+      }
+    ],
+    "noAgencies": true,
+    "constraintStatus": "unmet",
+    "notice": "No-agencies constraint unmet: no direct employer has been confirmed. Browsing suggestions only, not vacancies or verified job listings. Requested city is a search constraint, not an observed job location. Publisher identity, location, availability and page access are unverified.",
+    "retryable": false,
+    "trust": "untrusted_public_metadata"
+  }
+}

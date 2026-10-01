@@ -1,0 +1,10 @@
+✔ corrected behavior: assistant-generated content must not become a user_supplied source (1562.836958ms)
+✔ corrected behavior: expiry during canonical writer lock wait must roll back mutation and receipt (2461.809614ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4415.680329

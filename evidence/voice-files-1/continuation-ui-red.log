@@ -1,0 +1,32 @@
+✖ staged native voice UI binds conversation, stops late connection and provides authenticated file downloads (1168.266072ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1807.391795
+
+✖ failing tests:
+
+test at tests/voice-files-ui.test.ts:3:1
+✖ staged native voice UI binds conversation, stops late connection and provides authenticated file downloads (1168.266072ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + undefined
+  - '44444444-4444-4444-8444-444444444444'
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/voice-files-ui.test.ts:12:265)
+      at runNextTicks (node:internal/process/task_queues:65:5)
+      at process.processImmediate (node:internal/timers:541:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: '44444444-4444-4444-8444-444444444444',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

@@ -1,0 +1,47 @@
+{
+  "waiting": true,
+  "expired": true,
+  "run": {
+    "id": "28c8f490-5969-4bb3-9324-3da6a3adabde",
+    "status": "failed",
+    "error_code": "session_revoked",
+    "model_calls": 1,
+    "tool_calls": 0
+  },
+  "persisted": {
+    "runs": [
+      {
+        "id": "28c8f490-5969-4bb3-9324-3da6a3adabde",
+        "status": "failed",
+        "error_code": "session_revoked",
+        "model_calls": 1,
+        "tool_calls": 0
+      }
+    ],
+    "messages": [
+      {
+        "sequence": 1,
+        "role": "user",
+        "text": "update after controlled delay"
+      }
+    ],
+    "artifacts": [
+      {
+        "id": "eac55418-a6de-41fb-a8a9-3e8ac9bddbac",
+        "title": "original",
+        "current_revision": 1
+      }
+    ],
+    "receipts": [],
+    "providerCalls": 1
+  },
+  "revisions": [
+    {
+      "revision": 1,
+      "content": {
+        "text": "BEFORE",
+        "language": "en"
+      }
+    }
+  ]
+}

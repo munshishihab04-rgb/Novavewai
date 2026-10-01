@@ -1,0 +1,46 @@
+✖ generic page path requires explicit authorized origin and never expires by age alone (27.32609ms)
+✖ generic role evidence is in listing title, sala is not ai piani, footer is not city evidence (1.120945ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 218.913223
+
+✖ failing tests:
+
+test at tests/jobs-generic-pages.test.ts:4:1
+✖ generic page path requires explicit authorized origin and never expires by age alone (27.32609ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/jobs-generic-pages.test.ts:7:130)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/jobs-generic-pages.test.ts:10:1
+✖ generic role evidence is in listing title, sala is not ai piani, footer is not city evidence (1.120945ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/jobs-generic-pages.test.ts:13:130)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

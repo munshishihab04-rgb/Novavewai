@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "/home/azureuser/nova-community-agent/scripts/voice-design-test.py", line 33, in <module>
+    asyncio.run(main())
+  File "/usr/lib/python3.12/asyncio/runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/azureuser/nova-community-agent/scripts/voice-design-test.py", line 18, in main
+    box=await page.locator('#voicepanel').bounding_box();assert box['height']>=830 and box['width']>=380,box
+                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'x': 16, 'y': 193.359375, 'width': 358, 'height': 457.28125}

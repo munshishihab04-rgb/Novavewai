@@ -1,0 +1,122 @@
+{
+  "items": [
+    {
+      "id": "33",
+      "kind": "run.queued",
+      "detail": {
+        "messageId": "d62cfc5b-8430-4695-9360-a53c6c262784"
+      },
+      "createdAt": "2026-09-30T18:33:49.274Z"
+    },
+    {
+      "id": "34",
+      "kind": "inference.started",
+      "detail": {
+        "call": 1
+      },
+      "createdAt": "2026-09-30T18:33:49.281Z"
+    },
+    {
+      "id": "35",
+      "kind": "inference.received",
+      "detail": {
+        "call": 1,
+        "tools": [
+          "jobs_search",
+          "jobs_search"
+        ]
+      },
+      "createdAt": "2026-09-30T18:33:49.287Z"
+    },
+    {
+      "id": "36",
+      "kind": "tool.succeeded",
+      "detail": {
+        "tool": "jobs_search",
+        "callId": "d3db9cd4-0ffe-4879-969c-f0fa8762164b",
+        "result": {
+          "trust": "untrusted_public_metadata",
+          "notice": "Link di ricerca nazionale per parole chiave, non annunci trovati né filtro geografico verificato. Accesso automatico Subito non autorizzato; nessuna pagina raccolta. Inserzionista sconosciuto.",
+          "remote": true,
+          "status": "search_links_only",
+          "retryable": false,
+          "noAgencies": false,
+          "occupation": "saldatore",
+          "searchLinks": [
+            {
+              "url": "https://www.subito.it/annunci-italia/vendita/offerte-lavoro/?q=saldatore+Faenza",
+              "kind": "BROWSING_SUGGESTION",
+              "title": "Subito — ricerca nazionale per parole chiave: saldatore Faenza",
+              "status": "NOT_FETCHED",
+              "evidence": "Constructed national keyword search URL; not an observed listing or geographic filter.",
+              "pageKind": "SEARCH",
+              "sourceName": "Subito",
+              "discoveredAt": "2026-09-30T18:33:49.296Z",
+              "requestedCity": "Faenza",
+              "requestedRole": "saldatore",
+              "publisher_type": "UNKNOWN",
+              "observedLocation": null,
+              "requestedProvince": null
+            }
+          ],
+          "requestedCity": "Faenza",
+          "constraintStatus": "not_requested",
+          "sourceUnavailable": {
+            "code": "jobs_automated_access_not_authorized",
+            "originalSearchUrl": "https://www.subito.it/annunci-italia/vendita/offerte-lavoro/?q=saldatore+Faenza"
+          }
+        }
+      },
+      "createdAt": "2026-09-30T18:33:49.299Z"
+    },
+    {
+      "id": "37",
+      "kind": "tool.succeeded",
+      "detail": {
+        "tool": "jobs_search",
+        "callId": "c64ca593-d263-467f-a024-3cd33cbd570a",
+        "result": {
+          "city": "Faenza",
+          "code": "jobs_retry_suppressed",
+          "status": "unavailable",
+          "retryable": false,
+          "occupation": "saldatore"
+        }
+      },
+      "createdAt": "2026-09-30T18:33:49.314Z"
+    },
+    {
+      "id": "38",
+      "kind": "inference.started",
+      "detail": {
+        "call": 2
+      },
+      "createdAt": "2026-09-30T18:33:49.322Z"
+    },
+    {
+      "id": "39",
+      "kind": "inference.received",
+      "detail": {
+        "call": 2,
+        "tools": []
+      },
+      "createdAt": "2026-09-30T18:33:49.328Z"
+    },
+    {
+      "id": "40",
+      "kind": "assistant.persisted",
+      "detail": {
+        "sequence": 10,
+        "messageId": "7d561039-4979-48e0-b8f8-a90802961df5"
+      },
+      "createdAt": "2026-09-30T18:33:49.330Z"
+    },
+    {
+      "id": "41",
+      "kind": "run.completed",
+      "detail": {},
+      "createdAt": "2026-09-30T18:33:49.330Z"
+    }
+  ],
+  "nextAfter": null
+}

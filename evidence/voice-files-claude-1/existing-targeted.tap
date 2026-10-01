@@ -1,0 +1,100 @@
+TAP version 13
+# Subtest: generated PDF signature/extraction and ZIP independent unzip retain exact source bytes
+ok 1 - generated PDF signature/extraction and ZIP independent unzip retain exact source bytes
+  ---
+  duration_ms: 858.759201
+  type: 'test'
+  ...
+# Subtest: generated archives reject traversal, duplicate names, wrong format and byte overflow before tool execution
+ok 2 - generated archives reject traversal, duplicate names, wrong format and byte overflow before tool execution
+  ---
+  duration_ms: 1.657742
+  type: 'test'
+  ...
+# Subtest: flexible binary transport is owner-scoped, inert and explicitly not universal extraction
+ok 3 - flexible binary transport is owner-scoped, inert and explicitly not universal extraction
+  ---
+  duration_ms: 1658.071052
+  type: 'test'
+  ...
+# Subtest: native generated file tool commits revision and owner-scoped exact code download
+ok 4 - native generated file tool commits revision and owner-scoped exact code download
+  ---
+  duration_ms: 1955.704151
+  type: 'test'
+  ...
+# Subtest: R1 acceptance: pending upload owns shared key, completes once and replays after restart
+ok 5 - R1 acceptance: pending upload owns shared key, completes once and replays after restart
+  ---
+  duration_ms: 1758.152506
+  type: 'test'
+  ...
+# Subtest: R1 all generic routes conflict before DB or file side effects; owners remain independent
+ok 6 - R1 all generic routes conflict before DB or file side effects; owners remain independent
+  ---
+  duration_ms: 1794.648925
+  type: 'test'
+  ...
+# Subtest: R1 reverse direction: completed generic key rejects upload before reservation or blob write
+ok 7 - R1 reverse direction: completed generic key rejects upload before reservation or blob write
+  ---
+  duration_ms: 1602.378451
+  type: 'test'
+  ...
+# Subtest: R1 DB failure: reservation blocks other routes until recovery, then same request retries once
+ok 8 - R1 DB failure: reservation blocks other routes until recovery, then same request retries once
+  ---
+  duration_ms: 1947.651574
+  type: 'test'
+  ...
+# Subtest: R1 FS failure: reservation blocks other routes until recovery, then same request retries once
+ok 9 - R1 FS failure: reservation blocks other routes until recovery, then same request retries once
+  ---
+  duration_ms: 1797.540382
+  type: 'test'
+  ...
+# Subtest: R1 cancelled reservation cannot disturb a replacement completed cache; purge releases only its owner
+ok 10 - R1 cancelled reservation cannot disturb a replacement completed cache; purge releases only its owner
+  ---
+  duration_ms: 1375.917246
+  type: 'test'
+  ...
+# Subtest: R1 pending purge releases reservation and leaves another owner same-key cache intact
+ok 11 - R1 pending purge releases reservation and leaves another owner same-key cache intact
+  ---
+  duration_ms: 1649.46805
+  type: 'test'
+  ...
+# Subtest: R1 cancelled upload retry with identical key and body gets a new reservation, old request cannot finalize it
+ok 12 - R1 cancelled upload retry with identical key and body gets a new reservation, old request cannot finalize it
+  ---
+  duration_ms: 1687.806865
+  type: 'test'
+  ...
+# Subtest: R1 recovery of legacy collision preserves the completed same-owner same-key response
+ok 13 - R1 recovery of legacy collision preserves the completed same-owner same-key response
+  ---
+  duration_ms: 1853.710417
+  type: 'test'
+  ...
+# Subtest: provider-observed committed voice input uses native tools, persists once, and continues in text
+ok 14 - provider-observed committed voice input uses native tools, persists once, and continues in text
+  ---
+  duration_ms: 1644.175733
+  type: 'test'
+  ...
+# Subtest: stop during native inference fences late voice tool completion
+ok 15 - stop during native inference fences late voice tool completion
+  ---
+  duration_ms: 1669.188883
+  type: 'test'
+  ...
+1..15
+# tests 15
+# suites 0
+# pass 15
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 27550.672205

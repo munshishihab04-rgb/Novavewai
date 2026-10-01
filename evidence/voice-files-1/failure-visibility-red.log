@@ -1,0 +1,28 @@
+✖ failed canonical tool never speaks success and exposes voice run failure (4572.439503ms)
+✔ provider-observed committed voice input uses native tools, persists once, and continues in text (1782.653005ms)
+✔ stop during native inference fences late voice tool completion (1631.599952ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 2
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 8761.645598
+
+✖ failing tests:
+
+test at tests/voice-native.test.ts:4:1
+✖ failed canonical tool never speaks success and exposes voice run failure (4572.439503ms)
+  AssertionError [ERR_ASSERTION]: bounded wait expired
+      at wait (/home/azureuser/nova-community-agent/tests/voice-native.test.ts:5:136)
+      at async TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/voice-native.test.ts:4:439)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: undefined,
+    operator: 'fail',
+    diff: 'simple'
+  }

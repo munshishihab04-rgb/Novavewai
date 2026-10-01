@@ -1,0 +1,5 @@
+
+> nova-community-agent@0.1.0 typecheck
+> tsc --noEmit
+
+tests/agent.test.ts(157,43): error TS2322: Type 'ServerResponse<IncomingMessage>' is not assignable to type 'void | Promise<void>'.

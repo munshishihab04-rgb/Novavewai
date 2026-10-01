@@ -1,0 +1,13 @@
+✔ lease loss during writer wait rolls back; replacement drains the old transaction before recovery (1652.09011ms)
+✔ lease loss while file read awaits records unknown before read returns (1774.17671ms)
+✔ lease loss fences held inference, late output and replacement (1984.085752ms)
+✔ lease loss fences held inference, late output and cancel (1981.416217ms)
+✔ lease loss fences held inference, late output and purge (1891.020168ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 9778.057625

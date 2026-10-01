@@ -1,0 +1,59 @@
+{
+  "startupError": "Agent/storage runtime already active",
+  "before": [
+    {
+      "id": "9fd0dfe6-3ee1-4764-ba7f-a75c776ba754",
+      "state": "pending",
+      "request_key": "shared-pending"
+    }
+  ],
+  "after": [
+    {
+      "id": "9fd0dfe6-3ee1-4764-ba7f-a75c776ba754",
+      "state": "pending",
+      "request_key": "shared-pending"
+    }
+  ],
+  "stolen": {
+    "status": 409,
+    "body": {
+      "error": "idempotency_conflict"
+    }
+  },
+  "upload": {
+    "status": 201,
+    "body": {
+      "id": "9fd0dfe6-3ee1-4764-ba7f-a75c776ba754",
+      "conversationId": "864385e3-856d-4625-84fb-e172112be4f9",
+      "name": "pending.txt",
+      "mime": "text/plain",
+      "size": 23,
+      "hash": "51a3a0d2c57bc73cac8631969165f7cac8d095618f90b6dedcca4c505d1f62ab",
+      "state": "ready",
+      "storage": "local-encrypted-development"
+    }
+  },
+  "persisted": {
+    "runs": [],
+    "messages": [],
+    "artifacts": [],
+    "receipts": [],
+    "providerCalls": 0
+  },
+  "idempotency": [
+    {
+      "key": "shared-pending",
+      "status": 201,
+      "response": {
+        "id": "9fd0dfe6-3ee1-4764-ba7f-a75c776ba754",
+        "hash": "51a3a0d2c57bc73cac8631969165f7cac8d095618f90b6dedcca4c505d1f62ab",
+        "mime": "text/plain",
+        "name": "pending.txt",
+        "size": 23,
+        "state": "ready",
+        "storage": "local-encrypted-development",
+        "conversationId": "864385e3-856d-4625-84fb-e172112be4f9"
+      }
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "public_url": "https://loving-say-than-seemed.trycloudflare.com",
+  "real_webrtc": true,
+  "audio_stats": [
+    {
+      "bytes": 2295,
+      "packets": 34
+    }
+  ],
+  "state_from_provider": "speaking",
+  "real_track_muted": true,
+  "close_released": true,
+  "page_errors": [],
+  "human_microphone_tested": false
+}

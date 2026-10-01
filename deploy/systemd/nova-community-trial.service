@@ -1,0 +1,17 @@
+[Unit]
+Description=NOVA community trial (public app)
+After=network-online.target
+
+[Service]
+WorkingDirectory=%h/nova-community-agent
+EnvironmentFile=%h/.local/share/nova-community-trial/trial.env
+Environment=PLAYWRIGHT_BROWSERS_PATH=%h/nova-community-agent/.playwright
+ExecStart=%h/.local/bin/node --import tsx scripts/trial.ts
+Restart=always
+RestartSec=5
+TimeoutStopSec=45
+UMask=0077
+NoNewPrivileges=yes
+
+[Install]
+WantedBy=default.target

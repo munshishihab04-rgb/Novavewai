@@ -1,0 +1,13 @@
+✔ generated PDF/TXT/ZIP/HTML: real bytes, owner scoped, safe headers, ZIP verified by python zipfile (2321.423714ms)
+✔ create_file validation rejects traversal, absolute, non-source names, disguised formats, duplicates (0.932642ms)
+✔ flexible uploads: recognized JS text, transparent unsupported ZIP/binary, owner isolation, read_file honesty (1847.274498ms)
+✔ voice sessions: owner isolation on create/stop, foreign conversation, reload marks active failed, uncommitted transcript ignored (2076.65797ms)
+✔ voice session budget and provider failure paths (1690.495552ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 8652.949005

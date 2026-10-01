@@ -1,0 +1,49 @@
+{
+  "passed": true,
+  "tests": {
+    "tests": 112,
+    "pass": 112,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "typecheck": 0,
+  "public_assets": {
+    "features.js": "d8ef0e6cf256f537ab249045614ead791377b4ea12a4dc84be7b873b4e16dba8",
+    "style.css": "3a9aecb6209a7d70a1d819c1f6f8c7c879ac385a3fa52386cc4bcde90196f437"
+  },
+  "controlled_ui": {
+    "fullscreen_mobile": true,
+    "mute_changes_track": true,
+    "states_from_events": true,
+    "captions_toggle": true,
+    "close_stops_tracks": true,
+    "close_during_permission": true,
+    "small_viewport": true,
+    "console_errors": [],
+    "provider": "controlled RTC fixture"
+  },
+  "public_webrtc": {
+    "public_url": "https://loving-say-than-seemed.trycloudflare.com",
+    "real_webrtc": true,
+    "audio_stats": [
+      {
+        "bytes": 2295,
+        "packets": 34
+      }
+    ],
+    "state_from_provider": "speaking",
+    "real_track_muted": true,
+    "close_released": true,
+    "page_errors": [],
+    "human_microphone_tested": false
+  },
+  "historical_before_hashes": {
+    "features.js": "184140abc4cafa51859d96ce86645af71bd1b251ab4f6638bc1400fc0dfa2b50",
+    "style.css": "c113dcc64044122683f308f0b05f0d150b0041b77fcd999aa74415a21607a1c5",
+    "app.js": "cb6237282568d17bdd0de4ef78e8ac82cf5b6a082cdf5da18bc8b25ffa7a020c",
+    "index.html": "93c1d322f745ac1ebc46ce63d3d88b2426093a25c8980b0435a97accd6742976"
+  },
+  "visual_review": "no visible clipping, overlap, broken state, or major usability problem",
+  "scope": "voice surface only; no old products, no commit"
+}

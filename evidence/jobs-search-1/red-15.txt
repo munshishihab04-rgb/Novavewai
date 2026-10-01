@@ -1,0 +1,50 @@
+✖ progressive discovery runs search before companies and browser, preserves kinds and exact-URL dedupe (4.148644ms)
+✖ sufficient search avoids expensive stages; missing city starts nothing; strict mode excludes unknown (0.680269ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 192.22634
+
+✖ failing tests:
+
+test at tests/jobs-progressive.test.ts:1:568
+✖ progressive discovery runs search before companies and browser, preserves kinds and exact-URL dedupe (4.148644ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/jobs-progressive.test.ts:5:58)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/jobs-progressive.test.ts:1:1718
+✖ sufficient search avoids expensive stages; missing city starts nothing; strict mode excludes unknown (0.680269ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/jobs-progressive.test.ts:10:58)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

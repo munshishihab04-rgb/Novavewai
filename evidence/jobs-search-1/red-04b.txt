@@ -1,0 +1,18 @@
+✔ native jobs_search accepts intent and an empty city, not arbitrary browser options (1.191365ms)
+✔ missing city asks before any source or cache access and cooking infers cuoco (0.846957ms)
+✔ natural role/city search shares only canonical metadata with TTL across service instances (28.369095ms)
+✖ live searches have one shared lock, fail fast on overlap and rate limit across instances (502.983139ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 3
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 844.906205
+
+✖ failing tests:
+
+test at tests/jobs-search.test.ts:1:2878
+✖ live searches have one shared lock, fail fast on overlap and rate limit across instances (502.983139ms)
+  [Error: ENOTEMPTY: directory not empty, rmdir '/tmp/nova-jobs-uMgH9L'] { errno: -39, code: 'ENOTEMPTY', syscall: 'rmdir', path: '/tmp/nova-jobs-uMgH9L' }

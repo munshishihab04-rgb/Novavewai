@@ -1,0 +1,51 @@
+✔ Subito adapter is deny-by-default until explicit source-policy review (2.65316ms)
+✖ Playwright parser reads only compact listing cards, distinguishes blocks from no matches (2.612891ms)
+✖ fixed search URLs and robots policy do not allow login, third parties or forbidden paths (0.548033ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 1
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 703.1406
+
+✖ failing tests:
+
+test at tests/jobs-browser.test.ts:1:488
+✖ Playwright parser reads only compact listing cards, distinguishes blocks from no matches (2.612891ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/jobs-browser.test.ts:11:55)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/jobs-browser.test.ts:1:1669
+✖ fixed search URLs and robots policy do not allow login, third parties or forbidden paths (0.548033ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/jobs-browser.test.ts:23:55)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

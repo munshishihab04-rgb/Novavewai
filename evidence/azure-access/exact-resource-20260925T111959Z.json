@@ -1,0 +1,29 @@
+{
+  "checked_at": "2026-09-25T11:19:58.686074+00:00",
+  "project_id": "/subscriptions/6220ce8e-fa6e-47a9-93a5-39b8f8d63ae5/resourceGroups/Nuovaopenai/providers/Microsoft.CognitiveServices/accounts/sadesheikh-2809-resource/projects/sadesheikh-2809",
+  "read_only": true,
+  "checks": [
+    {
+      "target": "account",
+      "http_status": 403,
+      "error": {
+        "code": "AuthorizationFailed",
+        "message": "The client 'bbaa89eb-1f1f-49f2-a54b-f9a06527fb4c' with object id '365de28f-f0be-4a1d-aaa8-4e7bab89b815' does not have authorization to perform action 'Microsoft.CognitiveServices/accounts/read' over scope '/subscriptions/6220ce8e-fa6e-47a9-93a5-39b8f8d63ae5/resourceGroups/Nuovaopenai/providers/Microsoft.CognitiveServices/accounts/sadesheikh-2809-resource' or the scope is invalid. If access was recently granted, please refresh your credentials."
+      }
+    },
+    {
+      "target": "project",
+      "http_status": 403,
+      "error": {
+        "code": "AuthorizationFailed",
+        "message": "The client 'bbaa89eb-1f1f-49f2-a54b-f9a06527fb4c' with object id '365de28f-f0be-4a1d-aaa8-4e7bab89b815' does not have authorization to perform action 'Microsoft.CognitiveServices/accounts/projects/read' over scope '/subscriptions/6220ce8e-fa6e-47a9-93a5-39b8f8d63ae5/resourceGroups/Nuovaopenai/providers/Microsoft.CognitiveServices/accounts/sadesheikh-2809-resource/projects/sadesheikh-2809' or the scope is invalid. If access was recently granted, please refresh your credentials."
+      }
+    },
+    {
+      "target": "deployments",
+      "http_status": 200,
+      "deployments": [],
+      "has_more": false
+    }
+  ]
+}

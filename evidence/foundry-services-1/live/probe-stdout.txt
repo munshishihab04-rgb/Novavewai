@@ -1,0 +1,6 @@
+prebuilt-read extracted pages=1 text="ACME TEST 123\n\nSample Widget 2 x 10.00\nTotal 20.00 EUR\n"
+prebuilt-layout extracted pages=1 text="ACME TEST 123\n\nSample Widget 2 x 10.00\nTotal 20.00 EUR\n"
+language-detect 200 {"kind":"LanguageDetectionResults","results":{"documents":[{"id":"1","warnings":[],"detectedLanguage":{"name":"Italian","iso6391Name":"it","confidenceScore":1.0,"scriptName":"Latin","scriptIso15924Cod
+pii-detect 200 {"kind":"PiiEntityRecognitionResults","results":{"documents":[{"redactedText":"The quick brown fox visits the test office on ******. Contact: ***********************","id":"1","entities":[{"text":"Mon
+translator 200 [{"detectedLanguage":{"language":"en","score":1.0},"translations":[{"text":"Questa è una breve frase sintetica di prova.","to":"it"}]}]
+written /home/azureuser/nova-community-agent/evidence/foundry-services-1/live/service-matrix.json

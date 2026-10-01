@@ -1,0 +1,6 @@
+c830ff69bc993411dce3b7e80f9355ea24d85424a0736c3c8fcb0b569e604e8f  src/jobs.ts
+742a9bb940854a5bc9e099daed52756db773950d7021077d584e241df2354e92  src/agent.ts
+429b4a683e04ce5c023fa02e2df3efbc5f85431ea3b85c0cd92ff9e635769e1a  tests/jobs-search-links.test.ts
+ac80d55873abbde9d1480b440977253e9e49eb8ccc66a59c504749f3b1ccb8ba  tests/jobs-agent-search-links.test.ts
+25ce9ccbc51022f72fee618a5d443dca9fb74087d205625d01a32ae89034d8af  tests/jobs-web-fallback.test.ts
+5997847bbd3660827e398abb3ead74db4ba63f8dcfba56ee9f20081fb5d84080  tests/jobs-agent-repair.test.ts

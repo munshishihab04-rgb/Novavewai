@@ -1,0 +1,12 @@
+✔ native agent asks city from jobs receipt without browsing and includes discovery safety instructions (1541.366861ms)
+✔ jobs source receipt cannot persist after session revocation (1670.244551ms)
+✔ cancellation fences uncooperative job providers and does not hang app shutdown (1717.58553ms)
+✔ native jobs dispatch completes with original link receipt and no preference interview (1629.469672ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 7334.339771

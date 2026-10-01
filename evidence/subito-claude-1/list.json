@@ -1,0 +1,251 @@
+{
+  "list_url": "https://www.subito.it/annunci-emilia-romagna/vendita/offerte-lavoro/bologna/?q=cameriere",
+  "status": 200,
+  "page_title": "Subito.it Cameriere - Offerte di lavoro a Bologna e provincia",
+  "observed_at": "2026-09-30T17:52:01.747Z",
+  "cookie_action": null,
+  "raw_anchor_count": 33,
+  "unique_ad_urls": 30,
+  "items": [
+    {
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-bologna-658333217.htm",
+      "title": "Cameriere",
+      "date_hint": null,
+      "location_hint": "Bologna (BO)",
+      "card_tag": "ARTICLE.index-module_card__cC1Fw index-module_small__OrjT6 AdItem-mo",
+      "text_len": 69
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-con-esperienza-bologna-590242340.htm",
+      "title": "Cameriere con esperienza",
+      "date_hint": null,
+      "location_hint": "Bologna (BO)",
+      "card_tag": "ARTICLE.index-module_card__cC1Fw index-module_small__OrjT6 AdItem-mo",
+      "text_len": 79
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-banconista-chef-e-cuoco-bologna-649074452.htm",
+      "title": "Cameriere banconista, Chef e cuoco",
+      "date_hint": null,
+      "location_hint": "Bologna (BO)",
+      "card_tag": "ARTICLE.index-module_card__cC1Fw index-module_small__OrjT6 AdItem-mo",
+      "text_len": 93
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-a-di-sala-bologna-662640160.htm",
+      "title": "Cameriere/a di sala",
+      "date_hint": null,
+      "location_hint": "Bologna (BO)",
+      "card_tag": "ARTICLE.index-module_card__cC1Fw index-module_small__OrjT6 AdItem-mo",
+      "text_len": 75
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/badante-colf-bologna-662500225.htm",
+      "title": "Badante colf",
+      "date_hint": null,
+      "location_hint": "Badante colfBologna (BO)",
+      "card_tag": "ARTICLE.index-module_card__cC1Fw index-module_small__OrjT6 AdItem-mo",
+      "text_len": 62
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-bologna-659128027.htm",
+      "title": "Cameriere",
+      "date_hint": null,
+      "location_hint": "CameriereBologna (BO)",
+      "card_tag": "ARTICLE.index-module_card__cC1Fw index-module_small__OrjT6 AdItem-mo",
+      "text_len": 53
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/camerieri-e-ai-piani-castel-san-pietro-bo01-bologna-662140743.htm",
+      "title": "Camerieri/e ai Piani CASTEL SAN PIETRO (BO01)",
+      "date_hint": null,
+      "location_hint": "Castel San Pietro Terme (BO)",
+      "card_tag": "ARTICLE.index-module_card__cC1Fw index-module_small__OrjT6 AdItem-mo",
+      "text_len": 352
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-part-time-bologna-658433930.htm",
+      "title": "cameriere part-time",
+      "date_hint": null,
+      "location_hint": "Bologna (BO)",
+      "card_tag": "ARTICLE.index-module_card__cC1Fw index-module_small__OrjT6 AdItem-mo",
+      "text_len": 82
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-bologna-662055543.htm",
+      "title": "Cameriere",
+      "date_hint": null,
+      "location_hint": "Bologna (BO)",
+      "card_tag": "ARTICLE.index-module_card__cC1Fw index-module_small__OrjT6 AdItem-mo",
+      "text_len": 65
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/cameriera-e-ai-piani-hotel-bologna-020-bologna-662014346.htm",
+      "title": "CAMERIERA/E AI PIANI HOTEL -  BOLOGNA 020",
+      "date_hint": null,
+      "location_hint": "Bologna (BO)",
+      "card_tag": "ARTICLE.index-module_card__cC1Fw index-module_small__OrjT6 AdItem-mo",
+      "text_len": 313
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-bologna-658439957.htm",
+      "title": "Cameriere",
+      "date_hint": null,
+      "location_hint": "CameriereGranarolo dell'Emilia (BO)",
+      "card_tag": "ARTICLE.index-module_card__cC1Fw index-module_small__OrjT6 AdItem-mo",
+      "text_len": 71
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-a-bologna-661586954.htm",
+      "title": "Cameriere/a",
+      "date_hint": null,
+      "location_hint": "Castel Maggiore (BO)",
+      "card_tag": "ARTICLE.index-module_card__cC1Fw index-module_small__OrjT6 AdItem-mo",
+      "text_len": 71
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-a-per-ristorante-sushi-bologna-661573406.htm",
+      "title": "Cameriere/a per ristorante sushi",
+      "date_hint": null,
+      "location_hint": "Castel Maggiore (BO)",
+      "card_tag": "ARTICLE.index-module_card__cC1Fw index-module_small__OrjT6 AdItem-mo",
+      "text_len": 96
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/addetto-a-alla-ristorazione-bologna-661571664.htm",
+      "title": "ADDETTO/A ALLA RISTORAZIONE",
+      "date_hint": null,
+      "location_hint": "Casalecchio di Reno (BO)",
+      "card_tag": "ARTICLE.index-module_card__cC1Fw index-module_small__OrjT6 AdItem-mo",
+      "text_len": 95
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-addetto-al-catering-bologna-bo-20160-bologna-661511023.htm",
+      "title": "CAMERIERE ADDETTO AL CATERING-BOLOGNA (BO)-#20160",
+      "date_hint": null,
+      "location_hint": "BOLOGNA (BO)",
+      "card_tag": "ARTICLE.index-module_card__cC1Fw index-module_small__OrjT6 AdItem-mo",
+      "text_len": 326
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/cameriera-ai-piani-bologna-661141663.htm",
+      "title": "Cameriera ai piani",
+      "date_hint": null,
+      "location_hint": "Cameriera ai pianiValsamoggia (BO)",
+      "card_tag": "ARTICLE.index-module_card__cC1Fw index-module_small__OrjT6 AdItem-mo",
+      "text_len": 72
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-di-sala-bologna-655572187.htm",
+      "title": "Cameriere - di sala",
+      "date_hint": null,
+      "location_hint": "Bologna (BO)",
+      "card_tag": "ARTICLE.index-module_card__cC1Fw index-module_small__OrjT6 AdItem-mo",
+      "text_len": 67
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-a-di-sala-bologna-657647368.htm",
+      "title": "Cameriere/a di sala",
+      "date_hint": null,
+      "location_hint": "Bologna (BO)",
+      "card_tag": "ARTICLE.index-module_card__cC1Fw index-module_small__OrjT6 AdItem-mo",
+      "text_len": 63
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/castel-san-pietro-terme-bo-camerieri-e-evento-bologna-660844950.htm",
+      "title": "Castel San Pietro Terme (BO) camerieri/e evento",
+      "date_hint": null,
+      "location_hint": "Castel San Pietro Terme (BO)",
+      "card_tag": "ARTICLE.index-module_card__cC1Fw index-module_small__OrjT6 AdItem-mo",
+      "text_len": 329
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/cameriera-ai-piani-bologna-660766171.htm",
+      "title": "Cameriera ai piani",
+      "date_hint": null,
+      "location_hint": "Bologna (BO)",
+      "card_tag": "ARTICLE.index-module_card__cC1Fw index-module_small__OrjT6 AdItem-mo",
+      "text_len": 75
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/barista-cameriere-bologna-660549033.htm",
+      "title": "Barista/ cameriere",
+      "date_hint": null,
+      "location_hint": "Bologna (BO)",
+      "card_tag": "ARTICLE.index-module_card__cC1Fw index-module_small__OrjT6 AdItem-mo",
+      "text_len": 63
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/barista-cameriera-e-san-mamolo-alta-bologna-657351696.htm",
+      "title": "Barista/Cameriera-e San Mamolo Alta",
+      "date_hint": null,
+      "location_hint": "San Mamolo AltaBologna (BO)",
+      "card_tag": "ARTICLE.index-module_card__cC1Fw index-module_small__OrjT6 AdItem-mo",
+      "text_len": 79
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-bologna-660100898.htm",
+      "title": "Cameriere",
+      "date_hint": null,
+      "location_hint": "Bologna (BO)",
+      "card_tag": "ARTICLE.index-module_card__cC1Fw index-module_small__OrjT6 AdItem-mo",
+      "text_len": 62
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-di-sala-bologna-660095637.htm",
+      "title": "cameriere di sala",
+      "date_hint": null,
+      "location_hint": "Bologna (BO)",
+      "card_tag": "ARTICLE.index-module_card__cC1Fw index-module_small__OrjT6 AdItem-mo",
+      "text_len": 77
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/cameriera-di-sala-per-organico-fisso-bologna-659841657.htm",
+      "title": "Cameriera di sala per organico fisso",
+      "date_hint": null,
+      "location_hint": "San Giorgio di Piano (BO)",
+      "card_tag": "ARTICLE.index-module_card__cC1Fw index-module_small__OrjT6 AdItem-mo",
+      "text_len": 93
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/barista-e-o-cameriere-part-time-bologna-659164805.htm",
+      "title": "Barista e/o Cameriere part time",
+      "date_hint": null,
+      "location_hint": "Cameriere part timeBologna (BO)",
+      "card_tag": "ARTICLE.index-module_card__cC1Fw index-module_small__OrjT6 AdItem-mo",
+      "text_len": 77
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/pizzaiolo-bologna-645218414.htm",
+      "title": "Pizzaiolo",
+      "date_hint": null,
+      "location_hint": "PizzaioloCasalecchio di Reno (BO)",
+      "card_tag": "ARTICLE.index-module_card__cC1Fw index-module_small__OrjT6 AdItem-mo",
+      "text_len": 69
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/assisitenza-anziani-bologna-658736893.htm",
+      "title": "Assisitenza anziani",
+      "date_hint": null,
+      "location_hint": "Assisitenza anzianiMarzabotto (BO)",
+      "card_tag": "ARTICLE.index-module_card__cC1Fw index-module_small__OrjT6 AdItem-mo",
+      "text_len": 80
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/cameriere-a-bologna-658559180.htm",
+      "title": "Cameriere/a",
+      "date_hint": null,
+      "location_hint": "Granarolo dell'Emilia (BO)",
+      "card_tag": "ARTICLE.index-module_card__cC1Fw index-module_small__OrjT6 AdItem-mo",
+      "text_len": 73
+    },
+    {
+      "url": "https://www.subito.it/offerte-lavoro/governante-convivente-bologna-657143206.htm",
+      "title": "Governante convivente",
+      "date_hint": null,
+      "location_hint": "Governante conviventeBologna (BO)",
+      "card_tag": "ARTICLE.index-module_card__cC1Fw index-module_small__OrjT6 AdItem-mo",
+      "text_len": 75
+    }
+  ]
+}

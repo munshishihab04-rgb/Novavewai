@@ -1,0 +1,20 @@
+{
+  "exitCode": null,
+  "signal": null,
+  "stderr": "",
+  "runs": [
+    {
+      "status": "outcome_unknown",
+      "error_code": "runtime_interrupted",
+      "model_calls": 1,
+      "tool_calls": 0,
+      "phase": "inference_in_flight"
+    }
+  ],
+  "counts": {
+    "artifacts": 0,
+    "assistants": 0
+  },
+  "providerCalls": 1,
+  "remainingLease": []
+}

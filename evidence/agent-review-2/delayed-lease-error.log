@@ -1,0 +1,37 @@
+TAP version 13
+# Subtest: lock disappearance observed before delayed dedicated-client error does not escape onto pool
+not ok 1 - lock disappearance observed before delayed dedicated-client error does not escape onto pool
+  ---
+  duration_ms: 2827.669593
+  type: 'test'
+  location: '/home/azureuser/nova-community-agent/evidence/agent-review-2/delayed-lease-error.test.ts:1:3112'
+  failureType: 'testCodeFailure'
+  error: |-
+    destroying lease on lock-check invalidation must not install an idle listener that re-emits its delayed error onto an unhandled pool
+    + actual - expected
+    
+    + [
+    +   'terminating connection due to administrator command'
+    + ]
+    - []
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+    0: 'terminating connection due to administrator command'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/home/azureuser/nova-community-agent/evidence/agent-review-2/delayed-lease-error.test.ts:55:10)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3321.669191

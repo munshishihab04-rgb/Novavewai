@@ -1,0 +1,21 @@
+✔ corrected behavior: rejected second runtime must not delete first runtime pending upload/reservation (1612.97351ms)
+✔ corrected behavior: assistant-generated content must not become a user_supplied source (1325.380311ms)
+✔ pending upload namespace blocks turn without losing reservation or invoking model (1323.868545ms)
+✔ cancelled generation cannot write after a new run completes; original replay cannot redispatch (1497.473789ms)
+✔ a different live session cannot authorize output of the revoked initiating session (1296.718404ms)
+✔ entire provider batch is allowlist/schema validated before first mutation (1257.680936ms)
+✔ corrected behavior: expiry during canonical writer lock wait must roll back mutation and receipt (2439.562358ms)
+✔ receipt insertion failure atomically rolls back canonical revision and outbox; no replay inference (1275.99534ms)
+✔ startup reservation also excludes non-agent file runtime: false (1553.813396ms)
+✔ startup reservation also excludes non-agent file runtime: true (1337.204297ms)
+✔ lease loss fences held inference, late output and replacement (1612.300661ms)
+✔ lease loss fences held inference, late output and cancel (1690.353157ms)
+✔ lease loss fences held inference, late output and purge (1622.945401ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 20562.286733

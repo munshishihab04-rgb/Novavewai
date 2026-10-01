@@ -5,3 +5,23 @@ node_modules/
 !.env.example
 coverage/
 dist/
+.playwright/
+.cache/
+# local toolchains / caches (never commit)
+.venv-docs/
+*.pyc
+__pycache__/
+# runtime data lives outside the repo (~/.local/share/nova-community-trial); belt and braces
+trial.env
+*.env.local
+db/
+db-secret
+provider-key
+owner-id
+invite
+invite-current
+# scratch files
+shot-tmp.ts
+dbg-tmp.ts
+size-tmp.ts
+*-tmp.ts

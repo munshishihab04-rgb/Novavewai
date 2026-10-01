@@ -1,0 +1,20 @@
+✔ subito flag: absent or wrong value disables; exact owner value enables; list URL uses known province path else national query (2.097293ms)
+✔ subito adapter: parses cards from fixture, dedupes Vetrina, ignores /utente and ?o=, never paginates, no phone stored, cache hit avoids second navigation, badges → publisher (346.219391ms)
+✔ subito adapter: 403 and captcha page report truthful block codes, no results; cancelled signal aborts before launch (415.461078ms)
+✖ native dispatcher: flag off → Subito search link only; injected adapter on → LISTING_OBSERVED cards replace the Subito link and render with the Subito label in both renderers (1535.297281ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 3
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3094.281776
+
+✖ failing tests:
+
+test at tests/jobs-subito-playwright.test.ts:53:1
+✖ native dispatcher: flag off → Subito search link only; injected adapter on → LISTING_OBSERVED cards replace the Subito link and render with the Subito label in both renderers (1535.297281ms)
+  Error: Agent/storage runtime already active
+      at Runtime.start (/home/azureuser/nova-community-agent/src/runtime.ts:38:26)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)

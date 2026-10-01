@@ -1,0 +1,68 @@
+{
+  "waiting": true,
+  "expired": true,
+  "run": {
+    "id": "cb39ea71-4e91-45eb-bb6e-c9fd0ba3fd55",
+    "status": "failed",
+    "error_code": "session_revoked",
+    "model_calls": 1,
+    "tool_calls": 1
+  },
+  "persisted": {
+    "runs": [
+      {
+        "id": "cb39ea71-4e91-45eb-bb6e-c9fd0ba3fd55",
+        "status": "failed",
+        "error_code": "session_revoked",
+        "model_calls": 1,
+        "tool_calls": 1
+      }
+    ],
+    "messages": [
+      {
+        "sequence": 1,
+        "role": "user",
+        "text": "update after controlled delay"
+      }
+    ],
+    "artifacts": [
+      {
+        "id": "90183259-5c72-4500-a1d5-7b05b1aef31b",
+        "title": "original",
+        "current_revision": 2
+      }
+    ],
+    "receipts": [
+      {
+        "call_id": "c9c70ab8-2636-4622-996e-1b47a7594945",
+        "tool": "update_artifact",
+        "result": {
+          "id": "90183259-5c72-4500-a1d5-7b05b1aef31b",
+          "hash": "70bb941c5a82caae2308b14a46a563f094e8555f3e68094733e35015eb7eee31",
+          "content": {
+            "text": "AFTER_SESSION_EXPIRY",
+            "language": "en"
+          },
+          "revision": 2
+        }
+      }
+    ],
+    "providerCalls": 1
+  },
+  "revisions": [
+    {
+      "revision": 1,
+      "content": {
+        "text": "BEFORE",
+        "language": "en"
+      }
+    },
+    {
+      "revision": 2,
+      "content": {
+        "text": "AFTER_SESSION_EXPIRY",
+        "language": "en"
+      }
+    }
+  ]
+}

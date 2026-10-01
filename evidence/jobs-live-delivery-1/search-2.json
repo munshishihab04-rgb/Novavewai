@@ -1,0 +1,24 @@
+{
+  "query": "site.jobs OR site:careers.marriott.com OR site:jobs.hilton.com OR site:jobintourism.it \"Bologna\" \"cameriere\" annuncio posizione",
+  "text": "Ho trovato alcune offerte pertinenti per **cameriere/a a Bologna**, soprattutto in ambito hotel/ristorazione. Le più rilevanti sono queste:\n\n- **Adecco**: *Cameriere/a* per un hotel in centro a Bologna. Richiede anche esperienza minima in sala. ([adecco.com](https://www.adecco.com/it-it/cerca-lavoro/camerierea-bologna-bologna/cfddefa7-8135-4e3c-b969-8a8f66602c82))  \n- **Lavoropiù**: *Cameriere/a Colazioni - Hotel (part time)* a Bologna, con contratto a tempo determinato e fascia oraria lorda indicata. ([lavoropiu.it](https://www.lavoropiu.it/offerta/cameriere-a-colazioni-hotel-107229))  \n- **Indeed**: compare *Commis di Sala (part-time 30 h) - UNA Hotels Bologna San Lazzaro* e altre posizioni simili a Bologna. ([it.indeed.com](https://it.indeed.com/offerte-lavoro?l=Bologna%2C+Emilia-Romagna&q=Cameriere))  \n- **Bakeca**: ci sono più annunci aggiornati al 28/09/2026, inclusi ruoli come *cameriere/cameriera di sala* e *cameriere/a di sala - Bologna*. ([bologna.bakeca.it](https://bologna.bakeca.it/annunci/bar-ristorazione/luogo/Bologna/?keyword=cameriera))  \n\nSe vuoi, posso fare un passo in più e prepararti una lista più pulita con:\n1. **solo annunci hotel**,  \n2. **solo annunci su Bologna città**, oppure  \n3. **solo link diretti agli annunci attivi**.",
+  "sources": [
+    {
+      "title": "Cameriere/a | Bologna, Bologna - adecco.com",
+      "url": "https://www.adecco.com/it-it/cerca-lavoro/camerierea-bologna-bologna/cfddefa7-8135-4e3c-b969-8a8f66602c82"
+    },
+    {
+      "title": "Lavoro: Cameriere/a Colazioni - Hotel (part Time) - Bologna | Lavoropiù",
+      "url": "https://www.lavoropiu.it/offerta/cameriere-a-colazioni-hotel-107229"
+    },
+    {
+      "title": "Offerte di lavoro Cameriere - Bologna, Emilia-Romagna",
+      "url": "https://it.indeed.com/offerte-lavoro?l=Bologna%2C+Emilia-Romagna&q=Cameriere"
+    },
+    {
+      "title": "Annunci lavoro Cameriera - Offerte di lavoro Cameriera a Bologna centro ...",
+      "url": "https://bologna.bakeca.it/annunci/bar-ristorazione/luogo/Bologna/?keyword=cameriera"
+    }
+  ],
+  "checkedAt": "2026-09-30T17:21:18.923Z",
+  "kind": "web_search"
+}

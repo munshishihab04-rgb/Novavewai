@@ -1,0 +1,10 @@
+ce54db76e1a35507f3eaf2e3b80c40216591bf73808f520746ce38c0531be26f  src/jobs-live.ts
+dd12360b535e183b1af953a34b1923d38282bff01e6258c2d028e383425f4543  src/agent.ts
+427e5c5c9ef28d04fa97e63c90060a54bb44e739c0d93c88633d1931cdd6caf2  tests/jobs-live.test.ts
+02a4295dc26ffb91edf1e3792c5859c555ec2d782d706dbe0e801dd642e59874  evidence/jobs-live-delivery-1/search-1.json
+1227de76a1dc88cefa75fbd422945d9ff967c1f53b1137936ec05ce848eeacbc  evidence/jobs-live-delivery-1/search-2.json
+546d5c2d9f01569229c64d7cbe739ef9fda92c97aa949777ccc17558e6940903  evidence/jobs-live-delivery-1/LIVE-PAGES.md
+d91053922c08a08ac2b89c31d85b6a73f72e6ff115036da9a7fe12291acdbc12  evidence/jobs-live-delivery-1/REPORT.md
+ec9a00efec3804c72e4da3a3c7cc14109ecece8be34f04472392fb3d8a54597f  evidence/jobs-live-delivery-1/targeted-tests.txt
+7d6a5a1901d117873633e2de4661d1a5453e59775fac6ace1d2d23bf201e77b3  evidence/jobs-live-delivery-1/typecheck.txt
+9e33b24448d17fd295ed829c8a0e7fb87b784d296e72dec70a205b6f232435f5  evidence/jobs-live-delivery-1/live-adapter-result.json

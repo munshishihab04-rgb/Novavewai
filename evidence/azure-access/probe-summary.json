@@ -1,0 +1,17 @@
+{
+  "scope": "User authorized retry of existing Foundry access through current VM identity; read-only ARM discovery plus bounded inference probe",
+  "managed_identity_available": true,
+  "principal_id": "365de28f-f0be-4a1d-aaa8-4e7bab89b815",
+  "visible_subscription": "6220ce8e-fa6e-47a9-93a5-39b8f8d63ae5",
+  "cognitive_accounts_listed": 0,
+  "resource_inventory_crosscheck": "No Microsoft.CognitiveServices resources in returned subscription inventory; no nextLink",
+  "endpoint": "https://sadesheikh-2809-resource.openai.azure.com/openai/v1/chat/completions",
+  "requested_model": "gpt-5.4-mini",
+  "inference_http_status": 401,
+  "error_code": "PermissionDenied",
+  "missing_data_action": "Microsoft.CognitiveServices/accounts/OpenAI/deployments/chat/completions/action",
+  "actual_model_inference_verified": false,
+  "secrets_written": false,
+  "rbac_changed": false,
+  "next_requirement": "Resource ID/subscription for authorized existing Foundry account; approved data-plane role or approved credential path. Do not assume ARM management access grants inference permissions."
+}

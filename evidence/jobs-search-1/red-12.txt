@@ -1,0 +1,25 @@
+✖ daily warm cache is bounded to five cities, one role; duplicate daily run does no work (2.96783ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 181.708368
+
+✖ failing tests:
+
+test at tests/jobs-warm.test.ts:1:279
+✖ daily warm cache is bounded to five cities, one role; duplicate daily run does no work (2.96783ms)
+  AssertionError [ERR_ASSERTION]: warm operation exists
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/jobs-warm.test.ts:4:69)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

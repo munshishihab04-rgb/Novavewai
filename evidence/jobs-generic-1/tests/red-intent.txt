@@ -1,0 +1,32 @@
+✖ generic occupation and municipality are not limited to a dictionary (2.137913ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 186.431474
+
+✖ failing tests:
+
+test at tests/jobs-generic.test.ts:6:1
+✖ generic occupation and municipality are not limited to a dictionary (2.137913ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + undefined
+  - 'programmatore'
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/jobs-generic.test.ts:8:47)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 'programmatore',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

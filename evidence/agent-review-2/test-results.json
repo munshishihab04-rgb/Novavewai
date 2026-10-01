@@ -1,0 +1,79 @@
+[
+  {
+    "label": "permanent-regressions",
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "tests/agent-review-regressions.test.ts",
+      "tests/agent-runtime.test.ts"
+    ],
+    "cwd": "/home/azureuser/nova-community-agent",
+    "exit_code": 0,
+    "seconds": 36.217,
+    "counts": {},
+    "log": "permanent-regressions.log",
+    "log_sha256": "c6aa3060e930337f8e2b27eb42b7d1b5216ecd36e17101e3132db2f8d128ecfd"
+  },
+  {
+    "label": "unchanged-original-probes",
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "evidence/agent-review-2/adversarial.test.ts",
+      "evidence/agent-review-2/lease-loss.test.ts"
+    ],
+    "cwd": "/home/azureuser/nova-community-agent",
+    "exit_code": 0,
+    "seconds": 21.0,
+    "counts": {},
+    "log": "unchanged-original-probes.log",
+    "log_sha256": "4b02e59112339c3d6f97032eaba3dbe2edab4e6dc765e998b31a9f0e69713b3f"
+  },
+  {
+    "label": "full-suite",
+    "command": [
+      "npm",
+      "test"
+    ],
+    "cwd": "/home/azureuser/nova-community-agent",
+    "exit_code": 0,
+    "seconds": 251.838,
+    "counts": {},
+    "log": "full-suite.log",
+    "log_sha256": "e2863abf8aa6e09c73b80e0a11bea039d82f59add5e05c0bffdbecb973f236be"
+  },
+  {
+    "label": "typecheck",
+    "command": [
+      "npm",
+      "run",
+      "typecheck"
+    ],
+    "cwd": "/home/azureuser/nova-community-agent",
+    "exit_code": 0,
+    "seconds": 1.218,
+    "counts": {},
+    "log": "typecheck.log",
+    "log_sha256": "7d6a5a1901d117873633e2de4661d1a5453e59775fac6ace1d2d23bf201e77b3"
+  },
+  {
+    "label": "diff-check",
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "cwd": "/home/azureuser/nova-community-agent",
+    "exit_code": 0,
+    "seconds": 0.004,
+    "counts": {},
+    "log": "diff-check.log",
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+]

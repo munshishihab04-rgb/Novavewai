@@ -1,0 +1,1 @@
+import {readFile} from 'node:fs/promises';console.log('https://loving-say-than-seemed.trycloudflare.com/#invite='+await readFile('/home/azureuser/.local/share/nova-community-trial/invite-current','utf8'));

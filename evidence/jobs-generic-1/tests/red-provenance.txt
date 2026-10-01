@@ -1,0 +1,33 @@
+✔ generic occupation and municipality are not limited to a dictionary (4.34696ms)
+✖ current user provenance wins over model cities, negation and old preferences (3.120437ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 1
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 188.599182
+
+✖ failing tests:
+
+test at tests/jobs-generic.test.ts:14:1
+✖ current user provenance wins over model cities, negation and old preferences (3.120437ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  '' !== 'Imola'
+  
+      at TestContext.<anonymous> (/home/azureuser/nova-community-agent/tests/jobs-generic.test.ts:31:9)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '',
+    expected: 'Imola',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

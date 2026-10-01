@@ -1,0 +1,720 @@
+--- baseline/src/agent.ts
++++ src/agent.ts
+@@ -1,3 +1,4 @@
++import type { Runtime } from './runtime.ts';
+ import type { FastifyInstance, FastifyRequest } from 'fastify';
+ import type { Pool, PoolClient } from 'pg';
+ import { randomUUID } from 'node:crypto';
+@@ -19,26 +20,34 @@
+   if (artifacts.length > 50) agentError('context_budget');
+   return { task, artifacts, files, sequence };
+ }
+-export function agentRoutes(app: FastifyInstance, pool: Pool, mutate: Mutate, options?: AgentOptions, store?: LocalFiles) {
++export function agentRoutes(app: FastifyInstance, pool: Pool, mutate: Mutate, runtime: Runtime, options?: AgentOptions, store?: LocalFiles) {
+   const provider = options ? options.provider ?? new ChatCompletionsProvider(options) : undefined;
+   const modelBudget = options?.maxModelCalls ?? 8, toolBudget = options?.maxToolCalls ?? 16, contextBudget = options?.maxContextBytes ?? 65536, activeBudget = options?.maxActiveRuns ?? 4;
+   for (const [v, max] of [[modelBudget,8],[toolBudget,16],[contextBudget,65536],[activeBudget,4]]) if (!Number.isInteger(v) || v < 1 || v > max) throw new Error('Invalid agent budget');
+-  const jobs = new Map<string, { abort: AbortController; promise: Promise<void> }>();
+-  let lease: PoolClient | undefined, closing = false;
++  const jobs = new Map<string, { owner: string; abort: AbortController; promise: Promise<void> }>();
++  let lossWrites: Promise<unknown> = Promise.resolve();
++  let closing = false;
++  const unsubscribe = runtime.onLoss(() => {
++    closing = true;
++    for (const job of jobs.values()) job.abort.abort();
++    // Persist independently of an uncooperative file read or provider promise.
++    lossWrites = Promise.all([...jobs].map(([id, job]) => failRun(id, job.owner, new SafeError(503, 'runtime_interrupted')).catch(() => {})));
++  });
+   if (provider) app.addHook('onReady', async () => {
+-    lease = await pool.connect();
+-    if (!(await lease.query('SELECT pg_try_advisory_lock(913004) ok')).rows[0].ok) { lease.release(); lease = undefined; throw new Error('Agent runtime already active'); }
+-    const rows = (await pool.query("SELECT id,owner_id FROM agent_runs WHERE status IN ('queued','running')")).rows;
+-    for (const row of rows) await transaction(pool, async c => {
+-      await active(c, row.owner_id);
+-      const run = (await c.query("UPDATE agent_runs SET status=CASE WHEN status='queued' THEN 'failed' ELSE 'outcome_unknown' END,error_code='runtime_interrupted',updated_at=clock_timestamp() WHERE id=$1 AND status IN ('queued','running') RETURNING *", [row.id])).rows[0];
+-      if (run) await notice(c, run, 'run.' + run.status, { code: 'runtime_interrupted', inferenceResumed: false });
+-    });
++    try {
++      const rows = (await pool.query("SELECT id,owner_id FROM agent_runs WHERE status IN ('queued','running')")).rows;
++      for (const row of rows) await runtime.transaction(async c => {
++        await active(c, row.owner_id);
++        const run = (await c.query("UPDATE agent_runs SET status=CASE WHEN status='queued' THEN 'failed' ELSE 'outcome_unknown' END,error_code='runtime_interrupted',updated_at=clock_timestamp() WHERE id=$1 AND status IN ('queued','running') RETURNING *", [row.id])).rows[0];
++        if (run) await notice(c, run, 'run.' + run.status, { code: 'runtime_interrupted', inferenceResumed: false });
++      });
++    } catch (error) { runtime.close(); throw error; }
+   });
+   app.addHook('onClose', async () => {
+     closing = true; for (const job of jobs.values()) job.abort.abort();
+     await Promise.all([...jobs.values()].map(j => j.promise));
+-    if (lease) { await lease.query('SELECT pg_advisory_unlock(913004)'); lease.release(); lease = undefined; }
++    await lossWrites;
++    unsubscribe();
+   });
+   async function fence(c: PoolClient, id: string, owner: string, checkContext = true) {
+     await active(c, owner);
+@@ -49,6 +58,11 @@
+     if (!ctx.task || ctx.task.status !== 'active' || (checkContext && run.context_hash !== hash(canonical(ctx)))) return agentError('stale_context');
+     return { run, ctx };
+   }
++  // Authorization-only final check: our writes intentionally changed the run,
++  // task and context. The owner/run locks still serialize cancel, purge and edits.
++  async function finalSession(c: PoolClient, run: any) {
++    if (!(await c.query('SELECT 1 FROM sessions WHERE owner_id=$1 AND token_hash=$2 AND expires_at>clock_timestamp()', [run.owner_id, run.session_hash])).rowCount) agentError('session_revoked');
++  }
+   async function finish(c: PoolClient, run: any, text: string, status: string, taskStatus?: string) {
+     const sequence = (await context(c, run)).sequence + 1, id = randomUUID();
+     await c.query("INSERT INTO messages(id,owner_id,conversation_id,sequence,text,role) VALUES($1,$2,$3,$4,$5,'assistant')", [id, run.owner_id, run.conversation_id, sequence, text]);
+@@ -56,20 +70,36 @@
+     if (taskStatus) { await c.query('UPDATE tasks SET status=$3,version=version+1 WHERE owner_id=$1 AND id=$2', [run.owner_id, run.task_id, taskStatus]); await event(c, run.owner_id, 'task.' + taskStatus, run.task_id); }
+     await c.query('UPDATE agent_runs SET status=$2,checkpoint=$3,updated_at=clock_timestamp() WHERE id=$1', [run.id, status, { phase: 'terminal', messageId: id }]);
+     await notice(c, run, 'assistant.persisted', { messageId: id, sequence }); await notice(c, run, 'run.' + status);
++    await finalSession(c, run);
++  }
++  async function failRun(id: string, owner: string, error: unknown) {
++    // An unavailable/revoked session can terminate a run but cannot authorize
++    // any product write. Tombstones and terminal states remain authoritative.
++    await transaction(pool, async c => {
++      if (!(await c.query("SELECT id FROM users WHERE id=$1 AND status='active' FOR UPDATE", [owner])).rowCount) return;
++      const run = (await c.query("SELECT * FROM agent_runs WHERE owner_id=$1 AND id=$2 AND status IN ('queued','running') FOR UPDATE", [owner, id])).rows[0];
++      if (!run) return;
++      const code = closing ? 'runtime_interrupted' : error instanceof SafeError ? error.code : 'agent_internal_error';
++      const status = closing || ['provider_timeout','provider_error','agent_internal_error'].includes(code) ? 'outcome_unknown' : 'failed';
++      await c.query('UPDATE agent_runs SET status=$2,error_code=$3,updated_at=clock_timestamp() WHERE id=$1', [id, status, code]);
++      await notice(c, run, 'run.' + status, { code });
++    });
+   }
+   async function execute(id: string, owner: string, abort: AbortController) {
+     const deadline = setTimeout(() => abort.abort(), 120000);
+     try {
+       for (;;) {
+-        const messages = await transaction(pool, async c => {
++        const messages = await runtime.transaction(async c => {
+           const { run } = await fence(c, id, owner);
+           if (run.model_calls >= modelBudget) return agentError('model_budget');
+           const messages = run.checkpoint.messages;
+           if (!Array.isArray(messages) || Buffer.byteLength(JSON.stringify({ messages, tools: toolDefinitions })) > contextBudget) return agentError('context_budget');
+           await c.query("UPDATE agent_runs SET status='running',model_calls=model_calls+1,checkpoint=$2,updated_at=clock_timestamp() WHERE id=$1", [id, { phase: 'inference_in_flight', messages }]);
+-          await notice(c, run, 'inference.started', { call: run.model_calls + 1 }); return messages;
++          await notice(c, run, 'inference.started', { call: run.model_calls + 1 });
++          await finalSession(c, run); return messages;
+         });
+         // No owner or SQL transaction is held over provider I/O.
++        if (!runtime.available() || abort.signal.aborted) agentError('runtime_interrupted');
+         const timeout = new AbortController();
+         const timer = setTimeout(() => timeout.abort(), options?.timeoutMs ?? 15000);
+         const signal = AbortSignal.any([abort.signal, timeout.signal]);
+@@ -86,7 +116,7 @@
+         } finally { clearTimeout(timer); signal.removeEventListener('abort', onAbort); }
+         if (abort.signal.aborted) agentError('run_cancelled');
+         const calls = output.tool_calls ? validateTools(output.tool_calls) : [];
+-        await transaction(pool, async c => {
++        await runtime.transaction(async c => {
+           const { run } = await fence(c, id, owner);
+           if (run.tool_calls + calls.length > toolBudget) agentError('tool_budget');
+           for (const call of calls) if ((await c.query('SELECT 1 FROM agent_tool_receipts WHERE run_id=$1 AND call_id=$2', [id, call.id])).rowCount) agentError('duplicate_tool_call');
+@@ -100,14 +130,14 @@
+           // again after decrypt/await, before receipt or prompt persistence.
+           let fileText: string | undefined;
+           if (call.name === 'read_file') {
+-            const file = await transaction(pool, async c => {
++            const file = await runtime.transaction(async c => {
+               const { run } = await fence(c, id, owner);
+               const row = (await c.query("SELECT id,size,hash FROM files WHERE owner_id=$1 AND conversation_id=$2 AND id=$3 AND state='ready'", [owner, run.conversation_id, call.args.fileId])).rows[0];
+               if (!row) return agentError('tool_not_found'); if (!store) return agentError('file_storage_unavailable'); return row;
+             });
+             try { fileText = (await store!.get(owner, file.id, file.size, file.hash)).toString('utf8'); } catch { agentError('file_integrity_failure'); }
+           }
+-          const done = await transaction(pool, async c => {
++          const done = await runtime.transaction(async c => {
+             const { run, ctx } = await fence(c, id, owner);
+             if (abort.signal.aborted) agentError('run_cancelled');
+             let result: any;
+@@ -124,28 +154,19 @@
+             await notice(c, run, 'tool.succeeded', { callId: call.id, tool: call.name, result });
+             await c.query('UPDATE agent_runs SET tool_calls=tool_calls+1,checkpoint=$2,context_hash=$3,updated_at=clock_timestamp() WHERE id=$1', [id, { phase: 'ready', messages: nextMessages }, hash(canonical(await context(c, run)))]);
+             if (['ask_question','complete'].includes(call.name)) { await finish(c, run, call.args.text, result.status, call.name === 'ask_question' ? 'paused' : 'completed'); return true; }
++            await finalSession(c, run);
+             return false;
+           });
+           if (done) return;
+         }
+       }
+     } catch (error) {
+-      // An unavailable/revoked session can terminate a run but cannot authorize
+-      // any product write. Tombstones and terminal states remain authoritative.
+-      await transaction(pool, async c => {
+-        if (!(await c.query("SELECT id FROM users WHERE id=$1 AND status='active' FOR UPDATE", [owner])).rowCount) return;
+-        const run = (await c.query("SELECT * FROM agent_runs WHERE owner_id=$1 AND id=$2 AND status IN ('queued','running') FOR UPDATE", [owner, id])).rows[0];
+-        if (!run) return;
+-        const code = closing ? 'runtime_interrupted' : error instanceof SafeError ? error.code : 'agent_internal_error';
+-        const status = closing || ['provider_timeout','provider_error','agent_internal_error'].includes(code) ? 'outcome_unknown' : 'failed';
+-        await c.query('UPDATE agent_runs SET status=$2,error_code=$3,updated_at=clock_timestamp() WHERE id=$1', [id, status, code]);
+-        await notice(c, run, 'run.' + status, { code });
+-      });
++      await failRun(id, owner, error);
+     } finally { clearTimeout(deadline); }
+   }
+   const params = closed({ id: uuid });
+   const turn = mutate(async (c, owner, body, r) => {
+-    if (!provider || closing) fail(503, 'agent_unavailable');
++    if (!provider || closing || !runtime.available()) fail(503, 'agent_unavailable');
+     // Separate short capacity lock; never retained across provider work.
+     await c.query('SELECT pg_advisory_xact_lock(913005)');
+     await authenticatedOwner(c, r);
+@@ -179,7 +200,7 @@
+   app.post('/conversations/:id/turns', { schema: { params, body: closed({ baseSequence: { type: 'integer', minimum: 0, maximum: 2147483646 }, text: { type: 'string', minLength: 1, maxLength: 16384 }, taskId: uuid }, ['baseSequence','text']) } }, async (r, reply) => {
+     await turn(r, reply);
+     const id = (r as any).dispatchRun;
+-    if (id) { const abort = new AbortController(); const promise = execute(id, identity(r), abort).catch(() => {}).finally(() => jobs.delete(id)); jobs.set(id, { abort, promise }); }
++    if (id) { const abort = new AbortController(); const promise = execute(id, identity(r), abort).catch(() => {}).finally(() => jobs.delete(id)); jobs.set(id, { owner: identity(r), abort, promise }); }
+   });
+   app.get('/runs/:id', { schema: { params } }, async r => transaction(pool, async c => {
+     const owner = await authenticatedOwner(c, r);
+--- baseline/src/app.ts
++++ src/app.ts
+@@ -1,3 +1,4 @@
++import { Runtime } from './runtime.ts';
+ import { createArtifact, reviseArtifact } from './artifacts.ts';
+ import { agentRoutes, type AgentOptions } from './agent.ts';
+ import { fileRoutes, type FileOptions } from './files.ts';
+@@ -71,9 +72,13 @@
+ }
+ export function buildApp(pool: Pool, options: FileOptions & { agent?: AgentOptions } = {}) {
+   const app = Fastify({ logger: false, bodyLimit: 65536, ajv: { customOptions: { removeAdditional: false, coerceTypes: false } } });
++  const runtime = new Runtime(pool);
++  app.addHook('onReady', () => runtime.start());
++  app.addHook('onClose', async () => { runtime.close(); });
+   app.decorateRequest('owner', '');
+   app.addHook('onRoute', route => { route.schema = { ...route.schema, querystring: route.schema?.querystring ?? closed({}) }; });
+   app.addHook('onRequest', async r => {
++    if (!runtime.available()) fail(503, 'agent_unavailable');
+     const auth = r.headers.authorization;
+     if (!auth || !/^Bearer [A-Za-z0-9_-]{43}$/.test(auth)) fail(401, 'unauthorized');
+     const result = await pool.query("SELECT s.owner_id FROM sessions s JOIN users u ON u.id=s.owner_id WHERE s.token_hash=$1 AND s.expires_at>now() AND u.status='active'", [hash(auth!.slice(7))]);
+@@ -89,7 +94,7 @@
+     const key = r.headers['idempotency-key'];
+     if (typeof key !== 'string' || !/^[A-Za-z0-9_-]{1,100}$/.test(key)) return fail(400, 'idempotency_key_required');
+     const owner = identity(r), fingerprint = hash(canonical({ method: r.method, url: r.url, body: r.body ?? null }));
+-    const result = await transaction(pool, async c => {
++    const result = await runtime.transaction(async c => {
+       await authenticatedOwner(c, r);
+       const old = await idempotentResult(c, owner, key, fingerprint);
+       if (old) return { status: old.status, body: old.response };
+@@ -140,11 +145,11 @@
+     if (!row) fail(404, 'not_found');
+     return suffix ? { ...row, renderer: 'canonical-json-v1' } : row;
+   });
+-  const fileStore = fileRoutes(app, pool, options);
++  const fileStore = fileRoutes(app, pool, options, runtime);
+   provenanceRoutes(app, pool, mutate, fileStore);
+   contextRoutes(app, pool, mutate);
+   privacyRoutes(app, pool, fileStore);
+   actionRoutes(app, pool, mutate);
+-  agentRoutes(app, pool, mutate, options.agent, fileStore);
++  agentRoutes(app, pool, mutate, runtime, options.agent, fileStore);
+   return app;
+ }
+--- baseline/src/file-lifecycle.ts
++++ src/file-lifecycle.ts
+@@ -1,21 +1,22 @@
++import type { Runtime } from './runtime.ts';
+ import type { Pool } from 'pg';
+ import { transaction } from './app.ts';
+ import type { LocalFiles } from './local-files.ts';
+ // Serialized by the owner row, including inactive owners; cleanup cannot recreate content.
+-export async function cleanupFiles(pool: Pool, store: LocalFiles, owner?: string) {
++export async function cleanupFiles(pool: Pool, store: LocalFiles, owner?: string, runtime?: Runtime) {
+   const owners = owner ? [{ owner_id: owner }] : (await pool.query('SELECT DISTINCT owner_id FROM file_cleanup')).rows;
+-  for (const row of owners) await transaction(pool, async c => {
++  for (const row of owners) await (runtime ? runtime.transaction.bind(runtime) : transaction.bind(null, pool))(async c => {
+     await c.query('SELECT id FROM users WHERE id=$1 FOR UPDATE', [row.owner_id]);
+     const jobs = (await c.query('SELECT id FROM file_cleanup WHERE owner_id=$1', [row.owner_id])).rows;
+     for (const job of jobs) { await store.remove(job.id); await c.query('DELETE FROM file_cleanup WHERE id=$1', [job.id]); }
+   });
+ }
+-export async function recoverFiles(pool: Pool, store: LocalFiles) {
++export async function recoverFiles(pool: Pool, store: LocalFiles, runtime?: Runtime) {
+   const owners = (await pool.query("SELECT DISTINCT owner_id FROM files WHERE state='pending'")).rows;
+-  for (const row of owners) await transaction(pool, async c => {
++  for (const row of owners) await (runtime ? runtime.transaction.bind(runtime) : transaction.bind(null, pool))(async c => {
+     await c.query('SELECT id FROM users WHERE id=$1 FOR UPDATE', [row.owner_id]);
+     await c.query("INSERT INTO file_cleanup(id,owner_id) SELECT id,owner_id FROM files WHERE owner_id=$1 AND state='pending' ON CONFLICT DO NOTHING", [row.owner_id]);
+     await c.query("DELETE FROM files WHERE owner_id=$1 AND state='pending'", [row.owner_id]);
+   });
+-  await cleanupFiles(pool, store);
++  await cleanupFiles(pool, store, undefined, runtime);
+ }
+--- baseline/src/files.ts
++++ src/files.ts
+@@ -1,25 +1,28 @@
++import type { Runtime } from './runtime.ts';
+ import type { FastifyInstance } from 'fastify';
+ import type { Pool } from 'pg';
+ import { resolve } from 'node:path';
+ import { randomUUID, createHash } from 'node:crypto';
+-import { authenticatedOwner, canonical, closed, event, fail, hash, idempotentResult, identity, transaction, uuid } from './app.ts';
++import { authenticatedOwner, canonical, closed, event, fail, hash, idempotentResult, identity, uuid } from './app.ts';
+ import { recoverFiles } from './file-lifecycle.ts';
+ import { LocalFiles } from './local-files.ts';
+ export interface FileOptions { fileRoot?: string; fileHooks?: { afterReservation?: () => Promise<void> } }
+ const projection = `id,conversation_id AS "conversationId",name,mime,size,hash,state,'local-encrypted-development' AS storage`;
+-export function fileRoutes(app: FastifyInstance, pool: Pool, options: FileOptions) {
++export function fileRoutes(app: FastifyInstance, pool: Pool, options: FileOptions, runtime: Runtime) {
+   const store = options.fileRoot ? new LocalFiles(options.fileRoot) : undefined;
+   if (store) app.addHook('onReady', async () => {
+-    await transaction(pool, async c => {
+-      await c.query('SELECT pg_advisory_xact_lock(913003)');
+-      const binding = (await c.query('SELECT root_hash,key_fingerprint FROM local_storage_binding')).rows[0];
+-      const rootHash = hash(resolve(store.root));
+-      if (binding && binding.root_hash !== rootHash) throw new Error('Local storage root mismatch');
+-      await store.init(!binding);
+-      if (binding && binding.key_fingerprint !== store.fingerprint()) throw new Error('Local storage key mismatch');
+-      if (!binding) await c.query('INSERT INTO local_storage_binding(root_hash,key_fingerprint) VALUES($1,$2)', [rootHash, store.fingerprint()]);
+-    });
+-    await recoverFiles(pool, store);
++    try {
++      await runtime.transaction(async c => {
++        await c.query('SELECT pg_advisory_xact_lock(913003)');
++        const binding = (await c.query('SELECT root_hash,key_fingerprint FROM local_storage_binding')).rows[0];
++        const rootHash = hash(resolve(store.root));
++        if (binding && binding.root_hash !== rootHash) throw new Error('Local storage root mismatch');
++        await store.init(!binding);
++        if (binding && binding.key_fingerprint !== store.fingerprint()) throw new Error('Local storage key mismatch');
++        if (!binding) await c.query('INSERT INTO local_storage_binding(root_hash,key_fingerprint) VALUES($1,$2)', [rootHash, store.fingerprint()]);
++      });
++      await recoverFiles(pool, store, runtime);
++    } catch (error) { runtime.close(); throw error; }
+   });
+   app.post('/files', { schema: { body: closed({ conversationId: uuid, name: { type: 'string', pattern: '^[A-Za-z0-9][A-Za-z0-9_-]{0,79}\\.txt$' }, mime: { type: 'string', const: 'text/plain' }, dataBase64: { type: 'string', minLength: 4, maxLength: 21848 } }) } }, async (r, reply) => {
+     if (!store) fail(503, 'file_storage_unavailable');
+@@ -32,7 +35,7 @@
+     try { text = new TextDecoder('utf-8', { fatal: true }).decode(bytes); } catch { return fail(400, 'invalid_text_file'); }
+     if (/[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/.test(text) || text.trimStart().startsWith('%PDF-')) fail(400, 'invalid_text_file');
+     const owner = identity(r), fingerprint = hash(canonical({ method: r.method, url: r.url, body }));
+-    const reserved = await transaction(pool, async c => {
++    const reserved = await runtime.transaction(async c => {
+       await authenticatedOwner(c, r);
+       const old = await idempotentResult(c, owner, key, fingerprint);
+       if (old) return { replay: old.response };
+@@ -45,7 +48,7 @@
+     });
+     if (reserved.replay) return reply.code(201).send(reserved.replay);
+     await options.fileHooks?.afterReservation?.();
+-    const result = await transaction(pool, async c => {
++    const result = await runtime.transaction(async c => {
+       await authenticatedOwner(c, r);
+       if (!(await c.query("SELECT 1 FROM files WHERE owner_id=$1 AND id=$2 AND state='pending'", [owner, reserved.id])).rowCount) fail(409, 'upload_cancelled');
+       await store!.put(owner, reserved.id!, bytes);
+@@ -57,7 +60,7 @@
+     });
+     reply.code(201).send(result);
+   });
+-  for (const content of [false, true]) app.get('/files/:id' + (content ? '/content' : ''), { schema: { params: closed({ id: uuid }) } }, async (r, reply) => transaction(pool, async c => {
++  for (const content of [false, true]) app.get('/files/:id' + (content ? '/content' : ''), { schema: { params: closed({ id: uuid }) } }, async (r, reply) => runtime.transaction(async c => {
+     const owner = await authenticatedOwner(c, r);
+     const row = (await c.query(`SELECT ${projection} FROM files WHERE owner_id=$1 AND id=$2 AND state='ready'`, [owner, (r.params as any).id])).rows[0];
+     if (!row) fail(404, 'not_found');
+--- baseline/src/provenance.ts
++++ src/provenance.ts
+@@ -18,8 +18,9 @@
+       await event(c, owner, 'source.created', id);
+       return { id, conversationId: body.conversationId, fileId: file.id, snapshot, hash: file.hash, trust: 'user_supplied' };
+     }
+-    const message = (await c.query('SELECT text FROM messages WHERE owner_id=$1 AND conversation_id=$2 AND id=$3', [owner, body.conversationId, body.messageId])).rows[0];
++    const message = (await c.query('SELECT text,role FROM messages WHERE owner_id=$1 AND conversation_id=$2 AND id=$3', [owner, body.conversationId, body.messageId])).rows[0];
+     if (!message) fail(404, 'not_found');
++    if (message.role !== 'user') fail(409, 'generated_source_not_allowed');
+     const id = randomUUID(), digest = hash(message.text);
+     await c.query('INSERT INTO sources(id,owner_id,conversation_id,message_id,snapshot,hash) VALUES($1,$2,$3,$4,$5,$6)', [id, owner, body.conversationId, body.messageId, message.text, digest]);
+     await event(c, owner, 'source.created', id);
+--- baseline/src/runtime.ts
++++ src/runtime.ts
+@@ -0,0 +1,61 @@
++import type { Pool, PoolClient } from 'pg';
++import { fail, transaction } from './app.ts';
++
++// Single-host ownership: shared transaction barrier drains old writers before a
++// replacement recovers files/runs. The dedicated session owns the singleton.
++export class Runtime {
++  private client?: PoolClient;
++  private pid?: number;
++  private live = false;
++  private stopped = false;
++  private listeners = new Set<() => void>();
++  constructor(private pool: Pool) {}
++  available() { return this.live && !this.stopped; }
++  onLoss(listener: () => void) { this.listeners.add(listener); return () => { this.listeners.delete(listener); }; }
++  private invalidate = () => {
++    this.live = false; this.stopped = true;
++    for (const listener of this.listeners) listener();
++    this.listeners.clear();
++    this.release();
++  };
++  private release() {
++    const client = this.client; this.client = undefined;
++    // Destroy, never return a lease connection to the pool. Keep error handling
++    // until end (PG can emit error followed by end on backend termination).
++    if (client) client.release(true);
++  }
++  async start() {
++    try {
++      const client = await this.pool.connect(); this.client = client;
++      const ended = () => { this.invalidate(); client.removeListener('error', this.invalidate); client.removeListener('end', ended); };
++      client.on('error', this.invalidate); client.on('end', ended);
++      const row = (await client.query('SELECT pg_backend_pid() pid,pg_try_advisory_lock(913004) ok')).rows[0];
++      if (!row.ok) throw new Error('Agent/storage runtime already active');
++      if (this.stopped) throw new Error('Runtime lease lost');
++      this.pid = row.pid; this.live = true;
++      // Wait for previous runtime's in-flight transactions before any recovery.
++      await transaction(this.pool, async c => {
++        await c.query('SELECT pg_advisory_xact_lock(913006)');
++        await this.check(c);
++      });
++    } catch (error) { this.invalidate(); throw error; }
++  }
++  async check(c: PoolClient) {
++    if (!this.available()) fail(503, 'runtime_interrupted');
++    // Query actual lock ownership too: a backend can disappear before its error
++    // event reaches this process. The final check follows all blocking writes.
++    const held = await c.query("SELECT 1 FROM pg_locks WHERE locktype='advisory' AND classid=0 AND objid=913004 AND objsubid=1 AND pid=$1 AND granted", [this.pid]);
++    if (!held.rowCount) this.invalidate();
++    if (!this.available()) fail(503, 'runtime_interrupted');
++  }
++  async transaction<T>(run: (c: PoolClient) => Promise<T>): Promise<T> {
++    return transaction(this.pool, async c => {
++      await c.query('SELECT pg_advisory_xact_lock_shared(913006)');
++      await this.check(c);
++      const result = await run(c);
++      await this.check(c);
++      return result;
++    });
++  }
++  close() { this.invalidate(); }
++}
+--- baseline/docs/AGENT-CORE.md
++++ docs/AGENT-CORE.md
+@@ -16,7 +16,17 @@
+ 
+ ## Consistency and recovery
+ 
+-Short owner-locked transactions revalidate owner + exact initiating session with DB wall clock. No owner lock spans provider network awaits or tool file reads. Persist the dispatch checkpoint before inference; recheck run state, session, conversation sequence, task versions and canonical artifact revisions after awaits, before every local mutation and final message. External edits invalidate stale model context. Purge cascades run data; cancellation/late output cannot recreate it. Tool results and next checkpoint commit atomically. A single agent runtime per database is enforced by a dedicated advisory lock; this local gate deliberately does not implement distributed scheduling. Process loss retains explicit ambiguous inference rather than silently replaying it.
++Short owner-locked transactions revalidate owner + exact initiating session with DB wall clock. No owner lock spans provider network awaits or tool file reads. Persist the dispatch checkpoint before inference; recheck run state, session, conversation sequence, task versions and canonical artifact revisions after awaits, before every local mutation and final message. External edits invalidate stale model context. Purge cascades run data; cancellation/late output cannot recreate it. Tool results and next checkpoint commit atomically. A single application runtime per database (including non-agent/file mode) is enforced by a dedicated advisory lock acquired before file initialization or destructive recovery; this local gate deliberately does not implement distributed scheduling. Process loss retains explicit ambiguous inference rather than silently replaying it.
++
++### Review-1 lifecycle fixes
++
++Agent transactions perform a final exact owner/session wall-clock check after canonical, receipt, event and terminal writes. This final authorization check intentionally does not compare the pre-write context or reject the run's own newly terminal state. Expiry rolls back the entire current tool transaction; prior committed tools remain durable.
++
++`POST /sources` rejects assistant messages with `409 generated_source_not_allowed`. Only original user messages and uploaded files are user-supplied sources. No new provenance enum/migration is introduced; existing assistant messages remain visible/exportable with their role. This does not retroactively classify old sources or detect generated text manually pasted by a user.
++
++Lease `error` or `end` permanently invalidates that application instance, aborts active jobs, and rejects all new HTTP work with 503. Healthy DB permits `outcome_unknown/runtime_interrupted` persistence by exact run ID even if a file read is still pending. Cancelled/completed runs and purged owners are not overwritten. If DB is unavailable, durable restart recovery remains the fallback; inference is never replayed. A fresh application instance is required.
++
++Effect transactions hold a shared handover barrier and check actual dedicated lock ownership both before work and after writes. A replacement acquires the singleton and drains old transactions under the exclusive barrier before recovery. No owner/database transaction spans provider inference. Failed file/run initialization destroys the partially acquired client; engine and dedicated client listeners are removed on close/end. The database singleton is not a cross-database file-root lock, nor a distributed lease.
+ 
+ ## Implemented wire contract and limits
+ 
+--- baseline/tests/agent-review-regressions.test.ts
++++ tests/agent-review-regressions.test.ts
+@@ -0,0 +1,139 @@
++import test from 'node:test';
++import assert from 'node:assert/strict';
++import http from 'node:http';
++import { randomUUID } from 'node:crypto';
++import { mkdtemp, rm, writeFile } from 'node:fs/promises';
++import { tmpdir } from 'node:os';
++import { join } from 'node:path';
++import { buildApp, bootstrap, migrate, hash } from '../src/app.ts';
++import { database, request } from './helpers.ts';
++
++const dir = new URL('./',import.meta.url);
++const call = (name:string,args:any,id=randomUUID()) => ({id,type:'function',function:{name,arguments:JSON.stringify(args)}});
++const output = (calls?:any[], text='controlled output') => ({choices:[{finish_reason:calls?'tool_calls':'stop',message:{role:'assistant',content:calls?null:text,...(calls?{tool_calls:calls}:{})}}]});
++const deferred = () => { let resolve!:()=>void; const promise=new Promise<void>(r=>resolve=r); return {promise,resolve}; };
++const delay = (n=15)=>new Promise(r=>setTimeout(r,n));
++async function evidence(_name:string,_value:any) {}
++async function fixture(handler:(input:any,res:http.ServerResponse)=>any, extra:any={}) {
++  const db=await database(); await migrate(db.pool); const user=await bootstrap(db.pool);
++  const fileRoot=await mkdtemp(join(tmpdir(),'nova-review1-'));
++  const inputs:any[]=[];
++  const provider=http.createServer(async(req,res)=>{let raw='';for await(const chunk of req)raw+=chunk;const input=JSON.parse(raw);inputs.push(input);res.setHeader('content-type','application/json');try{await handler(input,res);}catch{res.destroy();}});
++  await new Promise<void>(r=>provider.listen(0,'127.0.0.1',r));
++  const agent={endpoint:`http://127.0.0.1:${(provider.address() as any).port}/v1/chat/completions`,model:'independent-controlled',allowLoopback:true};
++  const app=buildApp(db.pool,{agent,fileRoot,...extra}); const base=await app.listen({port:0,host:'127.0.0.1'});
++  const send=(path:string,body?:any,key:string=randomUUID(),method?:string,token=user.token)=>request(base,path,token,body,method,body===undefined?undefined:key);
++  const conversation=(await send('/conversations',{title:'Independent adversarial review'})).body;
++  return {db,user,fileRoot,inputs,agent,app,send,conversation,
++    async close(){await app.close();provider.closeAllConnections();await new Promise<void>(r=>provider.close(()=>r()));await db.close();await rm(fileRoot,{recursive:true,force:true});}};
++}
++async function settled(f:any,id:string) {for(let i=0;i<400;i++){const rows=(await f.db.pool.query('SELECT id,status,error_code,model_calls,tool_calls FROM agent_runs WHERE id=$1',[id])).rows;if(!rows.length||!['queued','running'].includes(rows[0].status))return rows[0];await delay();}throw Error('settle timeout');}
++async function state(f:any) {return {runs:(await f.db.pool.query('SELECT id,status,error_code,model_calls,tool_calls FROM agent_runs ORDER BY created_at')).rows,messages:(await f.db.pool.query('SELECT sequence,role,text FROM messages ORDER BY sequence')).rows,artifacts:(await f.db.pool.query('SELECT id,title,current_revision FROM artifacts')).rows,receipts:(await f.db.pool.query('SELECT call_id,tool,result FROM agent_tool_receipts')).rows,providerCalls:f.inputs.length};}
++
++test('corrected behavior: rejected second runtime must not delete first runtime pending upload/reservation',async()=>{
++  const arrived=deferred(),release=deferred();
++  const f=await fixture((_i,res)=>res.end(JSON.stringify(output())),{fileHooks:{afterReservation:async()=>{arrived.resolve();await release.promise;}}});
++  let second:any;
++  try {
++    const pending=f.send('/files',{conversationId:f.conversation.id,name:'pending.txt',mime:'text/plain',dataBase64:Buffer.from('pending controlled data').toString('base64')},'shared-pending');
++    await arrived.promise;
++    const before=(await f.db.pool.query('SELECT id,state,request_key FROM files')).rows;
++    second=buildApp(f.db.pool,{fileRoot:f.fileRoot,agent:f.agent});
++    let startupError='';try{await second.listen({port:0,host:'127.0.0.1'});}catch(e:any){startupError=e.message;}
++    const after=(await f.db.pool.query('SELECT id,state,request_key FROM files')).rows;
++    const stolen=await f.send(`/conversations/${f.conversation.id}/turns`,{baseSequence:0,text:'reuse reserved upload key'},'shared-pending');
++    if(stolen.status===201)await settled(f,stolen.body.id);
++    release.resolve();const upload=await pending;
++    const snapshot={startupError,before,after,stolen,upload,persisted:await state(f),idempotency:(await f.db.pool.query('SELECT key,status,response FROM idempotency WHERE key=$1',['shared-pending'])).rows};
++    await evidence('startup-pending-upload',snapshot);
++    assert.match(startupError,/already active/);
++    assert.equal(after.length,1,'runtime refused singleton lease must not recover another live runtime upload');
++    assert.equal(stolen.status,409);assert.equal(upload.status,201);
++  }finally{release.resolve();if(second)await second.close();await f.close();}
++});
++
++test('corrected behavior: assistant-generated content must not become a user_supplied source',async()=>{
++  const f=await fixture((_i,res)=>res.end(JSON.stringify(output(undefined,'MODEL_GENERATED_ONLY review fixture'))));
++  try{
++    const turn=await f.send(`/conversations/${f.conversation.id}/turns`,{baseSequence:0,text:'Produce an unverified statement'});await settled(f,turn.body.id);
++    const assistant=(await f.send(`/conversations/${f.conversation.id}/messages`)).body.items.find((m:any)=>m.role==='assistant');
++    const source=await f.send('/sources',{conversationId:f.conversation.id,messageId:assistant.id});
++    const persisted=(await f.db.pool.query('SELECT s.snapshot,s.trust,m.role FROM sources s JOIN messages m ON m.id=s.message_id')).rows;
++    await evidence('assistant-source-provenance',{source,persisted});
++    assert.equal(source.status,409);assert.equal(source.body.error,'generated_source_not_allowed');assert.deepEqual(persisted,[]);
++  }finally{await f.close();}
++});
++
++test('pending upload namespace blocks turn without losing reservation or invoking model',async()=>{
++  const arrived=deferred(),release=deferred();const f=await fixture((_i,res)=>res.end(JSON.stringify(output())),{fileHooks:{afterReservation:async()=>{arrived.resolve();await release.promise;}}});
++  try{
++    const pending=f.send('/files',{conversationId:f.conversation.id,name:'normal.txt',mime:'text/plain',dataBase64:Buffer.from('normal pending').toString('base64')},'normal-reservation');await arrived.promise;
++    const turn=await f.send(`/conversations/${f.conversation.id}/turns`,{baseSequence:0,text:'must reject'},'normal-reservation');release.resolve();const upload=await pending;
++    await evidence('pending-idempotency-control',{turn,upload,persisted:await state(f)});
++    assert.equal(turn.body.error,'idempotency_conflict');assert.equal(upload.status,201);assert.equal(f.inputs.length,0);
++  }finally{release.resolve();await f.close();}
++});
++
++test('cancelled generation cannot write after a new run completes; original replay cannot redispatch',async()=>{
++  const arrived=deferred(),release=deferred();let n=0;
++  const f=await fixture(async(_i,res)=>{if(++n===1){arrived.resolve();await release.promise;res.end(JSON.stringify(output([call('create_artifact',{title:'OLD_GENERATION',content:{text:'forbidden late mutation',language:'en'}})])));}else res.end(JSON.stringify(output([call('complete',{text:'NEW_GENERATION'})])));});
++  try{
++    const path=`/conversations/${f.conversation.id}/turns`,body={baseSequence:0,text:'old generation'};
++    const old=await f.send(path,body,'old-generation');await arrived.promise;await f.send(`/runs/${old.body.id}/cancel`,{});
++    const fresh=await f.send(path,{baseSequence:1,text:'new generation',taskId:old.body.taskId},'new-generation');await settled(f,fresh.body.id);
++    release.resolve();await delay(100);const replay=await f.send(path,body,'old-generation');const persisted=await state(f);await evidence('generation-fence',{old,fresh,replay,persisted});
++    assert.deepEqual(replay,old);assert.equal(persisted.providerCalls,2);assert.equal(persisted.artifacts.length,0);assert.deepEqual(persisted.messages.filter((m:any)=>m.role==='assistant').map((m:any)=>m.text),['NEW_GENERATION']);
++  }finally{release.resolve();await f.close();}
++});
++
++test('a different live session cannot authorize output of the revoked initiating session',async()=>{
++  const arrived=deferred(),release=deferred();const f=await fixture(async(_i,res)=>{arrived.resolve();await release.promise;res.end(JSON.stringify(output([call('complete',{text:'must not persist'})])));});
++  try{
++    const turn=await f.send(`/conversations/${f.conversation.id}/turns`,{baseSequence:0,text:'session fence'});await arrived.promise;
++    const replacement='R'.repeat(43);await f.db.pool.query("INSERT INTO sessions(token_hash,owner_id,expires_at) VALUES($1,$2,clock_timestamp()+interval '1 hour')",[hash(replacement),f.user.userId]);await f.db.pool.query('DELETE FROM sessions WHERE token_hash=$1',[hash(f.user.token)]);
++    release.resolve();const run=await settled(f,turn.body.id);const replacementRead=await f.send(`/runs/${turn.body.id}`,undefined,'unused',undefined,replacement);
++    await evidence('exact-session-fence',{run,replacementRead,persisted:await state(f)});
++    assert.equal(run.error_code,'session_revoked');assert.equal(replacementRead.status,200);assert.equal((await state(f)).messages.length,1);
++  }finally{release.resolve();await f.close();}
++});
++
++test('entire provider batch is allowlist/schema validated before first mutation',async()=>{
++  const f=await fixture((_i,res)=>res.end(JSON.stringify(output([call('create_artifact',{title:'must rollback',content:{text:'do not persist',language:'en'}}),call('constructor',{command:'attack'})]))));
++  try{
++    const turn=await f.send(`/conversations/${f.conversation.id}/turns`,{baseSequence:0,text:'untrusted tool injection'});const run=await settled(f,turn.body.id);const persisted=await state(f);await evidence('batch-allowlist',{run,persisted});
++    assert.equal(run.error_code,'tool_denied');assert.equal(persisted.artifacts.length,0);assert.equal(persisted.receipts.length,0);assert.equal(persisted.providerCalls,1);
++  }finally{await f.close();}
++});
++
++test('corrected behavior: expiry during canonical writer lock wait must roll back mutation and receipt',async()=>{
++  const arrived=deferred(),release=deferred();let artifactId='';
++  const f=await fixture(async(_i,res)=>{arrived.resolve();await release.promise;res.end(JSON.stringify(output([call('update_artifact',{artifactId,baseRevision:1,content:{text:'AFTER_SESSION_EXPIRY',language:'en'}})])));});
++  let blocker:any;
++  try{
++    const task=(await f.send('/tasks',{conversationId:f.conversation.id,goal:'expiry while writer blocked'})).body;
++    artifactId=(await f.send('/artifacts',{taskId:task.id,title:'original',content:{text:'BEFORE',language:'en'}})).body.id;
++    const turn=await f.send(`/conversations/${f.conversation.id}/turns`,{baseSequence:0,text:'update after controlled delay',taskId:task.id});await arrived.promise;
++    blocker=await f.db.pool.connect();await blocker.query('BEGIN');await blocker.query('SELECT id FROM artifacts WHERE id=$1 FOR UPDATE',[artifactId]);
++    await f.db.pool.query("UPDATE sessions SET expires_at=clock_timestamp()+interval '1 second' WHERE token_hash=$1",[hash(f.user.token)]);
++    release.resolve();let waiting=false;
++    for(let i=0;i<100;i++){waiting=!!(await f.db.pool.query("SELECT 1 FROM pg_stat_activity WHERE wait_event_type='Lock' AND query LIKE 'SELECT current_revision FROM artifacts%'")).rowCount;if(waiting)break;await delay();}
++    assert.ok(waiting,'canonical writer reached lock wait after initial session fence');
++    await delay(1100);
++    const expired=(await f.db.pool.query('SELECT expires_at<clock_timestamp() expired FROM sessions WHERE token_hash=$1',[hash(f.user.token)])).rows[0].expired;
++    await blocker.query('COMMIT');blocker.release();blocker=null;
++    const run=await settled(f,turn.body.id),persisted=await state(f),revisions=(await f.db.pool.query('SELECT revision,content FROM artifact_revisions ORDER BY revision')).rows;
++    await evidence('writer-session-expiry',{waiting,expired,run,persisted,revisions});
++    assert.equal(expired,true);assert.equal(persisted.artifacts[0].current_revision,1,'expired initiating session must not commit blocked artifact update');assert.equal(persisted.receipts.length,0);
++  }finally{release.resolve();if(blocker){await blocker.query('ROLLBACK');blocker.release();}await f.close();}
++});
++
++test('receipt insertion failure atomically rolls back canonical revision and outbox; no replay inference',async()=>{
++  const f=await fixture((_i,res)=>res.end(JSON.stringify(output([call('create_artifact',{title:'atomic failure',content:{text:'no artifact',language:'en'}})]))));
++  try{
++    await f.db.pool.query("CREATE FUNCTION review_reject() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'PRIVATE_DB_DETAIL_REVIEW'; END $$; CREATE TRIGGER review_reject BEFORE INSERT ON agent_tool_receipts FOR EACH ROW EXECUTE FUNCTION review_reject()");
++    const path=`/conversations/${f.conversation.id}/turns`,body={baseSequence:0,text:'atomic receipt'};const turn=await f.send(path,body,'atomic');const run=await settled(f,turn.body.id);const replay=await f.send(path,body,'atomic');const exported=await f.send('/me/export');
++    const persisted=await state(f);const artifactEvents=(await f.db.pool.query("SELECT kind FROM outbox WHERE kind LIKE 'artifact.%'")).rows;
++    await evidence('receipt-atomicity-redaction',{run,replay,persisted,artifactEvents,exportContainsInternal:JSON.stringify(exported).includes('PRIVATE_DB_DETAIL_REVIEW')});
++    assert.equal(run.status,'outcome_unknown');assert.equal(persisted.artifacts.length,0);assert.equal(persisted.receipts.length,0);assert.equal(artifactEvents.length,0);assert.deepEqual(replay,turn);assert.equal(persisted.providerCalls,1);assert.ok(!JSON.stringify(exported).includes('PRIVATE_DB_DETAIL_REVIEW'));assert.ok(!JSON.stringify(exported).includes('session_hash'));assert.ok(!JSON.stringify(exported).includes('checkpoint'));
++  }finally{await f.close();}
++});
+--- baseline/tests/agent-runtime.test.ts
++++ tests/agent-runtime.test.ts
+@@ -0,0 +1,161 @@
++import { LocalFiles } from '../src/local-files.ts';
++import test from 'node:test';
++import assert from 'node:assert/strict';
++import http from 'node:http';
++import { randomUUID } from 'node:crypto';
++import { mkdtemp, rm, writeFile } from 'node:fs/promises';
++import { tmpdir } from 'node:os';
++import { join } from 'node:path';
++import { buildApp, bootstrap, migrate, hash } from '../src/app.ts';
++import { database, request } from './helpers.ts';
++
++
++const call = (name:string,args:any,id=randomUUID()) => ({id,type:'function',function:{name,arguments:JSON.stringify(args)}});
++const output = (calls?:any[], text='controlled output') => ({choices:[{finish_reason:calls?'tool_calls':'stop',message:{role:'assistant',content:calls?null:text,...(calls?{tool_calls:calls}:{})}}]});
++const deferred = () => { let resolve!:()=>void; const promise=new Promise<void>(r=>resolve=r); return {promise,resolve}; };
++const delay = (n=15)=>new Promise(r=>setTimeout(r,n));
++async function evidence(_name:string,_value:any) {}
++async function fixture(handler:(input:any,res:http.ServerResponse)=>any, extra:any={}) {
++  const db=await database(); await migrate(db.pool); const user=await bootstrap(db.pool);
++  const fileRoot=await mkdtemp(join(tmpdir(),'nova-review1-'));
++  const inputs:any[]=[];
++  const provider=http.createServer(async(req,res)=>{let raw='';for await(const chunk of req)raw+=chunk;const input=JSON.parse(raw);inputs.push(input);res.setHeader('content-type','application/json');try{await handler(input,res);}catch{res.destroy();}});
++  await new Promise<void>(r=>provider.listen(0,'127.0.0.1',r));
++  const agent={endpoint:`http://127.0.0.1:${(provider.address() as any).port}/v1/chat/completions`,model:'independent-controlled',allowLoopback:true};
++  const app=buildApp(db.pool,{agent,fileRoot,...extra}); const base=await app.listen({port:0,host:'127.0.0.1'});
++  const send=(path:string,body?:any,key:string=randomUUID(),method?:string,token=user.token)=>request(base,path,token,body,method,body===undefined?undefined:key);
++  const conversation=(await send('/conversations',{title:'Independent adversarial review'})).body;
++  return {db,user,fileRoot,inputs,agent,app,send,conversation,
++    async close(){await app.close();provider.closeAllConnections();await new Promise<void>(r=>provider.close(()=>r()));await db.close();await rm(fileRoot,{recursive:true,force:true});}};
++}
++async function settled(f:any,id:string) {for(let i=0;i<400;i++){const rows=(await f.db.pool.query('SELECT id,status,error_code,model_calls,tool_calls FROM agent_runs WHERE id=$1',[id])).rows;if(!rows.length||!['queued','running'].includes(rows[0].status))return rows[0];await delay();}throw Error('settle timeout');}
++async function state(f:any) {return {runs:(await f.db.pool.query('SELECT id,status,error_code,model_calls,tool_calls FROM agent_runs ORDER BY created_at')).rows,messages:(await f.db.pool.query('SELECT sequence,role,text FROM messages ORDER BY sequence')).rows,artifacts:(await f.db.pool.query('SELECT id,title,current_revision FROM artifacts')).rows,receipts:(await f.db.pool.query('SELECT call_id,tool,result FROM agent_tool_receipts')).rows,providerCalls:f.inputs.length};}
++
++
++
++for (const blocked of ['receipt','terminal'] as const) test(`session final validation after actual ${blocked} write wait`,async()=>{
++ const arrived=deferred(),release=deferred();
++ const f=await fixture(async(_i,res)=>{arrived.resolve();await release.promise;res.end(JSON.stringify(output([call(blocked==='receipt'?'create_artifact':'complete',blocked==='receipt'?{title:'ROLLBACK',content:{text:'never',language:'en'}}:{text:'never'})])));});
++ let blocker:any;
++ try{
++  await f.db.pool.query(`CREATE FUNCTION hold_write() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN ${blocked==='terminal'?"IF NEW.kind <> 'run.completed' THEN RETURN NEW; END IF;":''} PERFORM pg_advisory_xact_lock(913090); RETURN NEW; END $$; CREATE TRIGGER hold_write BEFORE INSERT ON ${blocked==='receipt'?'agent_tool_receipts':'agent_events'} FOR EACH ROW EXECUTE FUNCTION hold_write()`);
++  const turn=await f.send(`/conversations/${f.conversation.id}/turns`,{baseSequence:0,text:'block final write'});await arrived.promise;
++  blocker=await f.db.pool.connect();await blocker.query('BEGIN');await blocker.query('SELECT pg_advisory_xact_lock(913090)');
++  await f.db.pool.query("UPDATE sessions SET expires_at=clock_timestamp()+interval '1 second' WHERE token_hash=$1",[hash(f.user.token)]);
++  release.resolve();let waiting=false;
++  for(let i=0;i<100;i++){waiting=!!(await f.db.pool.query("SELECT 1 FROM pg_locks WHERE locktype='advisory' AND objid=913090 AND NOT granted")).rowCount;if(waiting)break;await delay();}assert.ok(waiting);
++  await delay(1100);await blocker.query('COMMIT');blocker.release();blocker=null;
++  const run=await settled(f,turn.body.id);assert.equal(run.error_code,'session_revoked');assert.equal(run.tool_calls,0);
++  const s=await state(f);assert.equal(s.artifacts.length,0);assert.equal(s.receipts.length,0);assert.equal(s.messages.length,1);assert.equal(s.providerCalls,1);
++  assert.equal((await f.db.pool.query("SELECT count(*)::int n FROM outbox WHERE kind LIKE 'artifact.%' OR kind='task.completed'")).rows[0].n,0);
++  assert.equal((await f.db.pool.query('SELECT status FROM tasks')).rows[0].status,'active');
++ }finally{release.resolve();if(blocker){await blocker.query('ROLLBACK');blocker.release();}await f.close();}
++});
++
++test('lease loss during writer wait rolls back; replacement drains the old transaction before recovery',async()=>{
++ const arrived=deferred(),release=deferred();let artifactId='';
++ const f=await fixture(async(_i,res)=>{arrived.resolve();await release.promise;res.end(JSON.stringify(output([call('update_artifact',{artifactId,baseRevision:1,content:{text:'LATE',language:'en'}})])));});
++ let blocker:any,next:any;
++ try{
++  const task=(await f.send('/tasks',{conversationId:f.conversation.id,goal:'writer'})).body;
++  artifactId=(await f.send('/artifacts',{taskId:task.id,title:'original',content:{text:'BEFORE',language:'en'}})).body.id;
++  const turn=await f.send(`/conversations/${f.conversation.id}/turns`,{baseSequence:0,text:'update',taskId:task.id});await arrived.promise;
++  blocker=await f.db.pool.connect();await blocker.query('BEGIN');await blocker.query('SELECT id FROM artifacts WHERE id=$1 FOR UPDATE',[artifactId]);release.resolve();
++  let waiting=false;for(let i=0;i<100;i++){waiting=!!(await f.db.pool.query("SELECT 1 FROM pg_stat_activity WHERE wait_event_type='Lock' AND query LIKE 'SELECT current_revision FROM artifacts%'")).rowCount;if(waiting)break;await delay();}assert.ok(waiting);
++  const pid=(await f.db.pool.query("SELECT pid FROM pg_locks WHERE locktype='advisory' AND objid=913004 AND granted")).rows[0].pid;
++  await f.db.pool.query('SELECT pg_terminate_backend($1)',[pid]);await delay(50);
++  next=buildApp(f.db.pool,{agent:f.agent,fileRoot:f.fileRoot});let ready=false;const starting=next.listen({port:0,host:'127.0.0.1'}).then(()=>{ready=true;});
++  let draining=false;for(let i=0;i<100;i++){draining=!!(await f.db.pool.query("SELECT 1 FROM pg_locks WHERE locktype='advisory' AND objid=913006 AND NOT granted")).rowCount;if(draining)break;await delay();}
++  assert.ok(draining);assert.equal(ready,false);
++  await blocker.query('COMMIT');blocker.release();blocker=null;await starting;
++  const run=await settled(f,turn.body.id),s=await state(f);
++  assert.equal(run.status,'outcome_unknown');assert.equal(run.error_code,'runtime_interrupted');assert.equal(s.artifacts[0].current_revision,1);assert.equal(s.receipts.length,0);assert.equal(s.providerCalls,1);
++ }finally{release.resolve();if(blocker){await blocker.query('ROLLBACK');blocker.release();}await next?.close();await f.close();}
++});
++
++test('failed storage initialization releases singleton before close and removes client listeners',async()=>{
++ const db=await database();await migrate(db.pool);const fileRoot=await mkdtemp(join(tmpdir(),'nova-bad-root-'));
++ const clients:any[]=[];db.pool.on('acquire',c=>{if(!clients.includes(c))clients.push(c);});
++ let bad:any,next:any;
++ try{
++  // An existing key on an unbound root is refused (no replacement key).
++  await writeFile(join(fileRoot,'.key'),'fixture');
++  bad=buildApp(db.pool,{fileRoot});await assert.rejects(bad.listen({port:0,host:'127.0.0.1'}));await delay(50);
++  assert.equal((await db.pool.query("SELECT count(*)::int n FROM pg_locks WHERE locktype='advisory' AND objid=913004 AND granted")).rows[0].n,0);
++  next=buildApp(db.pool);await next.listen({port:0,host:'127.0.0.1'});await next.close();await bad.close();await delay(50);
++  const ended=clients.filter(c=>c._ending);assert.ok(ended.length>=2);
++  for(const c of ended){assert.ok(!c.listeners('error').some((fn:any)=>fn.name==='invalidate'));assert.ok(!c.listeners('end').some((fn:any)=>fn.name==='ended'));}
++ }finally{await next?.close();await bad?.close();await db.close();await rm(fileRoot,{recursive:true,force:true});}
++});
++
++test('dedicated client end alone invalidates runtime and cleans listeners',async()=>{
++ const db=await database();await migrate(db.pool);const user=await bootstrap(db.pool);
++ const clients:any[]=[];db.pool.on('acquire',c=>{if(!clients.includes(c))clients.push(c);});const app=buildApp(db.pool);
++ try{
++  const base=await app.listen({port:0,host:'127.0.0.1'});
++  const pid=(await db.pool.query("SELECT pid FROM pg_locks WHERE locktype='advisory' AND objid=913004 AND granted")).rows[0].pid;
++  const lease=clients.find(c=>c.processID===pid);assert.ok(lease);await lease.end();await delay(50);
++  assert.equal((await request(base,'/conversations',user.token,{title:'unleased'},'POST','new')).status,503);
++  assert.ok(!lease.listeners('error').some((fn:any)=>fn.name==='invalidate'));assert.ok(!lease.listeners('end').some((fn:any)=>fn.name==='ended'));
++ }finally{await app.close();await db.close();}
++});
++
++
++test('lease loss while file read awaits records unknown before read returns',async()=>{
++ const readEntered=deferred(),readRelease=deferred();let fileId='';
++ const f=await fixture((_i,res)=>res.end(JSON.stringify(output([call('read_file',{fileId})]))));
++ const original=LocalFiles.prototype.get;
++ try{
++  fileId=(await f.send('/files',{conversationId:f.conversation.id,name:'read.txt',mime:'text/plain',dataBase64:Buffer.from('held read').toString('base64')})).body.id;
++  LocalFiles.prototype.get=async function(...args:Parameters<typeof original>){const bytes=await original.apply(this,args);readEntered.resolve();await readRelease.promise;return bytes;};
++  const turn=await f.send(`/conversations/${f.conversation.id}/turns`,{baseSequence:0,text:'read'});await readEntered.promise;
++  const pid=(await f.db.pool.query("SELECT pid FROM pg_locks WHERE locktype='advisory' AND objid=913004 AND granted")).rows[0].pid;
++  await f.db.pool.query('SELECT pg_terminate_backend($1)',[pid]);
++  let status='';for(let i=0;i<100;i++){status=(await f.db.pool.query('SELECT status FROM agent_runs WHERE id=$1',[turn.body.id])).rows[0].status;if(status==='outcome_unknown')break;await delay();}
++  assert.equal(status,'outcome_unknown','unknown persistence must not depend on non-network read cooperating with abort');
++  readRelease.resolve();await delay(80);assert.equal((await state(f)).receipts.length,0);assert.equal(f.inputs.length,1);
++ }finally{readRelease.resolve();LocalFiles.prototype.get=original;await f.close();}
++});
++
++for (const enabled of [false,true]) test(`startup reservation also excludes non-agent file runtime: ${enabled}`,async()=>{
++ const arrived=deferred(), release=deferred();
++ const f=await fixture((_i,res)=>res.end(JSON.stringify(output())),{...(enabled?{}:{agent:undefined}),fileHooks:{afterReservation:async()=>{arrived.resolve();await release.promise;}}});
++ let second:any;
++ try {
++  const pending=f.send('/files',{conversationId:f.conversation.id,name:'pending.txt',mime:'text/plain',dataBase64:Buffer.from('pending').toString('base64')},'reserved');await arrived.promise;
++  second=buildApp(f.db.pool,{fileRoot:f.fileRoot});
++  let rejected=false;try{await second.listen({port:0,host:'127.0.0.1'});}catch{rejected=true;}
++  const rows=(await f.db.pool.query('SELECT state FROM files')).rows;
++  release.resolve();const result=await pending;
++  assert.equal(rejected,true);assert.deepEqual(rows,[{state:'pending'}]);assert.equal(result.status,201);
++ }finally{release.resolve();await second?.close();await f.close();}
++});
++
++for (const interaction of ['replacement','cancel','purge'] as const) test(`lease loss fences held inference, late output and ${interaction}`,async()=>{
++ const arrived=deferred(), release=deferred();let n=0;
++ const f=await fixture(async(_i,res)=>{if(++n===1){arrived.resolve();await release.promise;res.end(JSON.stringify(output([call('create_artifact',{title:'LATE',content:{text:'forbidden',language:'en'}})])));}else res.end(JSON.stringify(output([call('complete',{text:'NEW_RUNTIME'})])));});
++ let next:any;
++ try{
++  const path=`/conversations/${f.conversation.id}/turns`, body={baseSequence:0,text:'held'};
++  const old=await f.send(path,body,'old');await arrived.promise;
++  if(interaction==='cancel')await f.send(`/runs/${old.body.id}/cancel`,{});
++  if(interaction==='purge')await f.send('/me',{confirm:'purge'},'purge','DELETE');
++  const pid=(await f.db.pool.query("SELECT pid FROM pg_locks WHERE locktype='advisory' AND objid=913004 AND granted")).rows[0].pid;
++  await f.db.pool.query('SELECT pg_terminate_backend($1)',[pid]);await delay(150);
++  const oldState=await settled(f,old.body.id);
++  if(interaction==='purge')assert.equal(oldState,undefined);
++  else assert.equal(oldState.status,interaction==='cancel'?'cancelled':'outcome_unknown');
++  const rejected=await f.send(path,{baseSequence:1,text:'unleased'},'unleased');assert.ok([401,503].includes(rejected.status));
++  next=buildApp(f.db.pool,{agent:f.agent,fileRoot:f.fileRoot});const base=await next.listen({port:0,host:'127.0.0.1'});
++  if(interaction!=='purge'){
++   const fresh=await request(base,path,f.user.token,{baseSequence:1,text:'fresh',taskId:old.body.taskId},'POST','fresh');assert.equal(fresh.status,201);
++   assert.equal((await settled(f,fresh.body.id)).status,'completed');
++  }
++  release.resolve();await delay(100);
++  const persisted=await state(f);assert.equal(persisted.artifacts.length,0);
++  assert.deepEqual(persisted.messages.filter((m:any)=>m.role==='assistant').map((m:any)=>m.text),interaction==='purge'?[]:['NEW_RUNTIME']);
++  assert.equal(f.inputs.length,interaction==='purge'?1:2);
++  await f.app.close();
++  assert.equal((await f.db.pool.query("SELECT count(*)::int n FROM pg_locks WHERE locktype='advisory' AND objid=913004 AND granted")).rows[0].n,1,'closing dead runtime must not unlock successor');
++ }finally{release.resolve();await next?.close();await f.close();}
++});

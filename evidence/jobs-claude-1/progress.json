@@ -1,0 +1,27 @@
+{
+  "agent": "AGENT2 (Claude) — jobs-claude-1",
+  "window": "2026-09-30T17:30Z–17:48Z",
+  "phase": "done",
+  "budget": {"searchWebQueriesMax": 4, "publicPageReadsMax": 15},
+  "used": {"searchWebQueries": 4, "reconPublicRequests": 17, "reconDistinctUrls": 15, "adapterReplayPageReads": 7, "note": "adapter replays re-read pages already seen; disclosed in REPORT"},
+  "steps": [
+    {"step": "skills + spec + prior reports + source read", "status": "done"},
+    {"step": "live recon: robots, indexes, sitemaps (Restworld, Job in Tourism, LavoroTurismo, HNH)", "status": "done"},
+    {"step": "4 managed searchWeb queries", "status": "done", "result": "2 specific Bologna cameriere leads, both expired/withdrawn on original page"},
+    {"step": "TDD adapter: registry, redirect manual, date/location/publisher checks, reasons", "status": "done"},
+    {"step": "native agent test + all jobs tests (34/34) + typecheck", "status": "done"},
+    {"step": "live replay with production adapter", "status": "done", "result": "0 opportunities; 2 EXPIRED, 2 MISMATCH with reasons; cuoco control STALE_DATE 2026-07-31"},
+    {"step": "REPORT.md, source-hashes.json, SHA256SUMS", "status": "done"}
+  ],
+  "validatedListings": [],
+  "expiredOrWithdrawnBolognaCameriere": [
+    {"url": "https://www.lavoroturismo.it/offerte-lavoro/offerta-cameriere-sala-bologna-smy-hotels", "status": "EXPIRED", "company": "SMY Hotels", "location": "Bologna, Italia", "observedAt": "2026-09-30T17:43:45Z"},
+    {"url": "https://job.hnh.it/jobs/Cameriere-di-sala-full-time-o-part-time-Sala-Italia-Bologna-558045909.htm", "status": "EXPIRED (404 no longer published)", "company": "HNH Hospitality (employer ATS)", "observedAt": "2026-09-30T17:43:45Z"}
+  ],
+  "blockers": [
+    "No current cameriere Bologna vacancy exists on the six reviewed origins today (sitemaps checked); cannot be fixed by code",
+    "Managed search with site: operators returned zero citations; natural-language production query not re-run live (budget exhausted) — parent must validate",
+    "public/app.js renders only result.jobs; opportunities/unavailablePages need parent UI work + trial restart"
+  ],
+  "notDone": ["deploy", "restart", "commit", "public/ writes", "Subito adapter changes", "Playwright browser path", "DNS-pinned transport for discovered domains"]
+}
