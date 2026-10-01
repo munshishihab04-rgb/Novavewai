@@ -10,6 +10,7 @@ test('premium ui: Inter self-hosted, single icon family, no text glyph icons',as
   assert.match(css,/@font-face\{font-family:'Inter';src:url\('\/fonts\/Inter-latin\.woff2'\)/,'Inter declared from own origin');
   assert.doesNotMatch(css,/Segoe UI/,'no platform-default font left in the dark shell');assert.doesNotMatch(await (await fetch(base+'/style.css')).text(),/Segoe UI/);
   assert.doesNotMatch(css,/fonts\.googleapis|fonts\.gstatic/,'no third-party font requests');
+  const appJs=await (await fetch(base+'/app.js')).text();assert.doesNotMatch(appJs,/compariranno qui/,'drawer empty state must go through i18n, not hardcoded Italian');
   const html=await (await fetch(base+'/')).text();
   assert.doesNotMatch(html,/[✕✓→←⚙☰]/,'no text glyphs used as icons in the shell');
   const start=html.indexOf('<dialog id="drawer"');const drawer=html.slice(start,html.indexOf('</dialog>',start));
