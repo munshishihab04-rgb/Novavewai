@@ -30,10 +30,17 @@ export function webDataRoutes(app:FastifyInstance,pool:Pool){
   return {conversations,artifacts,runs,limit:100};
  }));
 }
-export interface WebOptions{nativeVoice?:boolean;/** Self-service registration; default open. Env NOVA_PUBLIC_REGISTRATION=off closes it. */registration?:boolean}
+export interface WebOptions{nativeVoice?:boolean;/** Self-service registration; default open. Env NOVA_PUBLIC_REGISTRATION=off closes it. */registration?:boolean;/** Mount everything under a URL prefix (e.g. '/nova' for licenzpol.it/nova). Default '' = root. Static files are rewritten at serve time so the browser only ever sees prefixed URLs. */basePath?:string}
 export const registrationOpenFromEnv=(env:Record<string,string|undefined>=process.env)=>env.NOVA_PUBLIC_REGISTRATION?.trim().toLowerCase()!=='off';
 export async function buildWeb(core:FastifyInstance,pool:Pool,options:WebOptions={}){
  const web=Fastify({logger:false,bodyLimit:5700000,trustProxy:false});
+ const bp=(options.basePath??'').replace(/\/+$/,'');if(bp&&!/^\/[a-z0-9_-]+$/.test(bp))throw Error('basePath must look like /name');
+ // Rewrite root-absolute references inside our own static files to the prefixed form. Only our known patterns, never user content.
+ const prefixed=(file:string,text:string)=>{if(!bp)return text;
+  if(file.endsWith('.html'))return text.replace(/(href|src)="\/(?!\/)/g,`$1="${bp}/`).replace('<head>','<head><base href="'+bp+'/">');
+  if(file.endsWith('.css'))return text.replace(/url\((['"]?)\/(?!\/)/g,`url($1${bp}/`);
+  if(file.endsWith('.js'))return text.replace(/request\('\/api'\+p/g,`request('${bp}/api'+p`).replace(/(['"\\`])\/api\//g,`$1${bp}/api/`).replace(/(['"\\`])\/auth\//g,`$1${bp}/auth/`).replace(/(['"\\`])\/artifacts\//g,`$1${bp}/artifacts/`);
+  return text};
  const registrationOpen=options.registration??registrationOpenFromEnv();
  const registrations=new Throttle(5,3600000),loginFailures=new Throttle(10,900000);
  const clientKey=(r:any)=>String(r.headers['cf-connecting-ip']??r.ip);
@@ -44,17 +51,19 @@ export async function buildWeb(core:FastifyInstance,pool:Pool,options:WebOptions
   if(!['GET','HEAD'].includes(r.method)){
    if(r.headers['x-nova-request']!=='1'||r.headers.origin!==`https://${r.headers.host}`)return reply.code(403).send({error:'origin_required'});
   }
-  if(r.url==='/auth/exchange'||r.url==='/auth/preview'||r.url==='/auth/register'||r.url==='/auth/login'){
+  const u=r.url.startsWith(bp+'/')?r.url.slice(bp.length):r.url;
+  if(u==='/auth/exchange'||u==='/auth/preview'||u==='/auth/register'||u==='/auth/login'){
    const key=clientKey(r),now=Date.now();if(buckets.size>1000)buckets.clear();let b=buckets.get(key);if(!b||now-b.at>60000){b={at:now,n:0};buckets.set(key,b)}if(++b.n>20)return reply.code(429).send({error:'rate_limited'});
   }
  });
  web.setErrorHandler((_e,_r,reply)=>reply.code(500).send({error:'request_failed'}));
- for(const [url,[file,type]] of Object.entries(assets))web.get(url,async(_r,reply)=>{const bytes=await readFile(new URL('../public/'+file,import.meta.url));return reply.type(type).send(file==='index.html'&&options.nativeVoice?bytes.toString().replace('</head>','<script src="/native.js" defer></script></head>'):bytes)});
- if(options.nativeVoice)web.get('/native.js',async(_r,reply)=>reply.type('text/javascript; charset=utf-8').send(await readFile(new URL('../staging/voice-files/public/native.js',import.meta.url))));
+ for(const [url,[file,type]] of Object.entries(assets))web.get(bp+(url==='/'&&bp?'/':url),async(_r,reply)=>{const bytes=await readFile(new URL('../public/'+file,import.meta.url));if(/\.(ttf|png|svg|ico|woff2?)$/.test(file))return reply.type(type).send(bytes);let text=bytes.toString();if(file==='index.html'&&options.nativeVoice)text=text.replace('</head>','<script src="/native.js" defer></script></head>');return reply.type(type).send(prefixed(file,text))});
+ if(bp)web.get(bp,async(_r,reply)=>reply.code(308).header('location',bp+'/').send());
+ if(options.nativeVoice)web.get(bp+'/native.js',async(_r,reply)=>reply.type('text/javascript; charset=utf-8').send(prefixed('native.js',(await readFile(new URL('../staging/voice-files/public/native.js',import.meta.url))).toString())));
  const cookieToken=(r:any)=>{const s=String(r.headers.cookie??'').split(';').map((x:string)=>x.trim()).find((x:string)=>x.startsWith('__Host-nova='))?.slice(12);return s&&/^[A-Za-z0-9_-]{43}$/.test(s)?s:undefined};
  const sessionCookie=(token:string,seconds:number)=>`__Host-nova=${token}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=${seconds}`;
  const credentials=(body:any)=>body&&typeof body==='object'&&!Array.isArray(body)&&Object.keys(body).every(k=>k==='username'||k==='password')?{username:body.username,password:body.password}:undefined;
- web.post('/auth/register',async(r,reply)=>{
+ web.post(bp+'/auth/register',async(r,reply)=>{
   if(!registrationOpen)return reply.code(403).send({error:'registration_closed'});
   const input=credentials(r.body);if(!input)return reply.code(400).send({error:'invalid_request'});
   if(registrations.blocked(clientKey(r)))return reply.code(429).send({error:'rate_limited'});
@@ -62,20 +71,20 @@ export async function buildWeb(core:FastifyInstance,pool:Pool,options:WebOptions
   if(!result.ok)return reply.code(result.error==='username_taken'?409:400).send({error:result.error});
   registrations.hit(clientKey(r));reply.header('set-cookie',sessionCookie(result.session,SESSION_SECONDS));return reply.code(201).send({ok:true,username:String(input.username).trim().toLowerCase()});
  });
- web.post('/auth/login',async(r,reply)=>{
+ web.post(bp+'/auth/login',async(r,reply)=>{
   const input=credentials(r.body);const username=typeof input?.username==='string'?input.username.trim().toLowerCase().slice(0,64):'';
   const key=clientKey(r)+'|'+username;const wait=loginFailures.blocked(key);if(wait)return reply.code(429).send({error:'rate_limited',retry_after:wait});
   const result=await loginAccount(pool,input?.username,input?.password);
   if(!result.ok){loginFailures.hit(key);return reply.code(401).send({error:'invalid_credentials'})}
   loginFailures.reset(key);reply.header('set-cookie',sessionCookie(result.session,SESSION_SECONDS));return {ok:true};
  });
- web.post('/auth/preview',async(r,reply)=>{
+ web.post(bp+'/auth/preview',async(r,reply)=>{
   const invite=(r.body as any)?.invite;if(typeof invite!=='string'||! /^[A-Za-z0-9_-]{43}$/.test(invite))return reply.code(401).send({error:'invalid_invite'});
   const row=(await pool.query("SELECT w.title,w.message FROM web_invites i JOIN users u ON u.id=i.owner_id LEFT JOIN web_welcomes w ON w.owner_id=i.owner_id WHERE i.digest=$1 AND i.expires_at>clock_timestamp() AND u.status='active'",[hash(invite)])).rows[0];
   if(!row)return reply.code(401).send({error:'invalid_invite'});
   return {welcome:row.title?{title:row.title,message:row.message}:null};
  });
- web.post('/auth/exchange',async(r,reply)=>{
+ web.post(bp+'/auth/exchange',async(r,reply)=>{
   const invite=(r.body as any)?.invite;if(typeof invite!=='string'||! /^[A-Za-z0-9_-]{43}$/.test(invite))return reply.code(401).send({error:'invalid_invite'});
   const token=await transaction(pool,async c=>{
    const candidate=(await c.query("SELECT owner_id FROM web_invites WHERE digest=$1 AND expires_at>clock_timestamp()",[hash(invite)])).rows[0];if(!candidate)return;
@@ -86,10 +95,10 @@ export async function buildWeb(core:FastifyInstance,pool:Pool,options:WebOptions
   if(!token)return reply.code(401).send({error:'invalid_invite'});
   reply.header('set-cookie',`__Host-nova=${token}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=86400`);return {ok:true};
  });
- web.post('/auth/logout',async(r,reply)=>{const token=cookieToken(r);if(token)await pool.query('DELETE FROM sessions WHERE token_hash=$1',[hash(token)]);reply.header('set-cookie','__Host-nova=; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=0');return {ok:true}});
- web.all('/api/*',async(r,reply)=>{
+ web.post(bp+'/auth/logout',async(r,reply)=>{const token=cookieToken(r);if(token)await pool.query('DELETE FROM sessions WHERE token_hash=$1',[hash(token)]);reply.header('set-cookie','__Host-nova=; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=0');return {ok:true}});
+ web.all(bp+'/api/*',async(r,reply)=>{
   const token=cookieToken(r);if(!token)return reply.code(401).send({error:'unauthorized'});
-  const path=r.url.slice(4);if(!/^\/(workspace|conversations|runs|artifacts|tasks|files|me|documents|research|voice|providers)(\/|\?|$)/.test(path))return reply.code(404).send({error:'not_found'});
+  const path=r.url.slice(bp.length+4);if(!/^\/(workspace|conversations|runs|artifacts|tasks|files|me|documents|research|voice|providers)(\/|\?|$)/.test(path))return reply.code(404).send({error:'not_found'});
   const response=await core.inject({method:r.method as any,url:path,headers:{authorization:`Bearer ${token}`,...(r.headers['idempotency-key']?{'idempotency-key':String(r.headers['idempotency-key'])}:{}),...(r.body!==undefined?{'content-type':'application/json'}:{})},...(r.body!==undefined?{payload:JSON.stringify(r.body)}:{})});
   if(response.headers['content-disposition'])reply.header('content-disposition',response.headers['content-disposition']);reply.code(response.statusCode).type(String(response.headers['content-type']??'application/json'));return response.rawPayload;
  });return web;
