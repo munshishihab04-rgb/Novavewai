@@ -36,7 +36,7 @@ test('premium ui: drawer fits a phone, rows on a 48px grid, icons share one edge
   const convs=Array.from({length:12},(_,i)=>({id:'c'+i,title:'Conversazione numero '+(i+1)+' con un titolo abbastanza lungo',updated_at:new Date().toISOString()}));
   await page.route('https://nova.test/**',async route=>{const u=new URL(route.request().url());
    if(u.pathname==='/')return route.fulfill({body:await readFile('public/index.html','utf8'),contentType:'text/html'});
-   for(const f of ['app.js','style.css','dark.css','icons.js','features.js','dashboard.js','i18n.js'])if(u.pathname==='/'+f)return route.fulfill({body:await readFile('public/'+f,'utf8'),contentType:f.endsWith('.js')?'text/javascript':'text/css'});
+   for(const f of ['app.js','style.css','dark.css','icons.js','features.js','dashboard.js','i18n.js','theme.js'])if(u.pathname==='/'+f)return route.fulfill({body:await readFile('public/'+f,'utf8'),contentType:f.endsWith('.js')?'text/javascript':'text/css'});
    if(u.pathname.endsWith('.woff2'))return route.fulfill({body:await readFile('public'+u.pathname),contentType:'font/woff2'});
    if(u.pathname.endsWith('.ttf'))return route.fulfill({body:await readFile('public/NotoSansBengali-Regular.ttf'),contentType:'font/ttf'});
    if(!u.pathname.startsWith('/api/'))return route.fulfill({status:404,body:'{}'});

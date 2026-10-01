@@ -7,7 +7,7 @@ test('table editor for CSV/XLSX artifacts: cells render, edits save as a new rev
   const artifacts=[{id:XLSX,title:'ore.xlsx',current_revision:1,conversation_id:'11111111-1111-4111-8111-111111111111',file:{name:'ore.xlsx',format:'xlsx',entries:[]},cv:null},{id:DOCX,title:'lettera.docx',current_revision:1,conversation_id:'11111111-1111-4111-8111-111111111111',file:{name:'lettera.docx',format:'docx',entries:[]},cv:null}];
   await page.route('https://nova.test/**',async route=>{const u=new URL(route.request().url());
    if(u.pathname==='/')return route.fulfill({body:await readFile('public/index.html','utf8'),contentType:'text/html'});
-   for(const f of ['app.js','style.css','dark.css','icons.js','features.js','dashboard.js','i18n.js'])if(u.pathname==='/'+f)return route.fulfill({body:await readFile('public/'+f,'utf8'),contentType:f.endsWith('.js')?'text/javascript':'text/css'});
+   for(const f of ['app.js','style.css','dark.css','icons.js','features.js','dashboard.js','i18n.js','theme.js'])if(u.pathname==='/'+f)return route.fulfill({body:await readFile('public/'+f,'utf8'),contentType:f.endsWith('.js')?'text/javascript':'text/css'});
    if(!u.pathname.startsWith('/api/'))return route.fulfill({status:404,body:'{}'});
    const p=u.pathname.slice(4);sent.push({path:p,method:route.request().method(),body:route.request().postDataJSON()});
    if(p==='/workspace')return route.fulfill({json:{conversations:[{id:'11111111-1111-4111-8111-111111111111',title:'Office'}],artifacts,runs:[]}});

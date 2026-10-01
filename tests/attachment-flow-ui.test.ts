@@ -6,7 +6,7 @@ async function harness(){
  await page.route('https://nova.test/**',async route=>{const u=new URL(route.request().url());
   if(u.pathname==='/'){let html=await readFile('public/index.html','utf8');html=html.replace('</head>','<script src="/native.js" defer></script></head>');return route.fulfill({body:html,contentType:'text/html'})}
   if(u.pathname==='/native.js')return route.fulfill({body:await readFile('staging/voice-files/public/native.js','utf8'),contentType:'text/javascript'});
-  for(const f of ['app.js','style.css','dark.css','icons.js','features.js','dashboard.js','i18n.js'])if(u.pathname==='/'+f)return route.fulfill({body:await readFile('public/'+f,'utf8'),contentType:f.endsWith('.js')?'text/javascript':'text/css'});
+  for(const f of ['app.js','style.css','dark.css','icons.js','features.js','dashboard.js','i18n.js','theme.js'])if(u.pathname==='/'+f)return route.fulfill({body:await readFile('public/'+f,'utf8'),contentType:f.endsWith('.js')?'text/javascript':'text/css'});
   if(!u.pathname.startsWith('/api/'))return route.fulfill({status:404,body:'{}'});
   const p=u.pathname.slice(4);const body=route.request().postDataJSON();sent.push({path:p,method:route.request().method(),body});
   if(p==='/workspace')return route.fulfill({json:{conversations:[{id:CONV,title:'Prova'}],artifacts:[],runs:[]}});

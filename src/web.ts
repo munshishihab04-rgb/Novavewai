@@ -5,7 +5,7 @@ import { readFile } from 'node:fs/promises';
 import { authenticatedOwner, fail, hash, transaction } from './app.ts';
 import { Throttle, loginAccount, registerAccount, SESSION_SECONDS } from './accounts.ts';
 import { cvCard } from './cv-schema.ts';
-import { loadPreferences, savePreferences, validatePreferences } from './language.ts';
+import {isTheme, loadPreferences, savePreferences, validatePreferences } from './language.ts';
 
 export async function initWeb(pool:Pool) {
  await pool.query(`CREATE TABLE IF NOT EXISTS web_invites(digest text PRIMARY KEY, owner_id uuid NOT NULL REFERENCES users(id), expires_at timestamptz NOT NULL)`);
@@ -18,7 +18,7 @@ export async function issueInvite(pool:Pool,owner:string,seconds=3600){
 export function webDataRoutes(app:FastifyInstance,pool:Pool){
  // Language preferences: independent ui / chat / voice. PUT merges partial updates; invalid values → 400.
  app.get('/me/preferences',async r=>transaction(pool,async c=>loadPreferences(c,await authenticatedOwner(c,r))));
- app.put('/me/preferences',{schema:{body:{type:'object'}}},async r=>transaction(pool,async c=>{const owner=await authenticatedOwner(c,r);const current=await loadPreferences(c,owner);const next=validatePreferences(r.body,current.language);if(!next)return fail(400,'invalid_preferences');const ob=(r.body as any)?.onboarded;if(ob!==undefined&&ob!==true)return fail(400,'invalid_preferences');await savePreferences(c,owner,next,ob===true);return loadPreferences(c,owner)}));
+ app.put('/me/preferences',{schema:{body:{type:'object'}}},async r=>transaction(pool,async c=>{const owner=await authenticatedOwner(c,r);const current=await loadPreferences(c,owner);const next=validatePreferences(r.body,current.language);if(!next)return fail(400,'invalid_preferences');const ob=(r.body as any)?.onboarded;if(ob!==undefined&&ob!==true)return fail(400,'invalid_preferences');const th=(r.body as any)?.theme;if(th!==undefined&&!isTheme(th))return fail(400,'invalid_preferences');await savePreferences(c,owner,next,ob===true,th);return loadPreferences(c,owner)}));
  // Minimal account card for the drawer: username when self-registered, otherwise an invite-based guest label.
  app.get('/me',async r=>transaction(pool,async c=>{const owner=await authenticatedOwner(c,r);const row=(await c.query('SELECT username,created_at FROM account_credentials WHERE owner_id=$1',[owner])).rows[0];return {id:owner,username:row?.username??null,kind:row?'account':'invite',since:row?.created_at??null}}));
  app.get('/workspace',async r=>transaction(pool,async c=>{
@@ -45,7 +45,7 @@ export async function buildWeb(core:FastifyInstance,pool:Pool,options:WebOptions
  const registrationOpen=options.registration??registrationOpenFromEnv();
  const registrations=new Throttle(5,3600000),loginFailures=new Throttle(10,900000);
  const clientKey=(r:any)=>String(r.headers['cf-connecting-ip']??r.ip);
- const assets:Record<string,[string,string]>={'/':['index.html','text/html; charset=utf-8'],'/app.js':['app.js','text/javascript; charset=utf-8'],'/style.css':['style.css','text/css; charset=utf-8'],'/features.js':['features.js','text/javascript; charset=utf-8'],'/dashboard.js':['dashboard.js','text/javascript; charset=utf-8'],'/dark.css':['dark.css','text/css; charset=utf-8'],'/icons.js':['icons.js','text/javascript; charset=utf-8'],'/i18n.js':['i18n.js','text/javascript; charset=utf-8'],'/NotoSansBengali-Regular.ttf':['NotoSansBengali-Regular.ttf','font/ttf'],'/NotoSansBengali-Bold.ttf':['NotoSansBengali-Bold.ttf','font/ttf'],'/fonts/Inter-latin.woff2':['fonts/Inter-latin.woff2','font/woff2'],'/fonts/Inter-latin-ext.woff2':['fonts/Inter-latin-ext.woff2','font/woff2']};
+ const assets:Record<string,[string,string]>={'/':['index.html','text/html; charset=utf-8'],'/app.js':['app.js','text/javascript; charset=utf-8'],'/style.css':['style.css','text/css; charset=utf-8'],'/features.js':['features.js','text/javascript; charset=utf-8'],'/dashboard.js':['dashboard.js','text/javascript; charset=utf-8'],'/dark.css':['dark.css','text/css; charset=utf-8'],'/icons.js':['icons.js','text/javascript; charset=utf-8'],'/i18n.js':['i18n.js','text/javascript; charset=utf-8'],'/theme.js':['theme.js','text/javascript; charset=utf-8'],'/NotoSansBengali-Regular.ttf':['NotoSansBengali-Regular.ttf','font/ttf'],'/NotoSansBengali-Bold.ttf':['NotoSansBengali-Bold.ttf','font/ttf'],'/fonts/Inter-latin.woff2':['fonts/Inter-latin.woff2','font/woff2'],'/fonts/Inter-latin-ext.woff2':['fonts/Inter-latin-ext.woff2','font/woff2']};
  const buckets=new Map<string,{at:number,n:number}>();
  web.addHook('onRequest',async(r,reply)=>{
   reply.header('cache-control','no-store').header('referrer-policy','no-referrer').header('x-content-type-options','nosniff').header('x-frame-options','DENY').header('content-security-policy',"default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src 'self'; media-src 'self' blob:; frame-ancestors 'none'; base-uri 'none'; form-action 'self'").header('permissions-policy','microphone=(self), camera=(), geolocation=()');

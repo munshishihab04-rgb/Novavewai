@@ -6,7 +6,7 @@ async function harness(width:number,prefs:any){
  const browser=await chromium.launch({headless:true,args:['--no-sandbox']});const page=await browser.newPage({viewport:{width,height:844}});page.on('pageerror',e=>console.log('PAGEERROR',e.message));const sent:any[]=[];let state={language:{...prefs}};
  await page.route('https://nova.test/**',async route=>{const u=new URL(route.request().url());
   if(u.pathname==='/')return route.fulfill({body:await readFile('public/index.html','utf8'),contentType:'text/html'});
-  for(const f of ['app.js','style.css','dark.css','icons.js','features.js','dashboard.js','i18n.js'])if(u.pathname==='/'+f)return route.fulfill({body:await readFile('public/'+f,'utf8'),contentType:f.endsWith('.js')?'text/javascript':'text/css'});
+  for(const f of ['app.js','style.css','dark.css','icons.js','features.js','dashboard.js','i18n.js','theme.js'])if(u.pathname==='/'+f)return route.fulfill({body:await readFile('public/'+f,'utf8'),contentType:f.endsWith('.js')?'text/javascript':'text/css'});
   if(u.pathname.endsWith('.ttf'))return route.fulfill({body:await readFile('public/NotoSansBengali-Regular.ttf'),contentType:'font/ttf'});
   if(!u.pathname.startsWith('/api/'))return route.fulfill({status:404,body:'{}'});
   const p=u.pathname.slice(4);const body=route.request().postDataJSON();sent.push({path:p,method:route.request().method(),body});
@@ -36,7 +36,7 @@ test('language settings panel: three independent selects, saving PUTs only the c
  const {browser,page,sent}=await harness(390,{ui:'it',chat:'auto',voice:'auto'});try{
   await page.locator('.dash-header').getByRole('button',{name:'Apri menu'}).click();await page.waitForSelector('#drawer[open]');
   await page.locator('#drawer').getByRole('button',{name:/Lingua e voce/}).click();await page.waitForSelector('#languagedialog[open]');
-  const d=page.locator('#languagedialog');assert.equal(await d.locator('select').count(),3);
+  const d=page.locator('#languagedialog');assert.equal(await d.locator('select').count(),4,'3 language selects + appearance');assert.equal(await d.locator('#uilang,#chatlang,#voicelang').count(),3);
   for(const sel of ['#uilang','#chatlang','#voicelang']){const opts=await page.locator(sel+' option').allInnerTexts();assert.ok(opts.some(o=>/Banglish/.test(o)),sel+' offers Banglish');}
   assert.equal(await page.locator('#uilang option').count(),4,'ui has no auto');assert.equal(await page.locator('#chatlang option').count(),5);
   await page.selectOption('#chatlang','bn');await page.selectOption('#uilang','en');await d.getByRole('button',{name:'Salva'}).click();

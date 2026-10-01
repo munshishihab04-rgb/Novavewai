@@ -4,7 +4,7 @@ async function harness(width:number){
  const browser=await chromium.launch({headless:true,args:['--no-sandbox']});const page=await browser.newPage({viewport:{width,height:844}});page.on('pageerror',e=>console.log('PAGEERROR',e.message));const sent:any[]=[];
  await page.route('https://nova.test/**',async route=>{const u=new URL(route.request().url());
   if(u.pathname==='/')return route.fulfill({body:await readFile('public/index.html','utf8'),contentType:'text/html'});
-  for(const f of ['app.js','style.css','dark.css','icons.js','features.js','dashboard.js','i18n.js'])if(u.pathname==='/'+f)return route.fulfill({body:await readFile('public/'+f,'utf8'),contentType:f.endsWith('.js')?'text/javascript':'text/css'});
+  for(const f of ['app.js','style.css','dark.css','icons.js','features.js','dashboard.js','i18n.js','theme.js'])if(u.pathname==='/'+f)return route.fulfill({body:await readFile('public/'+f,'utf8'),contentType:f.endsWith('.js')?'text/javascript':'text/css'});
   if(!u.pathname.startsWith('/api/'))return route.fulfill({status:404,body:'{}'});
   const p=u.pathname.slice(4);const body=route.request().postDataJSON();sent.push({path:p,method:route.request().method(),body});
   if(p==='/workspace')return route.fulfill({json:{conversations:[{id:CONV,title:'Turni settimana'},{id:'22222222-2222-4222-8222-222222222222',title:'Lettera al Comune'}],artifacts:[],runs:[]}});
