@@ -28,8 +28,9 @@ test('premium ui: Inter self-hosted, single icon family, no text glyph icons',as
   for(const k of ['sidebar','timer','search','languages','sparkles','paperclip','mic','send','plus','chat','doc','logout','download','book','sliders','x','user','edit','folder'])assert.ok(glyphs[k],'icon missing: '+k);
  }finally{await web.close();await db.close()}
 });
+const glyphPath=(html:string,id:string)=>{const m=html.match(new RegExp(`<symbol id="i-${id}" viewBox="0 0 24 24"><path d="([^"]+)"`));return m?m[1]:null};
 test('premium ui: drawer fits a phone, rows on a 48px grid, icons share one edge/size, account pinned; dashboard hides see-all on single-card rails',async()=>{
- const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
+ const browser=await chromium.launch({headless:true,args:['--no-sandbox']});const html=await readFile('public/index.html','utf8');
  try{
   const page=await browser.newPage({viewport:{width:390,height:844}});const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
   const convs=Array.from({length:12},(_,i)=>({id:'c'+i,title:'Conversazione numero '+(i+1)+' con un titolo abbastanza lungo',updated_at:new Date().toISOString()}));
@@ -56,6 +57,8 @@ test('premium ui: drawer fits a phone, rows on a 48px grid, icons share one edge
   const clear=await page.evaluate(()=>{const last=[...document.querySelectorAll('.dash-section')].at(-1)!;const dock=document.querySelector('.dash-composer-dock')!.getBoundingClientRect();const card=last.querySelector('.dash-card')!.getBoundingClientRect();const rail=document.querySelector('.dash-rail')!;return{clear:card.bottom<=dock.top,single:rail.querySelectorAll('.dash-card').length===1,cardW:rail.querySelector('.dash-card')!.getBoundingClientRect().width,railW:rail.getBoundingClientRect().width-34}});
   assert.ok(clear.clear,'last rail hidden under the composer at scroll end');if(clear.single)assert.ok(clear.cardW>=clear.railW-2,'single model card should span the rail: '+clear.cardW+' vs '+clear.railW);
   await page.evaluate(()=>{document.querySelector('#nova-dashboard')!.scrollTop=0});
+  // the menu button shows the same glyph on the dashboard and in the chat shell (one action, one icon)
+  const dashMenu=await page.$eval('.dash-menu svg path',n=>n.getAttribute('d'));const chatMenu=await page.$eval('.menubutton svg use',n=>n.getAttribute('href'));assert.equal(chatMenu,'#i-menu');assert.equal(dashMenu,glyphPath(html,'menu'),'dashboard menu icon differs from chat menu icon');
   // header controls share one shape family (same radius)
   const radii=await page.$$eval('.dash-header button',n=>n.filter(b=>(b as HTMLElement).offsetParent).map(b=>getComputedStyle(b).borderRadius));assert.ok(new Set(radii).size<=1,'header control radii: '+radii);
   await page.locator('.dash-menu').click();await page.waitForSelector('#drawer[open]');await page.waitForTimeout(150);
