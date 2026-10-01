@@ -4,7 +4,7 @@ import {buildApp,migrate} from '../src/app.ts';import {buildWeb} from '../src/we
 // (Android reads https://host/.well-known/assetlinks.json, never under /nova). Fingerprints come from a file in the data dir.
 test('manifest + icons served under basePath with correct scope/start_url; assetlinks at origin root from data-dir file; absent file → 404 (never an empty/fabricated statement)',async()=>{
  const db=await database();await migrate(db.pool);const core=buildApp(db.pool);const dir=await mkdtemp(join(tmpdir(),'nova-al-'));
- const web=await buildWeb(core,db.pool,{basePath:'/nova',assetLinksFile:join(dir,'assetlinks.json')});const base=await web.listen({port:0,host:'127.0.0.1'});
+ const web=await buildWeb(core,db.pool,{basePath:'/nova',assetLinksFile:join(dir,'assetlinks.json'),releasesDir:dir});const base=await web.listen({port:0,host:'127.0.0.1'});
  try{
   const m=await fetch(base+'/nova/manifest.webmanifest');assert.equal(m.status,200);assert.match(m.headers.get('content-type')!,/application\/manifest\+json/);const j=await m.json();
   assert.equal(j.start_url,'/nova/');assert.equal(j.scope,'/nova/');assert.equal(j.id,'/nova/');assert.equal(j.display,'standalone');assert.equal(j.lang,'it');assert.ok(j.icons.some((i:any)=>i.purpose==='maskable'));
@@ -13,6 +13,10 @@ test('manifest + icons served under basePath with correct scope/start_url; asset
   assert.equal((await fetch(base+'/.well-known/assetlinks.json')).status,404,'no fingerprint file → 404');
   await writeFile(join(dir,'assetlinks.json'),JSON.stringify([{relation:['delegate_permission/common.handle_all_urls'],target:{namespace:'android_app',package_name:'it.licenzpol.nova',sha256_cert_fingerprints:['AA:BB']}}]));
   const al=await fetch(base+'/.well-known/assetlinks.json');assert.equal(al.status,200);assert.match(al.headers.get('content-type')!,/application\/json/);assert.equal((await al.json())[0].target.package_name,'it.licenzpol.nova');
+  assert.equal((await fetch(base+'/nova/download/nova.apk')).status,404,'no release yet → 404');
+  await writeFile(join(dir,'nova-latest.apk'),Buffer.from('PK\u0003\u0004fake'));await writeFile(join(dir,'nova-latest.apk.sha256'),'abc  nova-latest.apk\n');
+  const apk=await fetch(base+'/nova/download/nova.apk');assert.equal(apk.status,200);assert.match(apk.headers.get('content-type')!,/android\.package-archive/);assert.match(apk.headers.get('content-disposition')!,/nova\.apk/);assert.equal((await apk.arrayBuffer()).byteLength,8);
+  assert.equal((await (await fetch(base+'/nova/download/nova.apk.sha256')).text()).trim(),'abc  nova-latest.apk');
   // root-mounted default keeps serving the manifest at /manifest.webmanifest with scope '/'
  }finally{await web.close();await core.close();await db.close()}
  const web2=await buildWeb(core,db.pool,{});const base2=await web2.listen({port:0,host:'127.0.0.1'});try{const j=await (await fetch(base2+'/manifest.webmanifest')).json();assert.equal(j.scope,'/');assert.equal(j.start_url,'/')}finally{await web2.close()}
