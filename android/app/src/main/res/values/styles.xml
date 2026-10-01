@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <style name="Theme.Nova" parent="android:Theme.Material.NoActionBar"><item name="android:windowBackground">@color/nova_bg</item></style>
+  <style name="Theme.Nova.Launcher" parent="Theme.Nova"><item name="android:windowBackground">@color/nova_bg</item></style>
+</resources>

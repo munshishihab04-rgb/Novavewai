@@ -30,14 +30,15 @@ export function webDataRoutes(app:FastifyInstance,pool:Pool){
   return {conversations,artifacts,runs,limit:100};
  }));
 }
-export interface WebOptions{nativeVoice?:boolean;/** Self-service registration; default open. Env NOVA_PUBLIC_REGISTRATION=off closes it. */registration?:boolean;/** Mount everything under a URL prefix (e.g. '/nova' for licenzpol.it/nova). Default '' = root. Static files are rewritten at serve time so the browser only ever sees prefixed URLs. */basePath?:string}
+export interface WebOptions{nativeVoice?:boolean;/** Self-service registration; default open. Env NOVA_PUBLIC_REGISTRATION=off closes it. */registration?:boolean;/** Mount everything under a URL prefix (e.g. '/nova' for licenzpol.it/nova). Default '' = root. Static files are rewritten at serve time so the browser only ever sees prefixed URLs. */basePath?:string;/** Digital Asset Links statement file (JSON) served at /.well-known/assetlinks.json for the Android TWA. Absent/unreadable → 404. */assetLinksFile?:string}
 export const registrationOpenFromEnv=(env:Record<string,string|undefined>=process.env)=>env.NOVA_PUBLIC_REGISTRATION?.trim().toLowerCase()!=='off';
 export async function buildWeb(core:FastifyInstance,pool:Pool,options:WebOptions={}){
  const web=Fastify({logger:false,bodyLimit:5700000,trustProxy:false});
  const bp=(options.basePath??'').replace(/\/+$/,'');if(bp&&!/^\/[a-z0-9_-]+$/.test(bp))throw Error('basePath must look like /name');
  // Rewrite root-absolute references inside our own static files to the prefixed form. Only our known patterns, never user content.
  const prefixed=(file:string,text:string)=>{if(!bp)return text;
-  if(file.endsWith('.html'))return text.replace(/(href|src)="\/(?!\/)/g,`$1="${bp}/`).replace('<head>','<head><base href="'+bp+'/">');
+  // No <base> tag: CSP is base-uri 'none' on purpose; every reference is rewritten to an absolute prefixed path instead.
+  if(file.endsWith('.html'))return text.replace(/(href|src)="\/(?!\/)/g,`$1="${bp}/`);
   if(file.endsWith('.css'))return text.replace(/url\((['"]?)\/(?!\/)/g,`url($1${bp}/`);
   if(file.endsWith('.js'))return text.replace(/request\('\/api'\+p/g,`request('${bp}/api'+p`).replace(/(['"\\`])\/api\//g,`$1${bp}/api/`).replace(/(['"\\`])\/auth\//g,`$1${bp}/auth/`).replace(/(['"\\`])\/artifacts\//g,`$1${bp}/artifacts/`);
   return text};
@@ -57,8 +58,13 @@ export async function buildWeb(core:FastifyInstance,pool:Pool,options:WebOptions
   }
  });
  web.setErrorHandler((_e,_r,reply)=>reply.code(500).send({error:'request_failed'}));
- for(const [url,[file,type]] of Object.entries(assets))web.get(bp+(url==='/'&&bp?'/':url),async(_r,reply)=>{const bytes=await readFile(new URL('../public/'+file,import.meta.url));if(/\.(ttf|png|svg|ico|woff2?)$/.test(file))return reply.type(type).send(bytes);let text=bytes.toString();if(file==='index.html'&&options.nativeVoice)text=text.replace('</head>','<script src="/native.js" defer></script></head>');return reply.type(type).send(prefixed(file,text))});
+ for(const [url,[file,type]] of Object.entries(assets))web.get(bp+(url==='/'&&bp?'/':url),async(_r,reply)=>{const bytes=await readFile(new URL('../public/'+file,import.meta.url));if(/\.(ttf|png|svg|ico|woff2?)$/.test(file))return reply.type(type).send(bytes);let text=bytes.toString();if(file==='index.html')text=text.replace('</head>','<link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#121513"><link rel="apple-touch-icon" href="/icons/icon-192.png"></head>');if(file==='index.html'&&options.nativeVoice)text=text.replace('</head>','<script src="/native.js" defer></script></head>');return reply.type(type).send(prefixed(file,text))});
  if(bp)web.get(bp,async(_r,reply)=>reply.code(308).header('location',bp+'/').send());
+ // Installable PWA / TWA: manifest scoped to the mount path; icons are static PNGs.
+ web.get(bp+'/manifest.webmanifest',async(_r,reply)=>reply.type('application/manifest+json; charset=utf-8').send(JSON.stringify({id:bp+'/',name:'NOVA — Il tuo spazio',short_name:'Nova',description:'Assistente onesto per CV, documenti, lavoro e lingua — italiano, বাংলা, Banglish, English.',lang:'it',dir:'ltr',start_url:bp+'/',scope:bp+'/',display:'standalone',orientation:'portrait',background_color:'#121513',theme_color:'#121513',icons:[{src:bp+'/icons/icon-192.png',sizes:'192x192',type:'image/png'},{src:bp+'/icons/icon-512.png',sizes:'512x512',type:'image/png'},{src:bp+'/icons/maskable-512.png',sizes:'512x512',type:'image/png',purpose:'maskable'}]})));
+ for(const icon of ['icon-192.png','icon-512.png','maskable-512.png'])web.get(bp+'/icons/'+icon,async(_r,reply)=>reply.type('image/png').header('cache-control','public, max-age=86400').send(await readFile(new URL('../public/icons/'+icon,import.meta.url))));
+ // Digital Asset Links live at the ORIGIN root by spec, regardless of the mount path.
+ if(options.assetLinksFile)web.get('/.well-known/assetlinks.json',async(_r,reply)=>{try{const text=await readFile(options.assetLinksFile!,'utf8');JSON.parse(text);return reply.type('application/json').header('cache-control','public, max-age=3600').send(text)}catch{return reply.code(404).send({error:'not_found'})}});
  if(options.nativeVoice)web.get(bp+'/native.js',async(_r,reply)=>reply.type('text/javascript; charset=utf-8').send(prefixed('native.js',(await readFile(new URL('../staging/voice-files/public/native.js',import.meta.url))).toString())));
  const cookieToken=(r:any)=>{const s=String(r.headers.cookie??'').split(';').map((x:string)=>x.trim()).find((x:string)=>x.startsWith('__Host-nova='))?.slice(12);return s&&/^[A-Za-z0-9_-]{43}$/.test(s)?s:undefined};
  const sessionCookie=(token:string,seconds:number)=>`__Host-nova=${token}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=${seconds}`;

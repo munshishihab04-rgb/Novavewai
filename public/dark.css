@@ -82,3 +82,5 @@ body,#nova-dashboard,button,textarea,input,select{font-family:'Segoe UI','Noto S
 #welcome .welcomeactions{display:flex;gap:10px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}#welcome .welcomeactions button{margin:0;min-height:44px}
 #welcome .welcomeactions .primary{background:#245c43;color:#fff;border:0;border-radius:12px;padding:0 20px;font-weight:600}#welcome .welcomeactions .ghost{background:transparent;color:#c3cbc6;border:1px solid #2f3733;border-radius:12px;padding:0 14px}
 @media(max-width:420px){#welcome .welcome-langs{grid-template-columns:1fr}#welcome h2{font-size:21px}}
+
+svg.symbolsheet{display:none}

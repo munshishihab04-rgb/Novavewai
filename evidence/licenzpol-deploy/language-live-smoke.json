@@ -1,0 +1,23 @@
+{
+ "base": "https://licenzpol.it/nova",
+ "username": "smoke_4f15d4d8",
+ "firstVisitFlag": true,
+ "onboardingSaved": true,
+ "turn1": {
+  "pref": "bn",
+  "userLanguage": "it",
+  "status": "completed",
+  "reply": "আমি তোমার দৈনন্দিন কাজে সাহায্য করতে পারি: পরিষ্কারভাবে ফাইল/ডকুমেন্ট বানানো, CV তৈরি ও আপডেট করা, আর বর্তমান তথ্য ও চাকরির খোঁজ করা। আমি সবকিছু ধাপে ধাপে, একবারে এক প্রশ্ন করে করি, আর যেটা তুমি বলো শুধু সেটাই ব্যবহার করি—কিছুই বানিয়ে বলি না।",
+  "bengaliChars": 191,
+  "latinChars": 2
+ },
+ "turn2": {
+  "pref": "en",
+  "userLanguage": "banglish+it+en mixed",
+  "status": "completed",
+  "reply": "Yes — I can help you build your CV step by step, one question at a time, and I’ll save only the facts you give me.  \n\nWhat is your full name exactly as you want it to appear on the CV?",
+  "bengaliChars": 0,
+  "latinChars": 135
+ },
+ "result": "ok"
+}

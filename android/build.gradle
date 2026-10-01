@@ -1,0 +1,2 @@
+// NOVA Android wrapper — Trusted Web Activity over https://licenzpol.it/nova (no WebView, no JS bridge, no analytics).
+plugins { id("com.android.application") version "8.7.3" apply false }

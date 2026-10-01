@@ -25,3 +25,11 @@ shot-tmp.ts
 dbg-tmp.ts
 size-tmp.ts
 *-tmp.ts
+
+# android build outputs (keystore lives in the data dir, never here)
+android/.gradle/
+android/app/build/
+android/build/
+android/local.properties
+*.jks
+*.keystore

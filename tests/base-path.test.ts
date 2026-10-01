@@ -5,7 +5,7 @@ import {buildApp,bootstrap,migrate} from '../src/app.ts';import {buildWeb} from 
 async function up(basePath:string){const db=await database();await migrate(db.pool);const user=await bootstrap(db.pool);const core=buildApp(db.pool);const web=await buildWeb(core,db.pool,{basePath,nativeVoice:true});const base=await web.listen({port:0,host:'127.0.0.1'});return {db,core,web,base,user}}
 test('basePath=/nova: assets, html references, auth, api and native.js are served under the prefix; root paths 404; no absolute "/x" references leak in HTML/CSS/JS',async()=>{
  const {db,core,web,base}=await up('/nova');try{
-  const html=await (await fetch(base+'/nova/')).text();assert.match(html,/<base href="\/nova\/">/);assert.ok(!/(href|src)="\/(?!nova\/)/.test(html),'no root-absolute asset refs');assert.match(html,/src="\/nova\/native\.js"/);
+  const html=await (await fetch(base+'/nova/')).text();assert.ok(!html.includes('<base '),'no <base>: CSP base-uri none');assert.ok(!/(href|src)="\/(?!nova\/)/.test(html),'no root-absolute asset refs');assert.match(html,/src="\/nova\/native\.js"/);
   for(const f of ['app.js','i18n.js','dark.css','NotoSansBengali-Regular.ttf','native.js'])assert.equal((await fetch(base+'/nova/'+f)).status,200,f);
   const css=await (await fetch(base+'/nova/dark.css')).text();assert.ok(!/url\('\/(?!nova\/)/.test(css),'font urls rewritten');assert.match(css,/url\('\/nova\/NotoSansBengali-Regular\.ttf'\)/);
   const js=await (await fetch(base+'/nova/app.js')).text();assert.ok(!/request\('\/api'\+p/.test(js),'api base must be prefixed');assert.match(js,/\/nova\/api/);

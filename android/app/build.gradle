@@ -1,0 +1,33 @@
+plugins { id("com.android.application") }
+def keystoreFile = System.getenv("NOVA_KEYSTORE")
+android {
+  namespace "it.licenzpol.nova"
+  compileSdk 35
+  defaultConfig {
+    applicationId "it.licenzpol.nova"
+    minSdk 24
+    targetSdk 35
+    versionCode 1
+    versionName "0.1.0"
+    // Trusted Web Activity target. Host/path are also the Digital Asset Links subject.
+    manifestPlaceholders = [hostName: "licenzpol.it", launchPath: "/nova/", assetStatements: '[{"relation":["delegate_permission/common.handle_all_urls"],"target":{"namespace":"web","site":"https://licenzpol.it"}}]']
+  }
+  signingConfigs {
+    release {
+      if (keystoreFile) {
+        storeFile file(keystoreFile)
+        storePassword System.getenv("NOVA_KEYSTORE_PASSWORD")
+        keyAlias System.getenv("NOVA_KEY_ALIAS") ?: "nova"
+        keyPassword System.getenv("NOVA_KEY_PASSWORD")
+      }
+    }
+  }
+  buildTypes {
+    release {
+      minifyEnabled false
+      if (keystoreFile) signingConfig signingConfigs.release
+    }
+  }
+  compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
+}
+dependencies { implementation "com.google.androidbrowserhelper:androidbrowserhelper:2.5.0" }

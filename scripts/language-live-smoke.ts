@@ -2,11 +2,12 @@
 // chat turn in Italian must be answered in Bengali script → switch pref to en → mixed-language turn answered in English.
 // Writes evidence/onboarding/language-live-smoke.json. Purge the account afterwards with scripts/purge-smoke-accounts.ts.
 import {randomBytes} from 'node:crypto';import {writeFile} from 'node:fs/promises';import assert from 'node:assert/strict';
-const base=process.env.TRIAL_URL!;if(!/^https:\/\/[a-z-]+\.trycloudflare\.com$/.test(base))throw Error('origin');
+// TRIAL_URL may include a mount path (https://licenzpol.it/nova); the Origin header must be the bare origin.
+const base=process.env.TRIAL_URL!.replace(/\/$/,'');if(!/^https:\/\/[a-z0-9.-]+(\/[a-z0-9_-]+)?$/.test(base))throw Error('origin');const origin=new URL(base).origin;
 const username='smoke_'+randomBytes(4).toString('hex'),password='Smoke-'+randomBytes(9).toString('base64url');
-let cookie='';const H=()=>({'content-type':'application/json','x-nova-request':'1',origin:base,cookie});
+let cookie='';const H=()=>({'content-type':'application/json','x-nova-request':'1',origin,cookie});
 async function call(path:string,body?:any,method='POST'){const r=await fetch(base+(path.startsWith('/auth/')?'':'/api')+path,{method:body?method:'GET',redirect:'manual',headers:{...H(),...(body?{'idempotency-key':randomBytes(8).toString('hex')}:{})},body:body?JSON.stringify(body):undefined});const sc=r.headers.get('set-cookie');if(sc&&/__Host-nova=/.test(sc))cookie=sc.split(';')[0];const txt=await r.text();let j:any;try{j=JSON.parse(txt)}catch{j=txt}return {status:r.status,body:j}}
-const out:Record<string,unknown>={base,username};
+const out:Record<string,unknown>={base,username};const evidenceDir=process.env.EVIDENCE_DIR||'evidence/onboarding';
 const bengali=(s:string)=>(s.match(/[\u0980-\u09FF]/g)||[]).length,latin=(s:string)=>(s.match(/[A-Za-zÀ-ÿ]/g)||[]).length;
 async function turn(conv:string,text:string){const m0=await call(`/conversations/${conv}/messages`);const items0=m0.body.items||m0.body||[];const baseSequence=items0.length?Math.max(...items0.map((x:any)=>x.sequence||0)):0;const run=await call(`/conversations/${conv}/turns`,{baseSequence,text});assert.equal(run.status,201,JSON.stringify(run.body));const id=run.body.id;for(let i=0;i<60;i++){await new Promise(r=>setTimeout(r,2000));const st=await call(`/runs/${id}`);if(['completed','waiting_user','failed','cancelled','outcome_unknown'].includes(st.body.status)){const m=await call(`/conversations/${conv}/messages`);const items=m.body.items||m.body||[];const last=[...items].reverse().find((x:any)=>x.role==='assistant');return {status:st.body.status,reply:last?.text||''}}}throw Error('run timeout')}
 try{
@@ -22,4 +23,4 @@ try{
  assert.ok(/\b(the|you|your|can|help|CV)\b/i.test(t2.reply),'looks English');
  out.result='ok';
 }catch(e){out.result='fail';out.error=String(e).slice(0,600);out.cookieSet=!!cookie}
-await writeFile('evidence/onboarding/language-live-smoke.json',JSON.stringify(out,null,1));console.log(JSON.stringify(out,null,1));if(out.result!=='ok')process.exit(1);
+await writeFile(evidenceDir+'/language-live-smoke.json',JSON.stringify(out,null,1));console.log(JSON.stringify(out,null,1));if(out.result!=='ok')process.exit(1);
