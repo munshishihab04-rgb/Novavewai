@@ -3,14 +3,14 @@
 // No browser transcript is ever posted as user or assistant text.
 let nativeVoiceId=null,nativeVoiceConversation=null,nativeVoicePoll=null;
 const releaseVoiceMedia=stopVoice;
-stopVoice=function(){const id=nativeVoiceId;nativeVoiceId=null;clearTimeout(nativeVoicePoll);releaseVoiceMedia();if(id)void api('/voice/sessions/'+id+'/stop',{},'POST',crypto.randomUUID()).catch(()=>notice('Audio spento. Chiusura server non confermata; scade automaticamente.'));if(nativeVoiceConversation)void openConversation(nativeVoiceConversation).catch(()=>{});};
+stopVoice=function(){const id=nativeVoiceId,conversation=nativeVoiceConversation;nativeVoiceId=null;nativeVoiceConversation=null;clearTimeout(nativeVoicePoll);releaseVoiceMedia();if(id)void api('/voice/sessions/'+id+'/stop',{},'POST',crypto.randomUUID()).catch(()=>notice('Audio spento. Chiusura server non confermata; scade automaticamente.'));if(conversation===current&&!busy&&!dirty){const viewEpoch=epoch,mediaEpoch=voiceEpoch;void messages(conversation).then(list=>{if(current===conversation&&epoch===viewEpoch&&voiceEpoch===mediaEpoch&&!busy&&!dirty)renderMessages(list);}).catch(()=>{});}};
 voiceScope.textContent='Stessa conversazione e strumenti della chat · turni salvati';
 voiceHint.textContent='Parla con Nova e ritrova qui il lavoro salvato.';
 voiceStart.onclick=async()=>{
  const e=++voiceEpoch;voiceStart.disabled=true;voiceLanguage.disabled=true;setVoiceState('connecting','Consenti l’accesso al microfono');
  try{
   if(dirty)throw Error('unsaved');
-  if(!current){const c=await api('/conversations',{title:'Conversazione vocale'},'POST',crypto.randomUUID());if(e!==voiceEpoch)return;current=c.id;sequence=0;task=null;run=null;}
+  if(!current){const viewEpoch=epoch;const c=await api('/conversations',{title:'Conversazione vocale'},'POST',crypto.randomUUID());if(e!==voiceEpoch)return;if(viewEpoch!==epoch||current){stopVoice();return;}current=c.id;sequence=0;task=null;run=null;mode('work');$('#messages').replaceChildren();$('#title').textContent=c.title||'Conversazione vocale';$('#crumb').textContent=$('#title').textContent;}
   nativeVoiceConversation=current;const conversation=current;
   const stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}});if(e!==voiceEpoch){stream.getTracks().forEach(t=>t.stop());return}voiceStream=stream;
   const peer=new RTCPeerConnection();voicePeer=peer;stream.getTracks().forEach(t=>peer.addTrack(t,stream));peer.ontrack=event=>{if(e!==voiceEpoch)return;voiceAudio.srcObject=event.streams[0];voiceAudio.play().catch(()=>{if(e===voiceEpoch)voicePlayback.hidden=false})};
@@ -25,7 +25,7 @@ voiceStart.onclick=async()=>{
   throw err}
  finally{sessionStorage.removeItem('nova.voice.request')}
   if(e!==voiceEpoch){void api('/voice/sessions/'+result.id+'/stop',{},'POST',crypto.randomUUID()).catch(()=>{});return}
-  nativeVoiceId=result.id;await peer.setRemoteDescription({type:'answer',sdp:result.sdp});voiceTimer=setTimeout(stopVoice,result.maxSeconds*1000);void syncNativeVoice(e,conversation,result.id);
+  nativeVoiceId=result.id;await peer.setRemoteDescription({type:'answer',sdp:result.sdp});if(e!==voiceEpoch)return;voiceTimer=setTimeout(stopVoice,result.maxSeconds*1000);void syncNativeVoice(e,conversation,result.id);
  }catch(err){if(e===voiceEpoch){stopVoice();setVoiceState('error','Voce non avviata');voiceHint.textContent='Nessun risultato inventato. Puoi continuare nella chat.'}}
 };
 async function syncNativeVoice(e,conversation,id){if(e!==voiceEpoch)return;try{

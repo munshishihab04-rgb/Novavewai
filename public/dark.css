@@ -88,6 +88,12 @@ body,#nova-dashboard,button,textarea,input,select{font-family:'Inter','Noto Sans
 
 svg.symbolsheet{display:none}
 
+/* Fluid drawer: finger tracking never animates layout or blocks vertical scroll. */
+#drawer{--drawer-progress:0;transform:translate3d(calc((var(--drawer-progress) - 1)*100%),0,0);transition:transform .24s cubic-bezier(.2,.8,.2,1);overscroll-behavior:contain;touch-action:pan-y}
+#drawer::backdrop{opacity:var(--drawer-progress);transition:opacity .24s ease}
+#drawer.dragging,#drawer.dragging::backdrop{transition:none}
+#drawer>*{flex-shrink:0}#drawer .recent{flex-shrink:1}
+@media(prefers-reduced-motion:reduce){#drawer,#drawer::backdrop{transition:none}}
 /* ── Premium shell: Inter type scale, one icon family, organised drawer ─────────────────── */
 body,#nova-dashboard,button,textarea,input,select{font-feature-settings:'cv11','ss01';-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 .nova-icon svg,#drawer svg,.dash-menu svg,.menubutton svg{stroke-width:1.75}
@@ -107,7 +113,7 @@ body,#nova-dashboard,button,textarea,input,select{font-feature-settings:'cv11','
 #drawer .drawersettings button span,#drawer .nav button span{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;line-height:1.2}
 #drawer .drawersettings button small,#drawer .draweraccount button small{display:block;width:auto;padding:0;margin:0;font-size:12px;color:var(--c-130);font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:44%;text-align:right}
 #drawer .label{margin:10px 0 2px;padding:0 12px;font-size:11px;font-weight:600;letter-spacing:.08em;color:var(--c-160)}
-#drawer .recent{margin:0;flex:1 1 auto;min-height:0;overflow:auto;display:flex;flex-direction:column}
+#drawer .recent{margin:0;flex:1 1 auto;min-height:88px;overflow:auto;display:flex;flex-direction:column}
 #drawer .recent #drawerrecent{display:flex;flex-direction:column;gap:2px;overflow:auto}
 #drawer .recent button{min-height:40px;padding:0 12px 0 46px;font-size:14px;font-weight:400;color:var(--c-161);border-radius:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;position:relative}
 #drawer .recent button::before{content:'';position:absolute;left:19px;top:50%;width:6px;height:6px;margin-top:-3px;border-radius:50%;background:var(--c-162)}
