@@ -28,6 +28,7 @@ const novaIcons={
  waveform:'<svg viewBox="0 0 24 24"><path d="M3 10v4M7 7v10M11 4v16M15 8v8M19 10v4"/></svg>',
  send:'<svg viewBox="0 0 24 24"><path d="M5 12 20 5l-4 15-4-6Z"/><path d="m12 14 8-9"/></svg>',
  paperclip:'<svg viewBox="0 0 24 24"><path d="m21 11.5-8.6 8.6a5 5 0 0 1-7-7l8.8-8.8a3.3 3.3 0 0 1 4.7 4.7l-8.8 8.7a1.7 1.7 0 0 1-2.4-2.3L15.5 7.7"/></svg>',
+ phone:'<svg viewBox="0 0 24 24"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M11 18h2"/></svg>',
  download:'<svg viewBox="0 0 24 24"><path d="M12 4v11m-5-4 5 5 5-5M4 19h16"/></svg>',
  logout:'<svg viewBox="0 0 24 24"><path d="M9 20H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h3M15 16l4-4-4-4M19 12H9"/></svg>',
  arrow:'<svg viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>',

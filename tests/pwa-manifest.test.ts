@@ -1,5 +1,8 @@
-import test from 'node:test';import assert from 'node:assert/strict';import {mkdtemp,writeFile} from 'node:fs/promises';import {tmpdir} from 'node:os';import {join} from 'node:path';
+import test from 'node:test';import assert from 'node:assert/strict';import {mkdtemp,writeFile,rm,symlink} from 'node:fs/promises';import {qrMatrix} from '../src/qr.ts';import {request as httpRequest} from 'node:http';import {tmpdir} from 'node:os';import {join} from 'node:path';
 import {buildApp,migrate} from '../src/app.ts';import {buildWeb} from '../src/web.ts';import {database} from './helpers.ts';
+// Parse the server's crispEdges SVG (one 1×1 path per dark module, 4-module quiet zone) back to a boolean matrix.
+function svgToMatrix(svg:string){const s=Number(/viewBox="0 0 (\d+) /.exec(svg)![1]),n=s-8;const m=Array.from({length:n},()=>new Array(n).fill(false));for(const [,x,y] of svg.matchAll(/M(\d+) (\d+)h1v1h-1z/g))m[Number(y)-4][Number(x)-4]=true;return m}
+function rawGet(base:string,path:string,host:string){return new Promise<{status:number,headers:Record<string,any>,body:string}>((resolve,reject)=>{const u=new URL(base);const req=httpRequest({host:u.hostname,port:u.port,path,method:'GET',headers:{host},setHost:false},res=>{let body='';res.on('data',(c:Buffer)=>body+=c);res.on('end',()=>resolve({status:res.statusCode!,headers:res.headers,body}))});req.on('error',reject);req.end()})}
 // Installable PWA + Trusted Web Activity support: manifest and icons under the mount path, Digital Asset Links at the ORIGIN root
 // (Android reads https://host/.well-known/assetlinks.json, never under /nova). Fingerprints come from a file in the data dir.
 test('manifest + icons served under basePath with correct scope/start_url; assetlinks at origin root from data-dir file; absent file → 404 (never an empty/fabricated statement)',async()=>{
@@ -14,9 +17,21 @@ test('manifest + icons served under basePath with correct scope/start_url; asset
   await writeFile(join(dir,'assetlinks.json'),JSON.stringify([{relation:['delegate_permission/common.handle_all_urls'],target:{namespace:'android_app',package_name:'it.licenzpol.nova',sha256_cert_fingerprints:['AA:BB']}}]));
   const al=await fetch(base+'/.well-known/assetlinks.json');assert.equal(al.status,200);assert.match(al.headers.get('content-type')!,/application\/json/);assert.equal((await al.json())[0].target.package_name,'it.licenzpol.nova');
   assert.equal((await fetch(base+'/nova/download/nova.apk')).status,404,'no release yet → 404');
+  assert.deepEqual(await (await fetch(base+'/nova/download/app.json')).json(),{available:false},'no release → metadata says unavailable, never fabricated');
+  assert.equal((await fetch(base+'/nova/download/qr.svg')).status,404,'no release → no QR');
   await writeFile(join(dir,'nova-latest.apk'),Buffer.from('PK\u0003\u0004fake'));await writeFile(join(dir,'nova-latest.apk.sha256'),'abc  nova-latest.apk\n');
   const apk=await fetch(base+'/nova/download/nova.apk');assert.equal(apk.status,200);assert.match(apk.headers.get('content-type')!,/android\.package-archive/);assert.match(apk.headers.get('content-disposition')!,/nova\.apk/);assert.equal((await apk.arrayBuffer()).byteLength,8);
   assert.equal((await (await fetch(base+'/nova/download/nova.apk.sha256')).text()).trim(),'abc  nova-latest.apk');
+  // metadata: size from the file, sha256 only when the checksum file holds a real digest, version from a nova-<v>-<code>.apk symlink target
+  let meta=await (await fetch(base+'/nova/download/app.json')).json();assert.equal(meta.available,true);assert.equal(meta.bytes,8);assert.equal(meta.sha256,null,'"abc" is not a digest');assert.equal(meta.version,null,'plain file, not a versioned symlink');assert.equal(meta.package,'it.licenzpol.nova');
+  await rm(join(dir,'nova-latest.apk'));await writeFile(join(dir,'nova-0.1.0-1.apk'),Buffer.from('PK\u0003\u0004fake2'));await symlink('nova-0.1.0-1.apk',join(dir,'nova-latest.apk'));await writeFile(join(dir,'nova-latest.apk.sha256'),'1378eb8e3609356a899e5ee89c895d1fb786bcbed34875d2234db28198103243  /opt/x/nova-0.1.0-1.apk\n');
+  meta=await (await fetch(base+'/nova/download/app.json')).json();assert.equal(meta.version,'0.1.0');assert.equal(meta.versionCode,1);assert.equal(meta.sha256,'1378eb8e3609356a899e5ee89c895d1fb786bcbed34875d2234db28198103243');assert.equal(meta.bytes,9);
+  // QR encodes the PUBLIC https URL built from the request Host + mount path (what a phone must open), not the loopback listener
+  // fetch() silently drops a custom Host header, so use a raw request to impersonate the public host behind the proxy.
+  const qr=await rawGet(base,'/nova/download/qr.svg','licenzpol.it');assert.equal(qr.status,200);assert.match(qr.headers['content-type']!,/image\/svg\+xml/);assert.match(qr.body,/^<svg /);
+  assert.deepEqual(svgToMatrix(qr.body),qrMatrix('https://licenzpol.it/nova/download/nova.apk'),'served SVG is the matrix of the public URL');
+  assert.notDeepEqual(svgToMatrix(qr.body),qrMatrix(base+'/nova/download/nova.apk'),'not the loopback listener URL');
+  assert.equal((await rawGet(base,'/nova/download/qr.svg','evil host;x')).status,400,'malformed host is refused, never encoded');
   // root-mounted default keeps serving the manifest at /manifest.webmanifest with scope '/'
  }finally{await web.close();await core.close();await db.close()}
  const web2=await buildWeb(core,db.pool,{});const base2=await web2.listen({port:0,host:'127.0.0.1'});try{const j=await (await fetch(base2+'/manifest.webmanifest')).json();assert.equal(j.scope,'/');assert.equal(j.start_url,'/')}finally{await web2.close()}

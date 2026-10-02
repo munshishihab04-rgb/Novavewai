@@ -1,7 +1,8 @@
 import Fastify, { type FastifyInstance } from 'fastify';
 import type { Pool } from 'pg';
 import { randomBytes } from 'node:crypto';
-import { readFile } from 'node:fs/promises';
+import { readFile, readlink, stat } from 'node:fs/promises';
+import { qrSvg } from './qr.ts';
 import { authenticatedOwner, fail, hash, transaction } from './app.ts';
 import { Throttle, loginAccount, registerAccount, SESSION_SECONDS } from './accounts.ts';
 import { cvCard } from './cv-schema.ts';
@@ -64,8 +65,18 @@ export async function buildWeb(core:FastifyInstance,pool:Pool,options:WebOptions
  web.get(bp+'/manifest.webmanifest',async(_r,reply)=>reply.type('application/manifest+json; charset=utf-8').send(JSON.stringify({id:bp+'/',name:'NOVA — Il tuo spazio',short_name:'Nova',description:'Assistente onesto per CV, documenti, lavoro e lingua — italiano, বাংলা, Banglish, English.',lang:'it',dir:'ltr',start_url:bp+'/',scope:bp+'/',display:'standalone',orientation:'portrait',background_color:'#121513',theme_color:'#121513',icons:[{src:bp+'/icons/icon-192.png',sizes:'192x192',type:'image/png'},{src:bp+'/icons/icon-512.png',sizes:'512x512',type:'image/png'},{src:bp+'/icons/maskable-512.png',sizes:'512x512',type:'image/png',purpose:'maskable'}]})));
  for(const icon of ['icon-192.png','icon-512.png','maskable-512.png'])web.get(bp+'/icons/'+icon,async(_r,reply)=>reply.type('image/png').header('cache-control','public, max-age=86400').send(await readFile(new URL('../public/icons/'+icon,import.meta.url))));
  // Android app download: the signed APK lives in the data dir (never in git); served verbatim with its checksum.
+ // `/download/app.json` describes the current release (size, sha256, version from the symlink target) so the UI can show
+ // the link/QR only when a build actually exists; `/download/qr.svg` encodes the public download URL for desktop visitors.
+ const releaseInfo=async()=>{const dir=options.releasesDir!;const [st,sha,target]=await Promise.all([stat(dir+'/nova-latest.apk'),readFile(dir+'/nova-latest.apk.sha256','utf8').catch(()=>''),readlink(dir+'/nova-latest.apk').catch(()=>'')]);
+  const version=/^nova-(\d+\.\d+\.\d+)-(\d+)\.apk$/.exec(target);const digest=/^[0-9a-f]{64}/i.exec(sha.trim());
+  return {available:true,bytes:st.size,sha256:digest?digest[0].toLowerCase():null,version:version?version[1]:null,versionCode:version?Number(version[2]):null,modified:st.mtime.toISOString(),package:'it.licenzpol.nova'}};
  if(options.releasesDir){web.get(bp+'/download/nova.apk',async(_r,reply)=>{try{const bytes=await readFile(options.releasesDir+'/nova-latest.apk');return reply.type('application/vnd.android.package-archive').header('content-disposition','attachment; filename="nova.apk"').header('cache-control','public, max-age=300').send(bytes)}catch{return reply.code(404).send({error:'not_found'})}});
-  web.get(bp+'/download/nova.apk.sha256',async(_r,reply)=>{try{return reply.type('text/plain').send(await readFile(options.releasesDir+'/nova-latest.apk.sha256','utf8'))}catch{return reply.code(404).send({error:'not_found'})}});}
+  web.get(bp+'/download/nova.apk.sha256',async(_r,reply)=>{try{return reply.type('text/plain').send(await readFile(options.releasesDir+'/nova-latest.apk.sha256','utf8'))}catch{return reply.code(404).send({error:'not_found'})}});
+  web.get(bp+'/download/app.json',async(_r,reply)=>{try{return reply.type('application/json').header('cache-control','public, max-age=300').send(await releaseInfo())}catch{return reply.type('application/json').header('cache-control','public, max-age=60').send({available:false})}});
+  web.get(bp+'/download/qr.svg',async(r,reply)=>{try{await stat(options.releasesDir+'/nova-latest.apk')}catch{return reply.code(404).send({error:'not_found'})}
+   // Host comes from the request (behind Caddy the browser's Host header), path from the mount: the QR must point where the page lives.
+   const host=String(r.headers.host??'');if(!/^[A-Za-z0-9](?:[A-Za-z0-9.-]{0,252}[A-Za-z0-9])?(?::\d{1,5})?$/.test(host))return reply.code(400).send({error:'host_invalid'});
+   return reply.type('image/svg+xml').header('cache-control','public, max-age=3600').send(qrSvg(`https://${host}${bp}/download/nova.apk`))});}
  // Digital Asset Links live at the ORIGIN root by spec, regardless of the mount path.
  if(options.assetLinksFile)web.get('/.well-known/assetlinks.json',async(_r,reply)=>{try{const text=await readFile(options.assetLinksFile!,'utf8');JSON.parse(text);return reply.type('application/json').header('cache-control','public, max-age=3600').send(text)}catch{return reply.code(404).send({error:'not_found'})}});
  if(options.nativeVoice)web.get(bp+'/native.js',async(_r,reply)=>reply.type('text/javascript; charset=utf-8').send(prefixed('native.js',(await readFile(new URL('../staging/voice-files/public/native.js',import.meta.url))).toString())));
